@@ -1,9 +1,9 @@
 package cookbook.service;
-import cookbook.domain.Recipe;
-import java.util.List;
 
 // Add methods to manipulate ingredients, tags, comments etc.
 // For example, addIngredient, addTag, addComment, removeIngredient, etc.
+
+import cookbook.model.Recipe;
 
 public class RecipeService {
 

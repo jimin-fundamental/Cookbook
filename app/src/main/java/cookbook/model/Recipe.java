@@ -1,4 +1,4 @@
-package cookbook.domain;
+package cookbook.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +22,21 @@ public class Recipe {
     }
 
     // Constructor, getters, and setters
-    public Recipe(Long id, String name, String shortDescription, List<String> ingredients, String process, int numberOfPersons, List<String> tags) {
+    public Recipe(Long id, String name, String shortDescription, List<String> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags) {
         this.id = id;
         this.name = name;
         this.shortDescription = shortDescription;
         this.ingredients = ingredients;
-        this.process = process;
+        this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
         this.tags = tags;
     }
-    public Recipe(Long id, String name, String shortDescription, List<String> ingredients, String detailedDescription, int numberOfPersons, List<String> tags, List<String> comments) {
+    public Recipe(Long id, String name, String shortDescription, List<String> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags, List<String> comments) {
         this.id = id;
         this.name = name;
         this.shortDescription = shortDescription;
         this.ingredients = ingredients;
-        this.process = process;
+        this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
         this.tags = tags;
         this.comments = comments;
