@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28382500-af00-4983-b3d9-595d8d6ef59d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.4/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.4/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.4/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.4/checksums/sha1-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="28382500-af00-4983-b3d9-595d8d6ef59d" name="Changes" comment="project structure done">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/MySqlUserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/UserDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/domain/Recipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/model/Recipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/RecipeRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/service/RecipeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/service/RecipeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/CreateProfileSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/CreateProfileSceneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/LoginSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/LoginSceneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/database/DatabaseManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/UserRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +29,12 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="cookbook" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -64,7 +68,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Workspace/UnisMindControl",
+    "last_opened_file_path": "C:/Workspace/cookbook",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -116,10 +120,39 @@
       <workItem from="1712733269434" duration="2727000" />
       <workItem from="1712746523705" duration="2625000" />
       <workItem from="1712842409019" duration="6578000" />
+      <workItem from="1712867797915" duration="4318000" />
     </task>
+    <task id="LOCAL-00001" summary="project structure done">
+      <option name="closed" value="true" />
+      <created>1712867738853</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712867738853</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="project structure done" />
+    <option name="LAST_COMMIT_MESSAGE" value="project structure done" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/app/src/main/java/cookbook/database/DatabaseManager.java</url>
+          <line>57</line>
+          <properties class="cookbook.database.DatabaseManager">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

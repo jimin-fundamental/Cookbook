@@ -9,6 +9,18 @@ public interface RecipeRepository {
     List<Recipe> getAllRecipes();
     void updateRecipe(Recipe recipe);
     void deleteRecipe(Long id);
-    // Other relevant methods
+
+    List<Recipe> findByName(String name);
+    List<Recipe> findByIngredient(String ingredient);
+    List<Recipe> findByTag(String tag);
+
+    void saveToFavorites(Recipe recipe);
+    void removeFromFavorites(Recipe recipe);
+    List<Recipe> getFavorites();
+
+    void addToWeekPlan(Recipe recipe, String week);
+    void removeFromWeekPlan(Recipe recipe, String week);
+    List<Recipe> getWeekPlan(String week);
+
 }
 

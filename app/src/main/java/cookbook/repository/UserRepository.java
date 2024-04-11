@@ -1,4 +1,8 @@
 package cookbook.repository;
 
-public class UserRepository {
+public interface UserRepository {
+    boolean insertUser(String name, String username, String password);
+    boolean checkUser(String username, String password);
+    // Other user-related methods
 }
+

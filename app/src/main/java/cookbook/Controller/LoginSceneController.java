@@ -1,10 +1,10 @@
-package cookbook.Controller;
+package cookbook.controller;
 
 import java.io.IOException;
 
-import cookbook.Model.DatabaseManager;
-import cookbook.Model.SceneModifier;
+import cookbook.DatabaseManager;
 
+import cookbook.repository.UserDao;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,7 +15,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class LoginSceneController {
-
     @FXML
     private TextField pw_textbox;
 
@@ -28,25 +27,34 @@ public class LoginSceneController {
     @FXML
     private TextField uName_textbox;
 
+    private UserDao userDao;
+
+    public LoginSceneController() {
+        DatabaseManager dbManager = new DatabaseManager();
+        userDao = new UserDao(dbManager);
+    }
 
     @FXML
-    void signIn_button_clicked(ActionEvent event) throws IOException{
+    void signInButtonClicked(ActionEvent event) throws IOException{
         String username = uName_textbox.getText();
         String password = pw_textbox.getText();
 
         // check database for usernamename and password
-        DatabaseManager manager = new DatabaseManager();
-        if(!manager.check_user(username, password)){
+        if(!userDao.checkUser(username, password)){
             System.out.println("credentials not correct!");
         }
         else{
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/StartScene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+            changeScene("/cookbook.view/StartScene.fxml", event);
         }
     }
 
     @FXML
-    void create_profile_button_pressed(ActionEvent event) throws IOException {
-        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/CreateProfileSceneController.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+    void createProfileButtonPressed(ActionEvent event) throws IOException {
+        changeScene("/cookbook.view/CreateProfileScene.fxml", event);
+    }
+
+    private void changeScene(String fxmlPath, ActionEvent event) throws IOException {
+        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource(fxmlPath)), (Stage)((Node)event.getSource()).getScene().getWindow());
     }
 
 }
