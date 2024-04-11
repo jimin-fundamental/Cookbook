@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="scene1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.Login_scene_controller">
+<Pane fx:id="scene1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.LoginSceneController">
    <children>
       <Button fx:id="signIn_button" layoutX="274.0" layoutY="302.0" mnemonicParsing="false" onAction="#signIn_button_clicked" text="sign in" />
       <TextField fx:id="uName_textbox" layoutX="273.0" layoutY="167.0" />

@@ -9,14 +9,12 @@ import javafx.scene.Node;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class Login_scene_controller {
+public class LoginSceneController {
 
     @FXML
     private TextField pw_textbox;
@@ -42,13 +40,13 @@ public class Login_scene_controller {
             System.out.println("credentials not correct!");
         }
         else{
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/start_scene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/StartScene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
         }
     }
 
     @FXML
     void create_profile_button_pressed(ActionEvent event) throws IOException {
-        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/create_new_profile_scene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/CreateProfileSceneController.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
     }
 
 }

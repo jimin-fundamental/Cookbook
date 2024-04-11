@@ -3,7 +3,6 @@ package cookbook.Controller;
 import javafx.scene.Node;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import cookbook.Model.DatabaseManager;
 import cookbook.Model.SceneModifier;
@@ -14,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class Create_new_profile_scene_controller {
+public class CreateProfileSceneController {
 
     @FXML
     private Button create_profile_button;
@@ -30,7 +29,7 @@ public class Create_new_profile_scene_controller {
 
     @FXML
     void back_button_pressed(ActionEvent event) throws IOException {
-        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/login_scene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
     }
 
     @FXML
@@ -45,7 +44,7 @@ public class Create_new_profile_scene_controller {
             System.out.println("something went wrong!");
         }
         else{
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/login_scene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
         }
         
 

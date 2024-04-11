@@ -1,4 +1,4 @@
-package cookbook.Model;
+package cookbook;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
