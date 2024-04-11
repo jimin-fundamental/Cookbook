@@ -20,7 +20,7 @@ public class App extends Application {
         Label mysql;
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://srv1145.hstgr.io/u689018343_cookbook?&user=u689018343_nulla&password=TheWorldOfNull1&useSSL=false ");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net/sql11698285?&user=sql11698285&password=BlmMYE2vhj&useSSL=false ");
             mysql = new Label("Driver found and connected");
 
         } catch (SQLException e) {

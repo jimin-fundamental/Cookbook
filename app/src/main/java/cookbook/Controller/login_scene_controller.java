@@ -1,6 +1,5 @@
-package cookbook.Controller;
+package cookbook.controller;
 
-import javafx;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
