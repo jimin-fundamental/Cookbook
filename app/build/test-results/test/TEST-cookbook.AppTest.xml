@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="cookbook.AppTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-04-11T13:58:43" hostname="MD3I429C" time="0.015">
+  <properties/>
+  <testcase name="appHasAGreeting()" classname="cookbook.AppTest" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
