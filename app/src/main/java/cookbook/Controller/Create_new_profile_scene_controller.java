@@ -3,7 +3,9 @@ package cookbook.Controller;
 import javafx.scene.Node;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import cookbook.Model.DatabaseManager;
 import cookbook.Model.SceneModifier;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,12 +34,21 @@ public class Create_new_profile_scene_controller {
     }
 
     @FXML
-    void create_profile_button_pressed(ActionEvent event) {
+    void create_profile_button_pressed(ActionEvent event) throws IOException{
         String name = name_textbox.getText();
         String userName = uName_textbox.getText();
         String password = pw_textbox.getText();
 
         // store data in the database
+        DatabaseManager manager = new DatabaseManager();
+        if(!manager.insert_user(name, userName, password)){
+            System.out.println("something went wrong!");
+        }
+        else{
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/login_scene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+        }
+        
+
     }
 
 }

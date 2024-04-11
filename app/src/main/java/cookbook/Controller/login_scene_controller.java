@@ -1,6 +1,8 @@
 package cookbook.Controller;
 
 import java.io.IOException;
+
+import cookbook.Model.DatabaseManager;
 import cookbook.Model.SceneModifier;
 
 import javafx.scene.Node;
@@ -31,16 +33,17 @@ public class Login_scene_controller {
 
     @FXML
     void signIn_button_clicked(ActionEvent event) throws IOException{
-        String userName = uName_textbox.getText();
+        String username = uName_textbox.getText();
         String password = pw_textbox.getText();
 
-        // check database for name and password
-        boolean credentialsAreCorrect = true;
-
-        if (credentialsAreCorrect){
+        // check database for usernamename and password
+        DatabaseManager manager = new DatabaseManager();
+        if(!manager.check_user(username, password)){
+            System.out.println("credentials not correct!");
+        }
+        else{
             SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/start_scene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
         }
-
     }
 
     @FXML
