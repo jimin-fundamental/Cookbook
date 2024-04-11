@@ -4,33 +4,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import cookbook.Model.SceneModifier;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.fxml.FXMLLoader;
+
 import javafx.stage.Stage;
 
 public class App extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        VBox root = new VBox();
-        root.setPadding(new Insets(5));
-        Label title = new Label("JavaFX");
-        Label mysql;
-
+    public void start(Stage stage) throws Exception {
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net/sql11698285?&user=sql11698285&password=BlmMYE2vhj&useSSL=false ");
-            mysql = new Label("Driver found and connected");
-
-        } catch (SQLException e) {
-            mysql = new Label("An error has occurred: " + e.getMessage());
+            // Connection conn = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net/sql11698285?&user=sql11698285&password=BlmMYE2vhj&useSSL=false ");
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/login_scene.fxml")), stage);
+        
+        } catch(Exception e) {
+            e.printStackTrace();
         }
-
-        root.getChildren().addAll(title, mysql);
-
-        primaryStage.setScene(new Scene(root, 400, 200));
-        primaryStage.setTitle("JavaFX");
-        primaryStage.show();
+    }
+    public static void main(String[] args) {
+        launch(args);
     }
 }

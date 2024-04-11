@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="scene1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.login_scene_controller">
+<Pane fx:id="scene1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.Login_scene_controller">
    <children>
-      <Button layoutX="274.0" layoutY="302.0" mnemonicParsing="false" text="sign in" />
+      <Button fx:id="signIn_button" layoutX="274.0" layoutY="302.0" mnemonicParsing="false" onAction="#signIn_button_clicked" text="sign in" />
       <TextField fx:id="uName_textbox" layoutX="273.0" layoutY="167.0" />
       <TextField fx:id="pw_textbox" layoutX="273.0" layoutY="209.0" />
       <Label layoutX="179.0" layoutY="166.0" text="Username">
@@ -26,5 +26,6 @@
             <Font size="48.0" />
          </font>
       </Label>
+      <Button fx:id="create_profile_button" layoutX="489.0" layoutY="361.0" mnemonicParsing="false" onAction="#create_profile_button_pressed" text="create profile" textAlignment="CENTER" />
    </children>
 </Pane>
