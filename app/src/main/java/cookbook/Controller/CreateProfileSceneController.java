@@ -1,5 +1,6 @@
 package cookbook.controller;
 
+import cookbook.SceneModifier;
 import cookbook.repository.UserDao;
 import javafx.scene.Node;
 

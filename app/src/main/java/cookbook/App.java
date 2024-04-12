@@ -1,6 +1,5 @@
 package cookbook;
 
-import cookbook.controller.SceneModifier;
 import cookbook.repository.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

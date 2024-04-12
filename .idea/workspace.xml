@@ -5,14 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28382500-af00-4983-b3d9-595d8d6ef59d" name="Changes" comment="project structure done">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/MySqlUserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/UserDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/SceneModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/classes/java/main/cookbook/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/classes/java/main/cookbook/App.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/classes/java/main/cookbook/Controller/Create_new_profile_scene_controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/classes/java/main/cookbook/Controller/Login_scene_controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/classes/java/main/cookbook/Model/SceneModifier.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/CreateProfileSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/CreateProfileSceneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/LoginSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/LoginSceneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/database/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/SceneModifier.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,29 +61,29 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.App.executor": "Run",
-    "Gradle.cookbook.executor": "Run",
-    "Gradle.cookbook:app [:app:App.main()].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Workspace/cookbook",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.App.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.cookbook.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.cookbook:app [:app:App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Workspace/cookbook&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
@@ -120,7 +123,8 @@
       <workItem from="1712733269434" duration="2727000" />
       <workItem from="1712746523705" duration="2625000" />
       <workItem from="1712842409019" duration="6578000" />
-      <workItem from="1712867797915" duration="4318000" />
+      <workItem from="1712867797915" duration="6134000" />
+      <workItem from="1712909032120" duration="931000" />
     </task>
     <task id="LOCAL-00001" summary="project structure done">
       <option name="closed" value="true" />
@@ -144,7 +148,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/app/src/main/java/cookbook/database/DatabaseManager.java</url>
+          <url>file://$PROJECT_DIR$/app/src/main/java/cookbook/DatabaseManager.java</url>
           <line>57</line>
           <properties class="cookbook.database.DatabaseManager">
             <option name="EMULATED" value="true" />

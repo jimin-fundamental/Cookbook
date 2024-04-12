@@ -1,4 +1,4 @@
-package cookbook.controller;
+package cookbook;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;

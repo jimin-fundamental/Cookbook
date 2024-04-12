@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import cookbook.DatabaseManager;
 
+import cookbook.SceneModifier;
 import cookbook.repository.UserDao;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
