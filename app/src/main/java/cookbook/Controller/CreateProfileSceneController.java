@@ -1,4 +1,4 @@
-package cookbook.controller;
+package cookbook.Controller;
 
 import cookbook.SceneModifier;
 import cookbook.repository.UserDao;
@@ -17,16 +17,19 @@ import javafx.stage.Stage;
 public class CreateProfileSceneController {
 
     @FXML
-    private Button create_profile_button;
+    private Button createProfileButton;
 
     @FXML
-    private TextField name_textbox;
+    private Button backButton;
 
     @FXML
-    private TextField pw_textbox;
+    private TextField nameTextbox;
 
     @FXML
-    private TextField uName_textbox;
+    private TextField pwTextbox;
+
+    @FXML
+    private TextField unameTextbox;
 
     private UserDao userDao;
 
@@ -42,9 +45,9 @@ public class CreateProfileSceneController {
 
     @FXML
     void createProfileButtonPressed(ActionEvent event) throws IOException{
-        String name = name_textbox.getText();
-        String userName = uName_textbox.getText();
-        String password = pw_textbox.getText();
+        String name = nameTextbox.getText();
+        String userName = unameTextbox.getText();
+        String password = pwTextbox.getText();
 
         // store data in the database
         if (!userDao.insertUser(name, userName, password)) {

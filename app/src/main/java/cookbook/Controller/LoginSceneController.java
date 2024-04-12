@@ -1,4 +1,4 @@
-package cookbook.controller;
+package cookbook.Controller;
 
 import java.io.IOException;
 
@@ -17,16 +17,19 @@ import javafx.stage.Stage;
 
 public class LoginSceneController {
     @FXML
-    private TextField pw_textbox;
+    private TextField pwTextbox;
 
     @FXML
     private Pane scene1;
 
     @FXML
-    private Button signIn_button;
+    private Button signInButton;
 
     @FXML
-    private TextField uName_textbox;
+    private Button createProfileButton;
+
+    @FXML
+    private TextField uNameTextbox;
 
     private UserDao userDao;
 
@@ -36,9 +39,9 @@ public class LoginSceneController {
     }
 
     @FXML
-    void signInButtonClicked(ActionEvent event) throws IOException{
-        String username = uName_textbox.getText();
-        String password = pw_textbox.getText();
+    void signInButtonPressed(ActionEvent event) throws IOException{
+        String username = uNameTextbox.getText();
+        String password = pwTextbox.getText();
 
         // check database for usernamename and password
         if(!userDao.checkUser(username, password)){
@@ -50,7 +53,7 @@ public class LoginSceneController {
     }
 
     @FXML
-    void createProfileButtonPressed(ActionEvent event) throws IOException {
+    void createProfileButtonPressed (ActionEvent event) throws IOException {
         changeScene("/cookbook.view/CreateProfileScene.fxml", event);
     }
 

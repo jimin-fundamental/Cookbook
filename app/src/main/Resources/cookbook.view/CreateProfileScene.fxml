@@ -9,7 +9,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.CreateProfileSceneController">
    <children>
-      <Button fx:id="create_profile_button" layoutX="257.0" layoutY="324.0" mnemonicParsing="false" onAction="#create_profile_button_pressed" text="create profile" />
+      <Button fx:id="createProfileButton" layoutX="257.0" layoutY="324.0" mnemonicParsing="false" onAction="#createProfileButtonPressed" text="create profile" />
       <Label layoutX="123.0" layoutY="169.0" text="Username">
          <font>
             <Font size="17.0" />
@@ -25,14 +25,14 @@
             <Font size="17.0" />
          </font>
       </Label>
-      <TextField fx:id="name_textbox" layoutX="241.0" layoutY="114.0" />
-      <TextField fx:id="uName_textbox" layoutX="241.0" layoutY="170.0" />
-      <TextField fx:id="pw_textbox" layoutX="241.0" layoutY="226.0" />
+      <TextField fx:id="nameTextbox" layoutX="241.0" layoutY="114.0" />
+      <TextField fx:id="uNameTextbox" layoutX="241.0" layoutY="170.0" />
+      <TextField fx:id="pwTextbox" layoutX="241.0" layoutY="226.0" />
       <Label layoutX="170.0" layoutY="35.0" text="Create new profile">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <Button fx:id="back_button" layoutX="30.0" layoutY="49.0" mnemonicParsing="false" onAction="#back_button_pressed" text="&lt;- Back" />
+      <Button fx:id="backButton" layoutX="30.0" layoutY="49.0" mnemonicParsing="false" onAction="#backButtonPressed" text="&lt;- Back" />
    </children>
 </Pane>

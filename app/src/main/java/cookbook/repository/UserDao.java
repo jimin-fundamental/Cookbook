@@ -10,6 +10,7 @@ public class UserDao implements UserRepository{
 
     public UserDao(DatabaseManager dbManager) {
         this.dbManager = dbManager;
+        this.url = "jdbc:mysql://sql11.freemysqlhosting.net/sql11698285?&user=sql11698285&password=BlmMYE2vhj&useSSL=false";
     }
 
     public boolean insertUser(String name, String username, String password){
