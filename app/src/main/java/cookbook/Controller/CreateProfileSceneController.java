@@ -2,7 +2,6 @@ package cookbook.Controller;
 
 import cookbook.SceneModifier;
 import cookbook.repository.UserDao;
-import javafx.scene.Node;
 
 import java.io.IOException;
 
@@ -13,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 public class CreateProfileSceneController {
 
