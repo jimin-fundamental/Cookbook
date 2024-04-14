@@ -9,6 +9,7 @@
 <Pane fx:id="scene1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.LoginSceneController">
    <children>
       <Button fx:id="signInButton" layoutX="274.0" layoutY="302.0" mnemonicParsing="false" onAction="#signInButtonPressed" text="sign in" />
+      <Button fx:id="startPageButton" layoutX="274.0" layoutY="335.0" mnemonicParsing="false" onAction="#startPageButtonPressed" text="skip" />
       <TextField fx:id="uNameTextbox" layoutX="273.0" layoutY="167.0" />
       <TextField fx:id="pwTextbox" layoutX="273.0" layoutY="209.0" />
       <Label layoutX="179.0" layoutY="166.0" text="Username">

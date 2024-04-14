@@ -53,6 +53,11 @@ public class LoginSceneController {
     }
 
     @FXML
+    void startPageButtonPressed(ActionEvent event) throws IOException{
+        changeScene("/cookbook.view/RecipeView.fxml", event);
+    }
+
+    @FXML
     void createProfileButtonPressed (ActionEvent event) throws IOException {
         changeScene("/cookbook.view/CreateProfileScene.fxml", event);
     }
