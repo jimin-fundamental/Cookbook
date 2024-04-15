@@ -27,6 +27,7 @@ public class UserDao implements UserRepository{
 
             int affectedRows = pstmt.executeUpdate();
 
+            pstmt.close();
             connection.close();
 
             if (affectedRows > 0) {
@@ -54,16 +55,19 @@ public class UserDao implements UserRepository{
             pstmt.setString(2, password);
 
             ResultSet rs = pstmt.executeQuery();
-
-            connection.close();
-
+            
+            
             // check the results
             if (rs.next()) {
                 int count = rs.getInt(1);
+                pstmt.close();
+                connection.close();
                 if (count > 0) {
                     return true;
                 }
             }
+            pstmt.close();
+            connection.close();
             return false;
 
         } catch (SQLException e) {
