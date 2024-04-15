@@ -10,12 +10,12 @@ public class UserDao implements UserRepository{
 
     public UserDao(DatabaseManager dbManager) {
         this.dbManager = dbManager;
-        this.url = "jdbc:mysql://sql11.freemysqlhosting.net/sql11698285?&user=sql11698285&password=BlmMYE2vhj&useSSL=false";
+        this.url = "jdbc:mysql://srv1145.hstgr.io/u689018343_cookbook?&user=u689018343_nulla&password=TheWorldOfNull1&useSSL=false";
     }
 
     public boolean insertUser(String name, String username, String password){
 
-        String sql = "INSERT INTO sql11698285.User (name, username, password) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO User (name, username, password) VALUES (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -44,7 +44,7 @@ public class UserDao implements UserRepository{
 
     public boolean checkUser(String username, String password){
 
-        String sql = "SELECT COUNT(*) FROM cookbook.users WHERE username = ? AND password = ?";
+        String sql = "SELECT COUNT(*) FROM User WHERE username = ? AND password = ?";
 
         try (Connection connection = DriverManager.getConnection(url);
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
