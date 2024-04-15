@@ -48,8 +48,13 @@ public class LoginSceneController {
             System.out.println("credentials not correct!");
         }
         else{
-            changeScene("/cookbook.view/StartScene.fxml", event);
+            changeScene("/cookbook.view/RecipeView.fxml", event);
         }
+    }
+
+    @FXML
+    void startPageButtonPressed(ActionEvent event) throws IOException{
+        changeScene("/cookbook.view/RecipeView.fxml", event);
     }
 
     @FXML

@@ -2,7 +2,6 @@ package cookbook.Controller;
 
 import cookbook.SceneModifier;
 import cookbook.repository.UserDao;
-import javafx.scene.Node;
 
 import java.io.IOException;
 
@@ -13,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 public class CreateProfileSceneController {
 
@@ -29,7 +29,7 @@ public class CreateProfileSceneController {
     private TextField pwTextbox;
 
     @FXML
-    private TextField unameTextbox;
+    private TextField uNameTextbox;
 
     private UserDao userDao;
 
@@ -46,7 +46,7 @@ public class CreateProfileSceneController {
     @FXML
     void createProfileButtonPressed(ActionEvent event) throws IOException{
         String name = nameTextbox.getText();
-        String userName = unameTextbox.getText();
+        String userName = uNameTextbox.getText();
         String password = pwTextbox.getText();
 
         // store data in the database
