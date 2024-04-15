@@ -31,6 +31,7 @@ public class RecipeItemController {
         
         // create new stage for new window of the recipe
         Stage stage= new Stage();
+        stage.setResizable(false);
         stage.setScene(new Scene(fxmlLoader.load()));
         
         // get the controller to call the method to set the data
