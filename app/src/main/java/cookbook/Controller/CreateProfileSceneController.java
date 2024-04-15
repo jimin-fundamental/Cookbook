@@ -29,7 +29,7 @@ public class CreateProfileSceneController {
     private TextField pwTextbox;
 
     @FXML
-    private TextField unameTextbox;
+    private TextField uNameTextbox;
 
     private UserDao userDao;
 
@@ -46,7 +46,7 @@ public class CreateProfileSceneController {
     @FXML
     void createProfileButtonPressed(ActionEvent event) throws IOException{
         String name = nameTextbox.getText();
-        String userName = unameTextbox.getText();
+        String userName = uNameTextbox.getText();
         String password = pwTextbox.getText();
 
         // store data in the database
