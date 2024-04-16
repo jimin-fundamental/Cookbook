@@ -26,7 +26,20 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     @Override
     public Recipe getRecipeById(Long id) {
-        return null;
+        Recipe recipe = new Recipe();
+
+        // Fetch ingredients for the recipe
+        List<String> ingredients = fetchIngredients(id);
+        recipe.setIngredients(ingredients);
+
+        // Fetch tags for the recipe
+        List<String> tags = fetchTags(id);
+        recipe.setTags(tags);
+
+        // Fetch comments for the recipe
+        List<String> comments = fetchComments(id);
+        recipe.setComments(comments);        
+        return recipe;
     }
 
     @Override
@@ -49,18 +62,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 String jsonProcessSteps = rs.getString("descr");
                 List<String> processSteps = parseProcessSteps(jsonProcessSteps);
                 recipe.setProcessSteps(processSteps);
-
-                // Fetch ingredients for the recipe
-                List<String> ingredients = getIngredients(recipe.getId());
-                recipe.setIngredients(ingredients);
-
-                // Fetch tags for the recipe
-                List<String> tags = getTags(recipe.getId());
-                recipe.setTags(tags);
-
-                // Fetch comments for the recipe
-                List<String> comments = getComments(recipe.getId());
-                recipe.setComments(comments);
 
                 recipes.add(recipe);
             }
@@ -133,7 +134,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public List<String> getIngredients(Long id) {
+    public List<String> fetchIngredients(Long id) {
         List<String> ingredients = new ArrayList<>();
 
         String sql = "SELECT name FROM Ingredient " +
@@ -153,7 +154,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
                     ingredients.add(ingredientName);
                 }
             }
-            System.out.println("ingredients done");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -163,7 +163,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public List<String> getTags(Long id) {
+    public List<String> fetchTags(Long id) {
         List<String> tags = new ArrayList<>();
 
         String sql = "SELECT t.tagname FROM Tags t " +
@@ -183,7 +183,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
                     tags.add(ingredientName);
                 }
             }
-            System.out.println("Labels done");
 
 
         } catch (SQLException e) {
@@ -194,7 +193,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public List<String> getComments(Long id) {
+    public List<String> fetchComments(Long id) {
         List<String> comments = new ArrayList<>();
 
         String sql = "SELECT comment FROM UserRecipe " +

@@ -17,7 +17,7 @@
          <children>
             <HBox prefHeight="0.0" spacing="15.0">
                <children>
-                  <ImageView fitHeight="150.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="123.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../../../Downloads/Best-Rice-Pudding.jpg" />
                      </image>
@@ -48,84 +48,13 @@
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Text>
-                  <FlowPane hgap="15.0" prefHeight="0.0" prefWidth="200.0" vgap="5.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Condensed Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Condensed Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Condensed Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Condensed Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Condensed Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Condensed Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="• Condensed Milk">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </FlowPane>
+                  <FlowPane fx:id="ingredientsFlowPane" hgap="15.0" prefHeight="187.0" prefWidth="181.0" vgap="5.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How to prepare">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Text>
-                  <VBox prefHeight="0.0" prefWidth="100.0" spacing="5.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="1. Cook the rice.">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2. Cook the cooked rice, some of the milk, sugar, and salt over medium heat until thick.">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3. Stir in the remaining milk, egg, and raisins. Cook for two more minutes.">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4. Remove from heat and stir in the butter and vanilla.">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4. Remove from heat and stir in the butter and vanilla.">
-                           <font>
-                              <Font name="System Italic" size="14.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </VBox>
+                  <VBox fx:id="vBoxProcessSteps" prefHeight="0.0" prefWidth="100.0" spacing="5.0" />
                </children>
             </VBox>
          </children>

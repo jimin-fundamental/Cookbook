@@ -18,26 +18,19 @@ import javafx.stage.Stage;
 public class RecipeItemController {
 
     @FXML
-
-    private Label recipeNameLabel;
+    private Text recipeNameText;
     
-    @FXML
-    private Label shortDescriptionLabel;
-    
-    @FXML
-    private Label tagsLabel;
 
     private Recipe recipe;
 
     public void setRecipeData(Recipe recipe){
         this.recipe = recipe;
-        recipeNameLabel.setText(recipe.getName());
-        shortDescriptionLabel.setText(recipe.getShortDescription());
+        recipeNameText.setText(recipe.getName());
         String tags = "";
         for (String tag : recipe.getTags()){
             tags += tag + ", ";
         }
-        tagsLabel.setText(tags);
+        //tagsLabel.setText(tags);
 
     }
 
