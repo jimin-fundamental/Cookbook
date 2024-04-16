@@ -1,15 +1,23 @@
 package cookbook.Controller;
 
-import cookbook.model.Recipe;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
-public class RecipeSceneController {
+public class RecipeSceneController{
 
     @FXML
-    private Label recipeNameLabel;
+    private Text recipeNameText;
+
+    @FXML
+    private Text recipeDescriptionText;
+
+    @FXML
+    private VBox recipeDetailsVBox;
 
     public void setRecipeData(String recipeName){
-        recipeNameLabel.setText(recipeName);
+        recipeNameText.setText(recipeName);
     }
+
 }
