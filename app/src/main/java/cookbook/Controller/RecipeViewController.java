@@ -44,12 +44,6 @@ public class RecipeViewController implements Initializable{
         SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")), (Stage)vBox.getScene().getWindow());
     }
 
-    private List<Recipe> availableRecipes(){
-        List<Recipe> recipes = recipeRepos.getAllRecipes();
-        return recipes;
-
-    }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
