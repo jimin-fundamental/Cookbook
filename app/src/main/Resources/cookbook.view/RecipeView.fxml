@@ -30,24 +30,28 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Label text="Recipes">
-               <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold" size="23.0" />
-               </font>
-            </Label>
             <ScrollPane prefWidth="1000.0" VBox.vgrow="ALWAYS">
                <content>
-                  <GridPane fx:id="recipeContainer" hgap="5.0" prefHeight="0.0" prefWidth="0.0" vgap="5.0">
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <padding>
-                        <Insets left="9.0" right="9.0" />
-                     </padding>
-                  </GridPane>
+                  <VBox>
+                     <children>
+                        <Label text="Recipes">
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="System Bold" size="23.0" />
+                           </font>
+                        </Label>
+                        <GridPane fx:id="recipeContainer" hgap="5.0" prefHeight="0.0" prefWidth="0.0" vgap="5.0">
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <padding>
+                              <Insets left="9.0" right="9.0" />
+                           </padding>
+                        </GridPane>
+                     </children>
+                  </VBox>
                </content>
             </ScrollPane>
          </children>
