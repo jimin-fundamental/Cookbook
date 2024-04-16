@@ -1,5 +1,6 @@
 package cookbook.Controller;
 
+
 import java.io.IOException;
 import java.lang.String;
 import java.net.URL;
@@ -19,8 +20,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 import javafx.stage.Stage;
-
+import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
+import cookbook.model.Recipe;
+import cookbook.repository.MySqlRecipeRepository;
 
 public class RecipeViewController implements Initializable{
 
@@ -33,25 +36,16 @@ public class RecipeViewController implements Initializable{
     @FXML
     private VBox vBox;
 
-    private List<String> recipeList;
+    private List<Recipe> recipeList;
+    private MySqlRecipeRepository recipeRepos;
 
     @FXML
     void changeProfileClicked(ActionEvent event) throws IOException {
         SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")), (Stage)vBox.getScene().getWindow());
     }
 
-    private List<String> availableRecipes(){
-        List<String> recipes = new ArrayList<>();
-        recipes.add("pizza");
-        recipes.add("lasagna");
-        recipes.add("scrambled eggs");
-        recipes.add("carbonara");
-        recipes.add("potato slices");
-        recipes.add("chili con carne");
-        recipes.add("chili sin carne");
-        recipes.add("sausages");
-        recipes.add("burger");
-        recipes.add("bread");
+    private List<Recipe> availableRecipes(){
+        List<Recipe> recipes = recipeRepos.getAllRecipes();
         return recipes;
 
     }
@@ -59,11 +53,14 @@ public class RecipeViewController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        recipeList = new ArrayList<>(availableRecipes());
+        //has to be the first to initialize the repository
+        recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
+
+        recipeList = recipeRepos.getAllRecipes();
         int column = 0;
         int row = 1;
         try {
-            for (String recipe : recipeList){
+            for (Recipe recipe : recipeList){
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/cookbook.view/RecipeItem.fxml"));
                 VBox recipeBox = fxmlLoader.load();

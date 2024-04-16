@@ -22,5 +22,10 @@ public interface RecipeRepository {
     void removeFromWeekPlan(Recipe recipe, String week);
     List<Recipe> getWeekPlan(String week);
 
+    List<String> getIngredients(Long id);
+    List<String> getTags(Long id);
+    List<String> getComments(Long id);
+    List<String> parseProcessSteps(String json);
+
 }
 

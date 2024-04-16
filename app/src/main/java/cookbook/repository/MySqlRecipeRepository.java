@@ -2,8 +2,14 @@ package cookbook.repository;
 
 import cookbook.DatabaseManager;
 import cookbook.model.Recipe;
+import java.sql.*;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.mysql.cj.protocol.Resultset;
 
 public class MySqlRecipeRepository implements RecipeRepository{
 
@@ -25,7 +31,50 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     @Override
     public List<Recipe> getAllRecipes() {
-        return List.of();
+        List<Recipe> recipes = new ArrayList<>();
+
+        String sql = "SELECT ID, name, sdecr, descr FROM Recipe";
+        
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+        PreparedStatement pstmt = connection.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Recipe recipe = new Recipe();
+                recipe.setId(rs.getLong("ID"));
+                recipe.setName(rs.getString("name"));
+                recipe.setShortDescription(rs.getString("sdecr"));
+
+                // Extract and parse process steps from JSON
+                String jsonProcessSteps = rs.getString("descr");
+                List<String> processSteps = parseProcessSteps(jsonProcessSteps);
+                recipe.setProcessSteps(processSteps);
+
+                // Fetch ingredients for the recipe
+                List<String> ingredients = getIngredients(recipe.getId());
+                recipe.setIngredients(ingredients);
+
+                // Fetch tags for the recipe
+                List<String> tags = getTags(recipe.getId());
+                recipe.setTags(tags);
+
+                // Fetch comments for the recipe
+                List<String> comments = getComments(recipe.getId());
+                recipe.setComments(comments);
+
+                recipes.add(recipe);
+            }
+            
+            
+            pstmt.close();
+            connection.close();
+            
+
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return recipes;
     }
 
     @Override
@@ -82,4 +131,114 @@ public class MySqlRecipeRepository implements RecipeRepository{
     public List<Recipe> getWeekPlan(String week) {
         return List.of();
     }
+
+    @Override
+    public List<String> getIngredients(Long id) {
+        List<String> ingredients = new ArrayList<>();
+
+        String sql = "SELECT name FROM Ingredient " +
+                     "INNER JOIN RecipeIngredient ON Ingredient.ID = RecipeIngredient.Ingredient_ID " +
+                     "WHERE RecipeIngredient.Recipe_ID = ?";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // Set the recipe ID parameter
+            pstmt.setLong(1, id);
+
+            // Execute the query
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ingredientName = rs.getString("name");
+                    ingredients.add(ingredientName);
+                }
+            }
+            System.out.println("ingredients done");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return ingredients;
+    }
+
+    @Override
+    public List<String> getTags(Long id) {
+        List<String> tags = new ArrayList<>();
+
+        String sql = "SELECT t.tagname FROM Tags t " +
+                     "INNER JOIN RecipeTag rt ON t.ID = rt.Tags_ID " +
+                     "WHERE rt.Recipe_ID = ?";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // Set the recipe ID parameter
+            pstmt.setLong(1, id);
+
+            // Execute the query
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ingredientName = rs.getString("tagname");
+                    tags.add(ingredientName);
+                }
+            }
+            System.out.println("Labels done");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tags;
+    }
+
+    @Override
+    public List<String> getComments(Long id) {
+        List<String> comments = new ArrayList<>();
+
+        String sql = "SELECT comment FROM UserRecipe " +
+                     "WHERE Recipe_ID = ? AND comment IS NOT NULL";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // Set the recipe ID parameter
+            pstmt.setLong(1, id);
+
+            // Execute the query
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String ingredientName = rs.getString("name");
+                    comments.add(ingredientName);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return comments;
+    }
+
+    @Override
+    public List<String> parseProcessSteps(String json) {
+        List<String> processSteps = new ArrayList<>();
+
+        // Use regex to extract process steps from JSON string
+        Pattern pattern = Pattern.compile("\"steps\"\\s*:\\s*\\[([^\\]]*)\\]");
+        Matcher matcher = pattern.matcher(json);
+
+        if (matcher.find()) {
+            String steps = matcher.group(1);
+            // Split the steps string by comma and trim each step
+            String[] stepsArray = steps.split(",");
+            for (String step : stepsArray) {
+                processSteps.add(step.trim().replaceAll("\"", ""));
+            }
+        }
+
+        return processSteps;
+    }
+
 }

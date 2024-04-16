@@ -9,7 +9,7 @@ public class RecipeSceneController {
     @FXML
     private Label recipeNameLabel;
 
-    public void setRecipeData(String recipeName){
-        recipeNameLabel.setText(recipeName);
+    public void setRecipeData(Recipe recipe){
+        recipeNameLabel.setText(recipe.getName());
     }
 }

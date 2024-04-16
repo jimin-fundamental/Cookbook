@@ -5,15 +5,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#recipeClicked" prefHeight="330.0" prefWidth="180.0" spacing="5.0" style="-fx-background-color: ffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeItemController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#recipeClicked" prefHeight="330.0" prefWidth="180.0" style="-fx-background-color: ffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeItemController">
    <children>
       <Label fx:id="recipeNameLabel" prefHeight="36.0" prefWidth="178.0" text="Title">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
          <font>
-            <Font size="14.0" />
+            <Font size="16.0" />
          </font>
+      </Label>
+      <Label fx:id="shortDescriptionLabel" text="short Description" wrapText="true">
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="tagsLabel" text="Tags" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
       </Label>
    </children>
 </VBox>
