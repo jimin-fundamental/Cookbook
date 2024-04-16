@@ -16,7 +16,9 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 import javafx.stage.Stage;
@@ -57,7 +59,7 @@ public class RecipeViewController implements Initializable{
             for (Recipe recipe : recipeList){
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/cookbook.view/RecipeItem.fxml"));
-                VBox recipeBox = fxmlLoader.load();
+                StackPane recipeBox = fxmlLoader.load();
                 RecipeItemController controller = fxmlLoader.getController();
                 controller.setRecipeData(recipe);
                 if(column == 5){
@@ -65,7 +67,6 @@ public class RecipeViewController implements Initializable{
                     ++row;
                 }
                 recipeContainer.add(recipeBox, column++, row);
-                GridPane.setMargin(recipeBox, new Insets(10));
                     
             }
         } catch (IOException e) {
