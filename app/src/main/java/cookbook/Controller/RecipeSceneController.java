@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import cookbook.DatabaseManager;
+import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.fxml.FXML;
@@ -29,6 +30,9 @@ public class RecipeSceneController implements Initializable{
     @FXML
     private FlowPane ingredientsFlowPane;
 
+    @FXML
+    private Text IngredientHeadlineText;
+
     private Recipe recipe;
     private MySqlRecipeRepository recipeRepos;
 
@@ -37,6 +41,7 @@ public class RecipeSceneController implements Initializable{
         
         this.recipeNameText.setText(recipe.getName());
         this.recipeDescriptionText.setText(recipe.getShortDescription());
+        this.IngredientHeadlineText.setText("Ingredients (" + recipe.getNumberOfPersons() + " servings)");
         
         this.recipe = recipeRepos.getRecipeById(recipe.getId());
         
@@ -47,8 +52,8 @@ public class RecipeSceneController implements Initializable{
             vBoxProcessSteps.getChildren().add(new Text(i++ + ": " + step));
         }
         
-        for (String ingredient : this.recipe.getIngredients()){
-            ingredientsFlowPane.getChildren().add(new Text(ingredient));
+        for (Ingredient ingredient : this.recipe.getIngredients()){
+            ingredientsFlowPane.getChildren().add(new Text(ingredient.getName() +" (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
         }
     }
 

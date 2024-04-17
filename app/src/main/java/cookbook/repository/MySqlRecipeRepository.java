@@ -1,6 +1,7 @@
 package cookbook.repository;
 
 import cookbook.DatabaseManager;
+import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import java.sql.*;
 
@@ -29,7 +30,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         Recipe recipe = new Recipe();
 
         // Fetch ingredients for the recipe
-        List<String> ingredients = fetchIngredients(id);
+        List<Ingredient> ingredients = fetchIngredients(id);
         recipe.setIngredients(ingredients);
 
         // Fetch tags for the recipe
@@ -46,7 +47,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
 
-        String sql = "SELECT ID, name, sdecr, descr FROM Recipe";
+        String sql = "SELECT ID, name, sdecr, descr, servings FROM Recipe";
         
         try (Connection connection = DriverManager.getConnection(dbManager.url);
         PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -57,6 +58,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 recipe.setId(rs.getLong("ID"));
                 recipe.setName(rs.getString("name"));
                 recipe.setShortDescription(rs.getString("sdecr"));
+                recipe.setNumberOfPersons(rs.getInt("servings"));
 
                 // Extract and parse process steps from JSON
                 String jsonProcessSteps = rs.getString("descr");
@@ -134,12 +136,12 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public List<String> fetchIngredients(Long id) {
-        List<String> ingredients = new ArrayList<>();
+    public List<Ingredient> fetchIngredients(Long id) {
+        List<Ingredient> ingredients = new ArrayList<>();
 
-        String sql = "SELECT name FROM Ingredient " +
-                     "INNER JOIN RecipeIngredient ON Ingredient.ID = RecipeIngredient.Ingredient_ID " +
-                     "WHERE RecipeIngredient.Recipe_ID = ?";
+        String sql = "SELECT i.name, ri.amount_int, ri.amount_unit FROM Ingredient i " +
+                     "INNER JOIN RecipeIngredient ri ON i.ID = ri.Ingredient_ID " +
+                     "WHERE ri.Recipe_ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -150,8 +152,11 @@ public class MySqlRecipeRepository implements RecipeRepository{
             // Execute the query
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    String ingredientName = rs.getString("name");
-                    ingredients.add(ingredientName);
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.setName(rs.getString("name"));
+                    ingredient.setAmount(rs.getInt("amount_int"));
+                    ingredient.setUnit(rs.getString("amount_unit"));
+                    ingredients.add(ingredient);
                 }
             }
 

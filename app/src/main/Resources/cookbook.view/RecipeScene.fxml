@@ -13,7 +13,7 @@
 
 <ScrollPane fx:id="wrapperScrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeSceneController">
    <content>
-      <VBox fx:id="wrapperVBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="0.0" spacing="10.0">
+      <VBox fx:id="wrapperVBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="272.0" prefWidth="32.0" spacing="10.0">
          <children>
             <HBox prefHeight="0.0" spacing="15.0">
                <children>
@@ -43,12 +43,12 @@
             </HBox>
             <VBox prefHeight="237.0" prefWidth="627.0" spacing="15.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ingredients">
+                  <Text fx:id="IngredientHeadlineText" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingredients">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Text>
-                  <FlowPane fx:id="ingredientsFlowPane" hgap="15.0" prefHeight="187.0" prefWidth="181.0" vgap="5.0" />
+                  <FlowPane fx:id="ingredientsFlowPane" hgap="15.0" vgap="5.0" VBox.vgrow="ALWAYS" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How to prepare">
                      <font>
                         <Font name="System Bold" size="20.0" />

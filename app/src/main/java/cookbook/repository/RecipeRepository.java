@@ -1,5 +1,6 @@
 package cookbook.repository;
 
+import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface RecipeRepository {
     void removeFromWeekPlan(Recipe recipe, String week);
     List<Recipe> getWeekPlan(String week);
 
-    List<String> fetchIngredients(Long id);
+    List<Ingredient> fetchIngredients(Long id);
     List<String> fetchTags(Long id);
     List<String> fetchComments(Long id);
     List<String> parseProcessSteps(String json);
