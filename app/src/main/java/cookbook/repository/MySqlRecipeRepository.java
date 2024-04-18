@@ -43,6 +43,15 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return recipe;
     }
 
+    public void fetchRecipeDetails(Recipe rec) {
+
+
+
+        // Fetch comments for the recipe
+        List<String> comments = fetchComments(rec.getId());
+        rec.setComments(comments);        
+    }
+
     @Override
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
@@ -64,6 +73,14 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 String jsonProcessSteps = rs.getString("descr");
                 List<String> processSteps = parseProcessSteps(jsonProcessSteps);
                 recipe.setProcessSteps(processSteps);
+
+                // Fetch tags for the recipe
+                List<String> tags = fetchTags(recipe.getId());
+                recipe.setTags(tags);
+
+                        // Fetch ingredients for the recipe
+                List<Ingredient> ingredients = fetchIngredients(recipe.getId());
+                recipe.setIngredients(ingredients);
 
                 recipes.add(recipe);
             }

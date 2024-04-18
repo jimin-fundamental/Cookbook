@@ -33,7 +33,6 @@ public class RecipeSceneController implements Initializable{
     @FXML
     private Text IngredientHeadlineText;
 
-    private Recipe recipe;
     private MySqlRecipeRepository recipeRepos;
 
     public void setRecipeData(Recipe recipe){
@@ -43,7 +42,9 @@ public class RecipeSceneController implements Initializable{
         this.recipeDescriptionText.setText(recipe.getShortDescription());
         this.IngredientHeadlineText.setText("Ingredients (" + recipe.getNumberOfPersons() + " servings)");
         
-        this.recipe = recipeRepos.getRecipeById(recipe.getId());
+
+        // add the missing details to the recipe
+        recipeRepos.fetchRecipeDetails(recipe);
         
         int i = 1;
         // recipe contains certain values and this.recipe different values so you have to differ.
@@ -52,7 +53,7 @@ public class RecipeSceneController implements Initializable{
             vBoxProcessSteps.getChildren().add(new Text(i++ + ": " + step));
         }
         
-        for (Ingredient ingredient : this.recipe.getIngredients()){
+        for (Ingredient ingredient : recipe.getIngredients()){
             ingredientsFlowPane.getChildren().add(new Text(ingredient.getName() +" (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
         }
     }

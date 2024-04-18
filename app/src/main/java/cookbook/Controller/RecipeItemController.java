@@ -15,15 +15,19 @@ import javafx.scene.text.Text;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class RecipeItemController {
 
     @FXML
     private Text recipeNameText;
-    
+
+    @FXML
+    private Label searchHitsLabel;
 
     private Recipe recipe;
 
-    public void setRecipeData(Recipe recipe){
+    public void setRecipeData(Recipe recipe, String tagHits){
         this.recipe = recipe;
         recipeNameText.setText(recipe.getName());
         String tags = "";
@@ -31,6 +35,9 @@ public class RecipeItemController {
             tags += tag + ", ";
         }
         //tagsLabel.setText(tags);
+        searchHitsLabel.setText(tagHits);
+
+
 
     }
 

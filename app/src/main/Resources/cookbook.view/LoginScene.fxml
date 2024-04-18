@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="scene1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.LoginSceneController">
+<Pane fx:id="scene1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.LoginSceneController">
    <children>
       <Button fx:id="signInButton" layoutX="274.0" layoutY="302.0" mnemonicParsing="false" onAction="#signInButtonPressed" text="sign in" />
       <Button fx:id="startPageButton" layoutX="274.0" layoutY="335.0" mnemonicParsing="false" onAction="#startPageButtonPressed" text="skip" />
@@ -28,5 +28,10 @@
          </font>
       </Label>
       <Button fx:id="createProfileButton" layoutX="489.0" layoutY="361.0" mnemonicParsing="false" onAction="#createProfileButtonPressed" text="create profile" textAlignment="CENTER" />
+      <Label fx:id="errorLabel" layoutX="208.0" layoutY="256.0" prefHeight="26.0" prefWidth="182.0" text="Credentials not correct!" textAlignment="CENTER" textFill="#ff1a1a" visible="false">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
