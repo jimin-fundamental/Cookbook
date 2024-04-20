@@ -45,8 +45,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     public void fetchRecipeDetails(Recipe rec) {
 
-
-
         // Fetch comments for the recipe
         List<String> comments = fetchComments(rec.getId());
         rec.setComments(comments);        
@@ -56,7 +54,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
 
-        String sql = "SELECT ID, name, sdecr, descr, servings FROM Recipe";
+        String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings FROM FullRecipeView";
         
         try (Connection connection = DriverManager.getConnection(dbManager.url);
         PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -64,22 +62,25 @@ public class MySqlRecipeRepository implements RecipeRepository{
             
             while (rs.next()) {
                 Recipe recipe = new Recipe();
-                recipe.setId(rs.getLong("ID"));
-                recipe.setName(rs.getString("name"));
-                recipe.setShortDescription(rs.getString("sdecr"));
-                recipe.setNumberOfPersons(rs.getInt("servings"));
+                recipe.setId(rs.getLong("Recipe_ID"));
+                recipe.setName(rs.getString("Recipe_Name"));
+                recipe.setShortDescription(rs.getString("Short_Description"));
+                recipe.setNumberOfPersons(rs.getInt("Servings"));
+
 
                 // Extract and parse process steps from JSON
-                String jsonProcessSteps = rs.getString("descr");
+                String jsonProcessSteps = rs.getString("Description");
                 List<String> processSteps = parseProcessSteps(jsonProcessSteps);
                 recipe.setProcessSteps(processSteps);
 
                 // Fetch tags for the recipe
-                List<String> tags = fetchTags(recipe.getId());
+                String jsonTags = rs.getString("Tags_JSON");
+                List<String> tags = parseProcessSteps(jsonTags);
                 recipe.setTags(tags);
 
                         // Fetch ingredients for the recipe
-                List<Ingredient> ingredients = fetchIngredients(recipe.getId());
+                String jsonIngredients = rs.getString("Ingredients_JSON");
+                List<Ingredient> ingredients = parseIngredients(jsonIngredients);
                 recipe.setIngredients(ingredients);
 
                 recipes.add(recipe);
@@ -262,4 +263,49 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return processSteps;
     }
 
+    public List<String> parseTags(String json) {
+        List<String> processSteps = new ArrayList<>();
+
+        // Use regex to extract process steps from JSON string
+        Pattern pattern = Pattern.compile("\"tagname\"\\s*:\\s*\\[([^\\]]*)\\]");
+        Matcher matcher = pattern.matcher(json);
+
+        if (matcher.find()) {
+            String tag = matcher.group(1);
+            // Split the steps string by comma and trim each step
+            String[] tags = tag.split(",");
+            for (String t : tags) {
+                processSteps.add(t.trim().replaceAll("\"", ""));
+            }
+        }
+
+        return processSteps;
+    }
+
+    public List<Ingredient> parseIngredients(String json) {
+        List<Ingredient> ingredients = new ArrayList<>();
+
+        // Use regex to extract process steps from JSON string
+        Pattern pattern = Pattern.compile("\\{\"name\":\\s*\"(.*?)\",\\s*\"amount\":\\s*\"(.*?)\",\\s*\"unit\":\\s*\"(.*?)\"\\}");
+        Matcher matcher = pattern.matcher(json);
+
+        if (matcher.find()) {
+            String name = matcher.group(1);
+            String amount = matcher.group(2);
+            String unit = matcher.group(3);
+            // Split the steps string by comma and trim each step
+            String[] names = name.split(",");
+            String[] amounts = amount.split(",");
+            String[] units = unit.split(",");
+            for (int i = 0; i < names.length; i++) {
+                Ingredient ingredient = new Ingredient();
+                ingredient.setName(names[i].trim().replaceAll("\"", ""));
+                ingredient.setAmount(Integer.parseInt(amounts[i].trim().replaceAll("\"", "")));
+                ingredient.setUnit(units[i].trim().replaceAll("\"", ""));
+                ingredients.add(ingredient);
+            }
+        }
+
+        return ingredients;
+    }
 }

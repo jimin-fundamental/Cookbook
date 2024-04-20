@@ -84,8 +84,11 @@ public class RecipeViewController implements Initializable{
 
     private void filterRecipes(){
         String searchWord = searchBar.getText();
-        recipeContainer.getChildren().clear();
         int number = 0;
+        // clear all displayed elements
+        recipeContainer.getChildren().clear();
+
+        // iterate through all recipes 
         for (Recipe recipe : recipeList){
             boolean hit = false;
             String searchHits = "";
@@ -109,16 +112,12 @@ public class RecipeViewController implements Initializable{
                     if(!searchWord.isEmpty())
                         searchHits += ingredient.getName() + ", ";
                     }
-                
             }
-            
             // add the recipe if found 
             if (hit){
-
                 // cut the last ", "
                 if (searchHits.length() >= 3)
                     searchHits = searchHits.substring(0, searchHits.length() - 2);
-                
                 // show selected Item
                 displayRecipeItem(recipe, number++, searchHits);
             }
