@@ -132,8 +132,8 @@ public class RecipeViewController implements Initializable{
             StackPane recipeBox = fxmlLoader.load();
             RecipeItemController controller = fxmlLoader.getController();
             controller.setRecipeData(recipe, searchHits);
-            int column = number % 3;
-            int row = number / 3 +1;
+            int column = number % 5;
+            int row = number / 5 +1;
             recipeContainer.add(recipeBox, column, row);
         } catch (IOException e) {
             e.printStackTrace();

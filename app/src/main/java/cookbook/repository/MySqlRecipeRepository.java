@@ -75,7 +75,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
                 // Fetch tags for the recipe
                 String jsonTags = rs.getString("Tags_JSON");
-                List<String> tags = parseProcessSteps(jsonTags);
+                List<String> tags = parseTags(jsonTags);
                 recipe.setTags(tags);
 
                         // Fetch ingredients for the recipe
@@ -267,13 +267,14 @@ public class MySqlRecipeRepository implements RecipeRepository{
         List<String> processSteps = new ArrayList<>();
 
         // Use regex to extract process steps from JSON string
-        Pattern pattern = Pattern.compile("\"tagname\"\\s*:\\s*\\[([^\\]]*)\\]");
+        Pattern pattern = Pattern.compile("\\{\\s*\"tagname\"\\s*:\\s*\"([^\"]+)\"\\s*\\}");
         Matcher matcher = pattern.matcher(json);
 
         if (matcher.find()) {
             String tag = matcher.group(1);
             // Split the steps string by comma and trim each step
             String[] tags = tag.split(",");
+            System.out.println(tag);
             for (String t : tags) {
                 processSteps.add(t.trim().replaceAll("\"", ""));
             }
@@ -285,23 +286,31 @@ public class MySqlRecipeRepository implements RecipeRepository{
     public List<Ingredient> parseIngredients(String json) {
         List<Ingredient> ingredients = new ArrayList<>();
 
-        // Use regex to extract process steps from JSON string
-        Pattern pattern = Pattern.compile("\\{\"name\":\\s*\"(.*?)\",\\s*\"amount\":\\s*\"(.*?)\",\\s*\"unit\":\\s*\"(.*?)\"\\}");
-        Matcher matcher = pattern.matcher(json);
+        List<String> jsonElementsList = new ArrayList<>();
 
-        if (matcher.find()) {
-            String name = matcher.group(1);
-            String amount = matcher.group(2);
-            String unit = matcher.group(3);
-            // Split the steps string by comma and trim each step
-            String[] names = name.split(",");
-            String[] amounts = amount.split(",");
-            String[] units = unit.split(",");
-            for (int i = 0; i < names.length; i++) {
+        // Use regex to match each JSON element in the array
+        Pattern pat = Pattern.compile("\\{[^\\}]+\\}");
+        Matcher mat = pat.matcher(json);
+
+        while (mat.find()) {
+            String jsonElement = mat.group();
+            jsonElementsList.add(jsonElement);
+        }
+        for (String element : jsonElementsList){
+
+            // Use regex to extract process steps from JSON string
+            Pattern pattern = Pattern.compile("\\{\\s*\"name\"\\s*:\\s*\"([^\"]+)\",\\s*\"amount\"\\s*:\\s*\"([^\"]+)\",\\s*\"unit\"\\s*:\\s*\"([^\"]+)\"\\s*\\}");
+            Matcher matcher = pattern.matcher(element);
+    
+            if (matcher.find()) {
+                String name = matcher.group(1).replaceAll("\"", "").trim();
+                String amount = matcher.group(2).replaceAll("\"", "").trim();
+                String unit = matcher.group(3).replaceAll("\"", "").trim();
+            
                 Ingredient ingredient = new Ingredient();
-                ingredient.setName(names[i].trim().replaceAll("\"", ""));
-                ingredient.setAmount(Integer.parseInt(amounts[i].trim().replaceAll("\"", "")));
-                ingredient.setUnit(units[i].trim().replaceAll("\"", ""));
+                ingredient.setName(name);
+                ingredient.setAmount(Integer.parseInt(amount));
+                ingredient.setUnit(unit);
                 ingredients.add(ingredient);
             }
         }
