@@ -254,7 +254,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         if (matcher.find()) {
             String steps = matcher.group(1);
             // Split the steps string by comma and trim each step
-            String[] stepsArray = steps.split(",");
+            String[] stepsArray = steps.split("\", \"");
             for (String step : stepsArray) {
                 processSteps.add(step.trim().replaceAll("\"", ""));
             }
