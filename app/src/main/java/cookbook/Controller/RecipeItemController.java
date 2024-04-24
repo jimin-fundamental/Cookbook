@@ -17,6 +17,9 @@ import javafx.scene.text.Text;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import java.util.List;
 
 // Display basic recipe information (like name and associated tags).
@@ -28,11 +31,18 @@ public class RecipeItemController {
     @FXML
     private Label searchHitsLabel;
 
+    @FXML
+    private ImageView recipeImageView;
+
     private Recipe recipe;
 
     public void setRecipeData(Recipe recipe, String tagHits){
         this.recipe = recipe;
         recipeNameText.setText(recipe.getName());
+
+        // Assuming getImagePath() returns the URL of the image as a string
+        Image image = new Image(recipe.getImagePath(), true);  // The true parameter allows for asynchronous loading
+        recipeImageView.setImage(image);
 
         //Setting tags
         String tags = "";
