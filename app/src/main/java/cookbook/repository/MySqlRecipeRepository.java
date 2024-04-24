@@ -39,7 +39,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
         // Fetch comments for the recipe
         List<String> comments = fetchComments(id);
-        recipe.setComments(comments);        
+        recipe.setComments(comments);
         return recipe;
     }
 
@@ -47,25 +47,28 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
         // Fetch comments for the recipe
         List<String> comments = fetchComments(rec.getId());
-        rec.setComments(comments);        
+        rec.setComments(comments);
     }
 
     @Override
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
 
-        String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings FROM FullRecipeView";
-        
+        //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings FROM FullRecipeView";
+        String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings, Image_URL FROM FullRecipeView";
+
+
         try (Connection connection = DriverManager.getConnection(dbManager.url);
         PreparedStatement pstmt = connection.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery()) {
-            
+
             while (rs.next()) {
                 Recipe recipe = new Recipe();
                 recipe.setId(rs.getLong("Recipe_ID"));
                 recipe.setName(rs.getString("Recipe_Name"));
                 recipe.setShortDescription(rs.getString("Short_Description"));
                 recipe.setNumberOfPersons(rs.getInt("Servings"));
+                recipe.setImagePath(rs.getString("Image_URL"));
 
 
                 // Extract and parse process steps from JSON
@@ -78,20 +81,20 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 List<String> tags = parseTags(jsonTags);
                 recipe.setTags(tags);
 
-                        // Fetch ingredients for the recipe
+                // Fetch ingredients for the recipe
                 String jsonIngredients = rs.getString("Ingredients_JSON");
                 List<Ingredient> ingredients = parseIngredients(jsonIngredients);
                 recipe.setIngredients(ingredients);
 
                 recipes.add(recipe);
             }
-            
-            
+
+
             pstmt.close();
             connection.close();
-            
 
-            
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -254,7 +257,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         if (matcher.find()) {
             String steps = matcher.group(1);
             // Split the steps string by comma and trim each step
-            String[] stepsArray = steps.split(",");
+            String[] stepsArray = steps.split("\", \"");
             for (String step : stepsArray) {
                 processSteps.add(step.trim().replaceAll("\"", ""));
             }
@@ -301,12 +304,12 @@ public class MySqlRecipeRepository implements RecipeRepository{
             // Use regex to extract process steps from JSON string
             Pattern pattern = Pattern.compile("\\{\\s*\"name\"\\s*:\\s*\"([^\"]+)\",\\s*\"amount\"\\s*:\\s*\"([^\"]+)\",\\s*\"unit\"\\s*:\\s*\"([^\"]+)\"\\s*\\}");
             Matcher matcher = pattern.matcher(element);
-    
+
             if (matcher.find()) {
                 String name = matcher.group(1).replaceAll("\"", "").trim();
                 String amount = matcher.group(2).replaceAll("\"", "").trim();
                 String unit = matcher.group(3).replaceAll("\"", "").trim();
-            
+
                 Ingredient ingredient = new Ingredient();
                 ingredient.setName(name);
                 ingredient.setAmount(Integer.parseInt(amount));

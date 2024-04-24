@@ -12,7 +12,9 @@ public class Recipe {
     private int numberOfPersons; // The number of persons the recipe serves
     private List<String> tags; // Tags for the recipe
     private List<String> comments; // User comments on the recipe
+    private String imagePath; // URL or path to the recipe's image
 
+    // Default constructor
     public Recipe() {
         // Initialize lists
         ingredients = new ArrayList<>();
@@ -40,6 +42,18 @@ public class Recipe {
         this.numberOfPersons = numberOfPersons;
         this.tags = tags;
         this.comments = comments;
+    }
+    // Constructor with all parameters including image path
+    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags, List<String> comments, String imagePath) {
+        this.id = id;
+        this.name = name;
+        this.shortDescription = shortDescription;
+        this.ingredients = ingredients;
+        this.processSteps = processSteps;
+        this.numberOfPersons = numberOfPersons;
+        this.tags = tags;
+        this.comments = comments;
+        this.imagePath = imagePath;
     }
 
     public Long getId() {
@@ -106,6 +120,13 @@ public class Recipe {
         this.comments = comments;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
 }
 

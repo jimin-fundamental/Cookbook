@@ -1,4 +1,7 @@
 .gradle/
 .vscode/
+./idea
 build/
 app/build/
+*.bin
+*.lock

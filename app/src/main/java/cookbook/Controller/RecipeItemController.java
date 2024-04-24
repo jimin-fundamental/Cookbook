@@ -1,5 +1,7 @@
 package cookbook.Controller;
 
+// manages the individual items in a list of recipes
+
 
 import com.google.common.cache.CacheLoader.InvalidCacheLoadException;
 
@@ -15,8 +17,12 @@ import javafx.scene.text.Text;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 import java.util.List;
 
+// Display basic recipe information (like name and associated tags).
 public class RecipeItemController {
 
     @FXML
@@ -25,21 +31,31 @@ public class RecipeItemController {
     @FXML
     private Label searchHitsLabel;
 
+    @FXML
+    private ImageView recipeImageView;
+
     private Recipe recipe;
 
     public void setRecipeData(Recipe recipe, String tagHits){
         this.recipe = recipe;
         recipeNameText.setText(recipe.getName());
+
+        // Assuming getImagePath() returns the URL of the image as a string
+        String imagePath = recipe.getImagePath() != null ? recipe.getImagePath() : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg";
+        Image image = new Image(recipe.getImagePath(), true);  // The true parameter allows for asynchronous loading
+        recipeImageView.setImage(image);
+
+        //Setting tags
         String tags = "";
         for (String tag : recipe.getTags()){
             tags += tag + ", ";
         }
         //tagsLabel.setText(tags);
+
+
         searchHitsLabel.setText(tagHits);
-
-
-
     }
+
 
     // show the clicked recipe with more details
     @FXML

@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="28382500-af00-4983-b3d9-595d8d6ef59d" name="Changes" comment="project structure done">
       <change afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/SceneModifier.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
@@ -16,6 +17,11 @@
       <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/CreateProfileSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/CreateProfileSceneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/LoginSceneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/LoginSceneController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/cookbook/Controller/SceneModifier.java" beforeDir="false" />
+=======
+    <list default="true" id="5ad23e2f-9b45-415f-a1e9-57cb80664585" name="Changes" comment="waiting for merging">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,14 +61,21 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
+<<<<<<< Updated upstream
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2egJl7plaWIXDebu3UlWpEKZI5Q" />
+=======
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2f8sskha4wbXSTvH5TFJvdvZjnP" />
+>>>>>>> Stashed changes
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+<<<<<<< Updated upstream
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;Application.App.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.cookbook.executor&quot;: &quot;Run&quot;,
@@ -97,6 +110,17 @@
       </method>
     </configuration>
   </component>
+=======
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+>>>>>>> Stashed changes
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -112,6 +136,7 @@
       <created>1712320436065</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
+<<<<<<< Updated upstream
       <updated>1712320436065</updated>
       <workItem from="1712320437093" duration="898000" />
       <workItem from="1712567534131" duration="484000" />
@@ -133,6 +158,19 @@
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
       <updated>1712867738853</updated>
+=======
+      <updated>1713194253146</updated>
+      <workItem from="1713194253660" duration="1432000" />
+      <workItem from="1713272427271" duration="3563000" />
+    </task>
+    <task id="LOCAL-00001" summary="waiting for merging">
+      <option name="closed" value="true" />
+      <created>1713275808683</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713275808683</updated>
+>>>>>>> Stashed changes
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
@@ -141,8 +179,13 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
+<<<<<<< Updated upstream
     <MESSAGE value="project structure done" />
     <option name="LAST_COMMIT_MESSAGE" value="project structure done" />
+=======
+    <MESSAGE value="waiting for merging" />
+    <option name="LAST_COMMIT_MESSAGE" value="waiting for merging" />
+>>>>>>> Stashed changes
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
