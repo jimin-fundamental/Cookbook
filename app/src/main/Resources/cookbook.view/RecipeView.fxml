@@ -37,11 +37,12 @@
                <content>
                   <VBox>
                      <children>
-                        <GridPane prefWidth="790.0">
+                        <GridPane VBox.vgrow="ALWAYS">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="579.0" minWidth="10.0" prefWidth="213.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="351.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="226.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="412.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="111.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="111.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
@@ -54,6 +55,11 @@
                               </Label>
                               <TextField fx:id="searchBar" alignment="TOP_LEFT" maxHeight="25.0" maxWidth="300.0" onAction="#searchBarKeyTyped" prefHeight="25.0" prefWidth="200.0" promptText="search..." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                               <Button fx:id="searchButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#searchButtonClicked" text="search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                              <Label fx:id="profileNameLabel" alignment="CENTER" contentDisplay="CENTER" text="ProfileName" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </GridPane>
                         <GridPane fx:id="recipeContainer" hgap="5.0" prefHeight="0.0" prefWidth="773.0" vgap="5.0">
