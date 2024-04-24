@@ -10,9 +10,13 @@ import cookbook.model.Recipe;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class RecipeSceneController implements Initializable{
 
@@ -34,6 +38,9 @@ public class RecipeSceneController implements Initializable{
     @FXML
     private Text IngredientHeadlineText;
 
+    @FXML
+    private ImageView recipeImageView;
+
     private MySqlRecipeRepository recipeRepos;
 
     public void setRecipeData(Recipe recipe){
@@ -42,7 +49,13 @@ public class RecipeSceneController implements Initializable{
         this.recipeNameText.setText(recipe.getName());
         this.recipeDescriptionText.setText(recipe.getShortDescription());
         this.IngredientHeadlineText.setText("Ingredients (" + recipe.getNumberOfPersons() + " servings)");
-        
+
+
+        // Load image
+        String imagePath = recipe.getImagePath() != null ? recipe.getImagePath() : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg";
+        Image image = new Image(imagePath, true);  // The true parameter allows for asynchronous loading
+        recipeImageView.setImage(image);
+
 
         // add the missing details to the recipe
         recipeRepos.fetchRecipeDetails(recipe);
