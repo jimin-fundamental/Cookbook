@@ -21,8 +21,26 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void addRecipe(Recipe recipe) {
-
+    public void addRecipe(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags) {
+        try (Connection connection = DriverManager.getConnection(dbManager.url)) {
+            // Prepare the SQL statement
+            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?)";
+            try (CallableStatement statement = connection.prepareCall(sql)) {
+                // Set the parameters for the stored procedure
+                statement.setString(1, name);
+                statement.setString(2, shortDescription);
+                statement.setString(3, description);
+                statement.setString(4, imageUrl);
+                statement.setInt(5, servings);
+                statement.setString(6, ingredients); // Directly pass the ingredients string
+                statement.setString(7, tags); // Directly pass the tags string
+    
+                // Execute the stored procedure
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -99,8 +117,24 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void updateRecipe(Recipe recipe) {
-
+    public void updateRecipe(int id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredientsText, String tagsText) {
+        try (Connection connection = DriverManager.getConnection(dbManager.url)) {
+            String sql = "CALL UpdateRecipe(?, ?, ?, ?, ?, ?, ?)";
+            try (CallableStatement statement = connection.prepareCall(sql)) {
+                statement.setInt(1, id);
+                statement.setString(2, name);
+                statement.setString(3, shortDescription);
+                statement.setString(4, description);
+                statement.setString(5, imageUrl);
+                statement.setInt(6, servings);
+                statement.setString(7, ingredientsText);
+                statement.setString(8, tagsText);
+    
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

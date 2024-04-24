@@ -37,8 +37,6 @@ public class RecipeItemController {
         //tagsLabel.setText(tags);
         searchHitsLabel.setText(tagHits);
 
-
-
     }
 
     // show the clicked recipe with more details
