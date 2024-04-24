@@ -1,21 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeSceneController">
-   <children>
-      <VBox prefHeight="400.0" prefWidth="600.0">
+<ScrollPane fx:id="wrapperScrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeSceneController">
+   <content>
+      <VBox fx:id="wrapperVBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="272.0" prefWidth="32.0" spacing="10.0">
          <children>
-            <Label fx:id="recipeNameLabel" prefHeight="11.0" prefWidth="602.0" text="Name">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
+            <HBox prefHeight="0.0" spacing="15.0">
+               <children>
+                  <ImageView fitHeight="123.0" fitWidth="1.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../Downloads/Best-Rice-Pudding.jpg" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                  </ImageView>
+                  <VBox fx:id="recipeDetailsVBox" prefHeight="0.0" prefWidth="0.0" spacing="10.0">
+                     <children>
+                        <Text fx:id="recipeNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Rice Pudding" wrappingWidth="395.0">
+                           <font>
+                              <Font name="System Bold" size="23.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="recipeDescriptionText" strokeType="OUTSIDE" strokeWidth="0.0" text="This rice pudding is the best I've ever tasted, and it gets rave reviews from everyone who tastes it! Sprinkle with nutmeg or cinnamon, if desired. For creamier pudding, use short or medium-grain rice." wrappingWidth="395.0">
+                           <font>
+                              <Font name="System Italic" size="14.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox prefHeight="237.0" prefWidth="627.0" spacing="15.0">
+               <children>
+                  <Text fx:id="IngredientHeadlineText" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingredients">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Text>
+                  <FlowPane fx:id="ingredientsFlowPane" hgap="15.0" vgap="5.0" VBox.vgrow="ALWAYS" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How to prepare">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Text>
+                  <VBox fx:id="vBoxProcessSteps" prefHeight="0.0" prefWidth="100.0" spacing="5.0" />
+               </children>
+            </VBox>
          </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
       </VBox>
-   </children>
-</Pane>
+   </content>
+</ScrollPane>

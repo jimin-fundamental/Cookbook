@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -14,7 +17,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeViewController">
    <children>
-      <VBox fx:id="vBox" prefHeight="600.0" prefWidth="1000.0" spacing="10.0">
+      <VBox fx:id="vBox" prefHeight="600.0" prefWidth="1000.0">
          <children>
             <MenuBar>
               <menus>
@@ -30,21 +33,39 @@
                 </Menu>
               </menus>
             </MenuBar>
-            <Label prefHeight="43.0" prefWidth="114.0" text="Recipes:">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="25.0" />
-               </font>
-            </Label>
-            <ScrollPane prefHeight="335.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
+            <ScrollPane prefWidth="1000.0" VBox.vgrow="ALWAYS">
                <content>
-                  <GridPane fx:id="recipeContainer" prefHeight="0.0" prefWidth="0.0">
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                  </GridPane>
+                  <VBox>
+                     <children>
+                        <GridPane prefWidth="790.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="579.0" minWidth="10.0" prefWidth="213.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="351.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="226.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label alignment="CENTER" prefHeight="34.0" prefWidth="100.0" text="Recipes" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                                 <font>
+                                    <Font name="System Bold" size="23.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxHeight="25.0" maxWidth="300.0" onAction="#searchBarKeyTyped" prefHeight="25.0" prefWidth="200.0" promptText="search..." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <Button fx:id="searchButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#searchButtonClicked" text="search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                           </children>
+                        </GridPane>
+                        <GridPane fx:id="recipeContainer" hgap="5.0" prefHeight="0.0" prefWidth="773.0" vgap="5.0">
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </GridPane>
+                     </children>
+                  </VBox>
                </content>
             </ScrollPane>
          </children>

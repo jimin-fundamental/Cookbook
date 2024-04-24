@@ -6,11 +6,11 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
 
-    private String url;
+    public String url;
 
 
     public DatabaseManager() {
-        url = "jdbc:mysql://sql11.freemysqlhosting.net/sql11698285?&user=sql11698285&password=BlmMYE2vhj&useSSL=false ";
+        url = "jdbc:mysql://srv1145.hstgr.io/u689018343_cookbook?&user=u689018343_nulla&password=TheWorldOfNull1&useSSL=false";
     }
 
     public Connection getConnection() {

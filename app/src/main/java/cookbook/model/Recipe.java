@@ -7,7 +7,7 @@ public class Recipe {
     private Long id; // Unique identifier for the recipe
     private String name; // The name of the recipe
     private String shortDescription; // A short description of the recipe
-    private List<String> ingredients; // A list of ingredients as strings
+    private List<Ingredient> ingredients; // A list of ingredients as strings
     private List<String> processSteps; // A detailed description of the process
     private int numberOfPersons; // The number of persons the recipe serves
     private List<String> tags; // Tags for the recipe
@@ -22,7 +22,7 @@ public class Recipe {
     }
 
     // Constructor, getters, and setters
-    public Recipe(Long id, String name, String shortDescription, List<String> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags) {
+    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags) {
         this.id = id;
         this.name = name;
         this.shortDescription = shortDescription;
@@ -31,7 +31,7 @@ public class Recipe {
         this.numberOfPersons = numberOfPersons;
         this.tags = tags;
     }
-    public Recipe(Long id, String name, String shortDescription, List<String> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags, List<String> comments) {
+    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags, List<String> comments) {
         this.id = id;
         this.name = name;
         this.shortDescription = shortDescription;
@@ -66,11 +66,11 @@ public class Recipe {
         this.shortDescription = shortDescription;
     }
 
-    public List<String> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<String> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
