@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -47,12 +48,17 @@ public class RecipeViewController implements Initializable{
     private TextField searchBar;
 
     @FXML
+    private Label profileNameLabel;
+
+    @FXML
     private Button searchButton;
 
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
 
-    
+    public void setUserName(String uName){
+        profileNameLabel.setText(uName);
+    }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
