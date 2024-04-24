@@ -77,6 +77,11 @@ public class RecipeViewController implements Initializable{
     void searchButtonClicked(ActionEvent event) {
         filterRecipes();
     }
+
+    @FXML
+    void addButtonClicked(ActionEvent event) throws IOException {
+        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/NewRecipe.fxml")), (Stage)vBox.getScene().getWindow());
+    }
     
     @FXML
     void searchBarKeyTyped(ActionEvent event) {
