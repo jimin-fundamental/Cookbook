@@ -41,6 +41,7 @@ public class RecipeItemController {
         recipeNameText.setText(recipe.getName());
 
         // Assuming getImagePath() returns the URL of the image as a string
+        String imagePath = recipe.getImagePath() != null ? recipe.getImagePath() : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg";
         Image image = new Image(recipe.getImagePath(), true);  // The true parameter allows for asynchronous loading
         recipeImageView.setImage(image);
 
@@ -50,6 +51,8 @@ public class RecipeItemController {
             tags += tag + ", ";
         }
         //tagsLabel.setText(tags);
+
+
         searchHitsLabel.setText(tagHits);
     }
 
