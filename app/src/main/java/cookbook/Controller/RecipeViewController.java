@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -25,12 +26,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.Controller.AddRecipeController;
 
 public class RecipeViewController implements Initializable{
 
@@ -47,12 +51,37 @@ public class RecipeViewController implements Initializable{
     private TextField searchBar;
 
     @FXML
+    private Label profileNameLabel;
+
+    @FXML
     private Button searchButton;
 
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
 
-    
+    @FXML
+    private void openAddRecipe(ActionEvent event) {
+        try {
+           
+            // FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
+            
+            // Stage stage = new Stage();
+            // stage.setTitle("add new recipe");
+            // stage.setResizable(false);
+            // stage.setScene(new Scene(fxmlLoader.load()));
+  
+            // stage.show();
+
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/NewRecipe.fxml")), (Stage)vBox.getScene().getWindow());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setUserName(String uName){
+        profileNameLabel.setText(uName);
+    }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
