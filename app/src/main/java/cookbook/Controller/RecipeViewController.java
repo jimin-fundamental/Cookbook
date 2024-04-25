@@ -59,24 +59,6 @@ public class RecipeViewController implements Initializable {
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
 
-    @FXML
-    private void openAddRecipe(ActionEvent event) {
-        try {
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
-
-            Stage stage = new Stage();
-            stage.setTitle("add new recipe");
-            stage.setResizable(false);
-            stage.setScene(new Scene(fxmlLoader.load()));
-
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void setUserName(String uName) {
         profileNameLabel.setText(uName);
     }
@@ -107,7 +89,20 @@ public class RecipeViewController implements Initializable {
 
     @FXML
     void addButtonClicked(ActionEvent event) throws IOException {
-        openAddRecipe(event);
+        try {
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
+
+            Stage stage = new Stage();
+            stage.setTitle("add new recipe");
+            stage.setResizable(false);
+            stage.setScene(new Scene(fxmlLoader.load()));
+
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
