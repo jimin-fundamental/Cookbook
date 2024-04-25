@@ -53,7 +53,7 @@ public class RecipeItemController {
         String imagePath = recipe.getImagePath() != null ? recipe.getImagePath()
                 : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg";
 
-        recipeImagePane.setStyle("-fx-background-image: url(" + imagePath + "); -fx-background-size: cover;");
+        recipeImagePane.setStyle("-fx-background-image: url(\"" + imagePath + "\"); -fx-background-size: cover;");
         // Setting tags
         String tags = "";
         for (String tag : recipe.getTags()) {
