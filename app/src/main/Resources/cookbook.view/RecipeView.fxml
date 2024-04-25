@@ -26,7 +26,7 @@
                     <MenuItem fx:id="changeProfile" mnemonicParsing="false" onAction="#changeProfileClicked" text="change profile" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="add new recipe">
+                <Menu mnemonicParsing="false" text="Add New Recipe">
                   <items>
                         <MenuItem mnemonicParsing="false" text="New Recipe" onAction="#openAddRecipe" />
                   </items>

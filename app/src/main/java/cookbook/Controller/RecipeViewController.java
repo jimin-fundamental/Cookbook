@@ -36,14 +36,14 @@ import cookbook.model.Recipe;
 import cookbook.repository.MySqlRecipeRepository;
 import cookbook.Controller.AddRecipeController;
 
-public class RecipeViewController implements Initializable{
+public class RecipeViewController implements Initializable {
 
     @FXML
     private GridPane recipeContainer;
 
     @FXML
     private MenuItem changeProfiles;
-    
+
     @FXML
     private VBox vBox;
 
@@ -62,46 +62,44 @@ public class RecipeViewController implements Initializable{
     @FXML
     private void openAddRecipe(ActionEvent event) {
         try {
-           
-            // FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
-            
-            // Stage stage = new Stage();
-            // stage.setTitle("add new recipe");
-            // stage.setResizable(false);
-            // stage.setScene(new Scene(fxmlLoader.load()));
-  
-            // stage.show();
 
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/NewRecipe.fxml")), (Stage)vBox.getScene().getWindow());
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
+
+            Stage stage = new Stage();
+            stage.setTitle("add new recipe");
+            stage.setResizable(false);
+            stage.setScene(new Scene(fxmlLoader.load()));
+
+            stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setUserName(String uName){
+    public void setUserName(String uName) {
         profileNameLabel.setText(uName);
     }
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //has to be the first to initialize the repository
+        // has to be the first to initialize the repository
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
-        
+
         recipeList = recipeRepos.getAllRecipes();
         int number = 0;
-        for (Recipe recipe : recipeList){
-           displayRecipeItem(recipe, number++, "");
-            
+        for (Recipe recipe : recipeList) {
+            displayRecipeItem(recipe, number++, "");
+
         }
     }
 
     @FXML
     void changeProfileClicked(ActionEvent event) throws IOException {
-        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")), (Stage)vBox.getScene().getWindow());
+        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")),
+                (Stage) vBox.getScene().getWindow());
     }
 
-    
     @FXML
     void searchButtonClicked(ActionEvent event) {
         filterRecipes();
@@ -109,47 +107,47 @@ public class RecipeViewController implements Initializable{
 
     @FXML
     void addButtonClicked(ActionEvent event) throws IOException {
-        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/NewRecipe.fxml")), (Stage)vBox.getScene().getWindow());
+        openAddRecipe(event);
     }
-    
+
     @FXML
     void searchBarKeyTyped(ActionEvent event) {
         filterRecipes();
     }
 
-    private void filterRecipes(){
+    private void filterRecipes() {
         String searchWord = searchBar.getText();
         int number = 0;
         // clear all displayed elements
         recipeContainer.getChildren().clear();
 
-        // iterate through all recipes 
-        for (Recipe recipe : recipeList){
+        // iterate through all recipes
+        for (Recipe recipe : recipeList) {
             boolean hit = false;
             String searchHits = "";
             // check if the search word is in the recipe name
-            if(recipe.getName().toLowerCase().contains(searchWord.toLowerCase())){
+            if (recipe.getName().toLowerCase().contains(searchWord.toLowerCase())) {
                 hit = true;
             }
-             // check if the search word is in the recipe tags
-            for (String tag : recipe.getTags()){
-                if( tag.toLowerCase().contains(searchWord.toLowerCase())){
+            // check if the search word is in the recipe tags
+            for (String tag : recipe.getTags()) {
+                if (tag.toLowerCase().contains(searchWord.toLowerCase())) {
                     hit = true;
-                    if(!searchWord.isEmpty()){
+                    if (!searchWord.isEmpty()) {
                         searchHits += tag + ", ";
                     }
                 }
             }
-             // check if the search word is in the recipe ingredients
-            for (Ingredient ingredient : recipe.getIngredients()){
-                if( ingredient.getName().toLowerCase().contains(searchWord.toLowerCase())){
+            // check if the search word is in the recipe ingredients
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                if (ingredient.getName().toLowerCase().contains(searchWord.toLowerCase())) {
                     hit = true;
-                    if(!searchWord.isEmpty())
+                    if (!searchWord.isEmpty())
                         searchHits += ingredient.getName() + ", ";
-                    }
+                }
             }
-            // add the recipe if found 
-            if (hit){
+            // add the recipe if found
+            if (hit) {
                 // cut the last ", "
                 if (searchHits.length() >= 3)
                     searchHits = searchHits.substring(0, searchHits.length() - 2);
@@ -157,18 +155,18 @@ public class RecipeViewController implements Initializable{
                 displayRecipeItem(recipe, number++, searchHits);
             }
         }
-    } 
+    }
 
-    private void displayRecipeItem(Recipe recipe, int number, String searchHits){
-        try{
-            
+    private void displayRecipeItem(Recipe recipe, int number, String searchHits) {
+        try {
+
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/cookbook.view/RecipeItem.fxml"));
             StackPane recipeBox = fxmlLoader.load();
             RecipeItemController controller = fxmlLoader.getController();
             controller.setRecipeData(recipe, searchHits);
             int column = number % 5;
-            int row = number / 5 +1;
+            int row = number / 5 + 1;
             recipeContainer.add(recipeBox, column, row);
         } catch (IOException e) {
             e.printStackTrace();
