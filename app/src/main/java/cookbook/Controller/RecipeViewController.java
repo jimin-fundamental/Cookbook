@@ -51,16 +51,18 @@ public class RecipeViewController implements Initializable {
     private TextField searchBar;
 
     @FXML
-    private Label profileNameLabel;
+    private Label greetingText;
 
     @FXML
     private Button searchButton;
 
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
+    private String userName;
 
     public void setUserName(String uName) {
-        profileNameLabel.setText(uName);
+        this.userName = uName;
+        greetingText.setText("Hi, " + uName + "!");
     }
 
     @Override
@@ -93,7 +95,21 @@ public class RecipeViewController implements Initializable {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
 
-            Stage stage = new Stage();
+            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            stage.setOnCloseRequest(closeEvent -> {
+                try {
+                    // this.recipeList = recipeRepos.getAllRecipes(); 
+                    FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+                    Stage s = new Stage();
+                    s.setScene(new Scene(fxmlLoader2.load()));
+                    RecipeViewController controller = fxmlLoader2.getController();
+                    controller.setUserName(this.userName);
+                    s.show();
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    System.out.println(e.getMessage());
+                }
+            });
             stage.setTitle("add new recipe");
             stage.setResizable(false);
             stage.setScene(new Scene(fxmlLoader.load()));

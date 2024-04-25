@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.ChangeRecipeController">
+   <content>
+      <VBox prefHeight="448.0" prefWidth="585.0" spacing="15.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add New Recipe">
+               <font>
+                  <Font name="System Bold" size="23.0" />
+               </font>
+            </Text>
+            <VBox prefHeight="0.0" prefWidth="100.0" spacing="5.0">
+               <children>
+                  <Label text="Title" />
+                  <TextField fx:id="titleField" />
+               </children>
+            </VBox>
+            <VBox prefHeight="0.0" prefWidth="100.0" spacing="5.0">
+               <children>
+                  <Label text="Short Description" />
+                  <TextField fx:id="shortDescriptionField" />
+               </children>
+            </VBox>
+            <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">
+               <children>
+                  <Label text="Description (Format: step 1; step2; step3; ...)" />
+                  <TextArea fx:id="descriptionArea" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">
+               <children>
+                  <Label text="Image URL" />
+                  <TextField fx:id="imageUrlField" />
+               </children>
+            </VBox>
+            <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">
+               <children>
+                  <Label text="Servings" />
+                  <TextField fx:id="servingsField" />
+               </children>
+            </VBox>
+            <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">
+               <children>
+                  <Label text="Ingredients (Format: name1,amount1,unit1;name2,amount2,unit2;...)" />
+                  <TextArea fx:id="ingredientsArea" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+            <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">
+               <children>
+                  <Label text="Tags: vegetarian, vegan, lactose free, gluten free, starter, main course, dessert, sweets,....(Format: tag1,tag2,tag3,...)" />
+                  <TextArea fx:id="tagsArea" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </VBox>
+            <HBox spacing="10.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               <Button onAction="#changeRecipe" text="Change Recipe" />
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </VBox>
+   </content>
+</ScrollPane>

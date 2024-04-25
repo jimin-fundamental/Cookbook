@@ -46,9 +46,11 @@ public class RecipeSceneController implements Initializable{
     private ImageView recipeImageView;
 
     private MySqlRecipeRepository recipeRepos;
+    private Recipe recipe;
 
     public void setRecipeData(Recipe recipe){
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
+        this.recipe = recipe;
         
         this.recipeNameText.setText(recipe.getName());
         this.recipeDescriptionText.setText(recipe.getShortDescription());
@@ -81,16 +83,22 @@ public class RecipeSceneController implements Initializable{
 
     }
 
-    public void editRecipeScene(ActionEvent eventS){
+    public void editRecipeScene(ActionEvent event){
         try {
             
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/EditRecipe.fxml"));
-            //setRecipeData(recipe);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/ChangeRecipe.fxml"));
 
-            Stage stage = (Stage) recipeNameText.getScene().getWindow(); // Get the current stage
-            stage.setTitle("edit recipe");
-           
+            // create new stage for new window of the recipe
+            Stage stage = new Stage();
+            stage.setResizable(false);
             stage.setScene(new Scene(fxmlLoader.load()));
+
+
+            // get the controller to call the method to set the data
+            ChangeRecipeController controller = fxmlLoader.getController();
+            controller.setRecipe(this.recipe);
+
+            stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
