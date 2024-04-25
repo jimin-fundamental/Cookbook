@@ -58,14 +58,16 @@ public class RecipeViewController implements Initializable{
     private void openAddRecipe(ActionEvent event) {
         try {
            
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
+            // FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
             
-            Stage stage = new Stage();
-            stage.setTitle("add new recipe");
-            stage.setResizable(false);
-            stage.setScene(new Scene(fxmlLoader.load()));
+            // Stage stage = new Stage();
+            // stage.setTitle("add new recipe");
+            // stage.setResizable(false);
+            // stage.setScene(new Scene(fxmlLoader.load()));
   
-            stage.show();
+            // stage.show();
+
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/NewRecipe.fxml")), (Stage)vBox.getScene().getWindow());
 
         } catch (IOException e) {
             e.printStackTrace();
