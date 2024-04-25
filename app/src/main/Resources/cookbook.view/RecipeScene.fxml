@@ -29,11 +29,7 @@
                         <Rectangle2D />
                      </viewport>
                   </ImageView>
-<<<<<<< HEAD
-
-=======
                   
->>>>>>> add_recipe
                   <VBox fx:id="recipeDetailsVBox" prefHeight="0.0" prefWidth="0.0" spacing="10.0">
 
                      <children>
@@ -43,11 +39,7 @@
                               <Font name="System Bold" size="23.0" />
                            </font>
                         </Text>
-<<<<<<< HEAD
-
-=======
                         <Button layoutX="500.0" layoutY="1000.0" onAction="#editRecipeScene" text="edit Recipe"/>
->>>>>>> add_recipe
                         <Text fx:id="recipeDescriptionText" strokeType="OUTSIDE" strokeWidth="0.0" text="This rice pudding is the best I've ever tasted, and it gets rave reviews from everyone who tastes it! Sprinkle with nutmeg or cinnamon, if desired. For creamier pudding, use short or medium-grain rice." wrappingWidth="395.0">
                            <font>
                               <Font name="System Italic" size="14.0" />

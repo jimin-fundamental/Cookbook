@@ -40,6 +40,9 @@ public class RecipeItemController {
     @FXML
     private Pane recipeImagePane;
 
+    @FXML
+    private StackPane tagsPane;
+
     private Recipe recipe;
 
     public void setRecipeData(Recipe recipe, String tagHits) {
@@ -59,6 +62,9 @@ public class RecipeItemController {
         // tagsLabel.setText(tags);
 
         searchHitsLabel.setText(tagHits);
+        if(tagHits != ""){
+            tagsPane.setStyle("-fx-background-color: green; -fx-background-radius: 4;");
+        }
     }
 
     // show the clicked recipe with more details
