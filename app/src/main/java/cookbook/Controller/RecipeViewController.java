@@ -127,38 +127,47 @@ public class RecipeViewController implements Initializable {
     }
 
     private void filterRecipes() {
-        String searchWord = searchBar.getText();
+        String[] searchWords = searchBar.getText().split(", ");
         int number = 0;
         // clear all displayed elements
         recipeContainer.getChildren().clear();
-
         // iterate through all recipes
         for (Recipe recipe : recipeList) {
-            boolean hit = false;
             String searchHits = "";
-            // check if the search word is in the recipe name
-            if (recipe.getName().toLowerCase().contains(searchWord.toLowerCase())) {
-                hit = true;
-            }
-            // check if the search word is in the recipe tags
-            for (String tag : recipe.getTags()) {
-                if (tag.toLowerCase().contains(searchWord.toLowerCase())) {
+            int numberOfHits = 0;
+            
+            for (String searchWord : searchWords){
+                boolean hit = false;
+                // check if the search word is in the recipe name
+                if (recipe.getName().toLowerCase().contains(searchWord.toLowerCase())) {
                     hit = true;
-                    if (!searchWord.isEmpty()) {
-                        searchHits += tag + ", ";
+                    numberOfHits += 1;
+                }
+                // check if the search word is in the recipe tags
+                for (String tag : recipe.getTags()) {
+                    if (tag.toLowerCase().contains(searchWord.toLowerCase())) {
+                        if (hit != true)
+                            numberOfHits += 1;
+                        hit = true;
+                        if (!searchWord.isEmpty() && !searchHits.contains(tag)) {
+                            searchHits += tag + ", ";
+                        }
+                    }
+                }
+                // check if the search word is in the recipe ingredients
+                for (Ingredient ingredient : recipe.getIngredients()) {
+                    if (ingredient.getName().toLowerCase().contains(searchWord.toLowerCase())) {
+                        if (hit != true)
+                            numberOfHits += 1;
+                        hit = true;
+                        if (!searchWord.isEmpty() && !searchHits.contains(ingredient.getName())){
+                            searchHits += ingredient.getName() + ", ";
+                        }
                     }
                 }
             }
-            // check if the search word is in the recipe ingredients
-            for (Ingredient ingredient : recipe.getIngredients()) {
-                if (ingredient.getName().toLowerCase().contains(searchWord.toLowerCase())) {
-                    hit = true;
-                    if (!searchWord.isEmpty())
-                        searchHits += ingredient.getName() + ", ";
-                }
-            }
             // add the recipe if found
-            if (hit) {
+            if (numberOfHits >= searchWords.length) {
                 // cut the last ", "
                 if (searchHits.length() >= 3)
                     searchHits = searchHits.substring(0, searchHits.length() - 2);
