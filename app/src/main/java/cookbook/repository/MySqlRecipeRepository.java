@@ -256,7 +256,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     public List<String> fetchComments(Long id) {
         List<String> comments = new ArrayList<>();
 
-        String sql = "SELECT comment FROM UserRecipe " +
+        String sql = "SELECT comment FROM Comments " +
                      "WHERE Recipe_ID = ? AND comment IS NOT NULL";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
