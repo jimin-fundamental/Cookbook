@@ -18,7 +18,17 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     public MySqlRecipeRepository(DatabaseManager dbManager) {
         this.dbManager = dbManager;
+        loadPredeterminedTags();  // Pre-load tags to optimize later checks
     }
+
+
+    private List<String> cachedPredeterminedTags;
+
+    //Cache Predetermined Tags
+    private void loadPredeterminedTags() {
+        cachedPredeterminedTags = getAllPredeterminedTags();
+    }
+
 
     @Override
     public void addRecipe(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags) {
@@ -375,5 +385,37 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
         return tags;
     }
+
+    private boolean tagExists(String tag) {
+        // Check in cached predetermined tags first
+        if (cachedPredeterminedTags.contains(tag)) {
+            return true;
+        }
+
+        // Check in the database if not found in the cache (for non-predetermined tags)
+        String sql = "SELECT COUNT(*) FROM Tags WHERE tagname = ?";
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, tag);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void ensureTagsExist(List<String> tags) {
+        for (String tag : tags) {
+            if (!tagExists(tag)) {
+                addTag(tag);
+            }
+        }
+    }
+
+
 
 }

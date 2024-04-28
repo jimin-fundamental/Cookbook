@@ -16,11 +16,12 @@ import javafx.scene.Node;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.CheckComboBox;
 
-public class AddRecipeController{
+public class AddRecipeController implements Initializable {
 
     @FXML
     private TextArea descriptionArea;
@@ -49,22 +50,42 @@ public class AddRecipeController{
 
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
-    // create the data to show in the CheckComboBox 
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        loadPredeterminedTags();
+    }
+
+    private void loadPredeterminedTags() {
+        List<String> tags = sqlRepos.getAllPredeterminedTags();
+        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
+        tagsComboBox.setItems(tagList);
+    }
+
 
     @FXML
     void addRecipe(ActionEvent event) {
         try{
+            // Collect selected tags from CheckComboBox
+            List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
+            String tagString = String.join(";", selectedTags); // Join tags into a single string separated by semicolons
+
+
+
             // add new Recipe
-            sqlRepos.addRecipe(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), tagsArea.getText());
+            sqlRepos.addRecipe(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), tagString);
+
             // Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             // stage.close();
 
+            // Change scene or close window
             SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
         
         }
         catch(Exception e){
-            // print error message (prototype)
-            System.out.println("Error");
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
         
     }
@@ -76,8 +97,11 @@ public class AddRecipeController{
         ingredientsArea.setText("");
         servingsField.setText("");
         shortDescriptionField.setText("");
+        tagsComboBox.getCheckModel().clearChecks(); // Clear selections in CheckComboBox
         tagsArea.setText("");
         titleField.setText("");
     }
 
+
+    // create the data to show in the CheckComboBox
 }
