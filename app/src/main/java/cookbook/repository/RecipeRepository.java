@@ -5,10 +5,10 @@ import cookbook.model.Recipe;
 import java.util.List;
 
 public interface RecipeRepository {
-    void addRecipe(Recipe recipe);
+    void addRecipe(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags);
     Recipe getRecipeById(Long id);
     List<Recipe> getAllRecipes();
-    void updateRecipe(Recipe recipe);
+    void updateRecipe(int id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags);
     void deleteRecipe(Long id);
 
     List<Recipe> findByName(String name);
