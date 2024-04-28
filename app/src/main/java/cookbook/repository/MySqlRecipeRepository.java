@@ -353,4 +353,27 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
         return ingredients;
     }
+
+    //method for getting whole predeterminedTags
+    public List<String> getAllPredeterminedTags() {
+        List<String> tags = new ArrayList<>();
+
+        String sql = "SELECT ID, tagname FROM Tags WHERE ispredefined = 1";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                String tag = rs.getString("tagname");
+                tags.add(tag);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tags;
+    }
+
 }
