@@ -3,15 +3,24 @@ package cookbook.Controller;
 import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
 import cookbook.repository.MySqlRecipeRepository;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
-public class AddRecipeController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import org.controlsfx.control.CheckComboBox;
+
+public class AddRecipeController{
 
     @FXML
     private TextArea descriptionArea;
@@ -32,10 +41,15 @@ public class AddRecipeController {
     private TextArea tagsArea;
 
     @FXML
+    private CheckComboBox tagsComboBox;
+
+    @FXML
     private TextField titleField;
+
 
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
+    // create the data to show in the CheckComboBox 
 
     @FXML
     void addRecipe(ActionEvent event) {

@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import org.controlsfx.control.CheckComboBox?>
 
 <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.AddRecipeController">
    <content>
@@ -56,10 +57,16 @@
                   <TextArea fx:id="ingredientsArea" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </VBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Label text="Tags" />
+                  <CheckComboBox title="Choose Tags" />
+               </children>
+            </HBox>
             <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">
                <children>
-                  <Label text="Tags: vegetarian, vegan, lactose free, gluten free, starter, main course, dessert, sweets,....(Format: tag1,tag2,tag3,...)" />
-                  <TextArea fx:id="tagsArea" prefHeight="200.0" prefWidth="200.0" />
+                  <Label text="Custom tags (Format: tag1;tag2;tag3...)" />
+                  <TextArea fx:id="tagsArea1" prefHeight="200.0" prefWidth="200.0" />
                </children>
             </VBox>
             <HBox spacing="10.0">
