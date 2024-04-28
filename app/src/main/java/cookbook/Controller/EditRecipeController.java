@@ -40,7 +40,7 @@ public class EditRecipeController {
 
     @FXML
     private void updateRecipe() {
-        int id = Integer.parseInt(recipeId.getText());
+        long id = Integer.parseInt(recipeId.getText());
         String name = titleField.getText();
         String shortDescription = shortDescriptionField.getText();
         String description = descriptionArea.getText();
