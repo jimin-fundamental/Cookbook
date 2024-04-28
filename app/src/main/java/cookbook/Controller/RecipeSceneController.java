@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -43,6 +44,9 @@ public class RecipeSceneController implements Initializable{
     private Text IngredientHeadlineText;
 
     @FXML
+    private FlowPane tagsFlowPane;
+
+    @FXML
     private ImageView recipeImageView;
 
     private MySqlRecipeRepository recipeRepos;
@@ -55,7 +59,6 @@ public class RecipeSceneController implements Initializable{
         this.recipeNameText.setText(recipe.getName());
         this.recipeDescriptionText.setText(recipe.getShortDescription());
         this.IngredientHeadlineText.setText("Ingredients (" + recipe.getNumberOfPersons() + " servings)");
-
 
         // Load image
         String imagePath = recipe.getImagePath() != null ? recipe.getImagePath() : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg";
