@@ -36,6 +36,7 @@ public class AddRecipeController {
 
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
+
     @FXML
     void addRecipe(ActionEvent event) {
         try{

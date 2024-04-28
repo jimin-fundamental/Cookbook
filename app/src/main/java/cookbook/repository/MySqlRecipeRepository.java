@@ -120,11 +120,11 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void updateRecipe(int id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredientsText, String tagsText) {
+    public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredientsText, String tagsText) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
-            String sql = "CALL UpdateRecipe(?, ?, ?, ?, ?, ?, ?)";
+            String sql = "CALL UpdateRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
             try (CallableStatement statement = connection.prepareCall(sql)) {
-                statement.setInt(1, id);
+                statement.setLong(1, id);
                 statement.setString(2, name);
                 statement.setString(3, shortDescription);
                 statement.setString(4, description);
@@ -256,7 +256,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     public List<String> fetchComments(Long id) {
         List<String> comments = new ArrayList<>();
 
-        String sql = "SELECT comment FROM UserRecipe " +
+        String sql = "SELECT comment FROM Comments " +
                      "WHERE Recipe_ID = ? AND comment IS NOT NULL";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
@@ -311,7 +311,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
             String tag = matcher.group(1);
             // Split the steps string by comma and trim each step
             String[] tags = tag.split(",");
-            System.out.println(tag);
             for (String t : tags) {
                 processSteps.add(t.trim().replaceAll("\"", ""));
             }
