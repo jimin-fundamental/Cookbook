@@ -48,6 +48,11 @@ public class RecipeSceneController implements Initializable{
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
     public void setRecipeData(Recipe recipe){
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
         this.recipe = recipe;
@@ -78,10 +83,7 @@ public class RecipeSceneController implements Initializable{
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
 
-    }
 
     public void editRecipeScene(ActionEvent event){
         try {

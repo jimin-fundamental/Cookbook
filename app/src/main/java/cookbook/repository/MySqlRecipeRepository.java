@@ -31,27 +31,33 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
 
     @Override
-    public void addRecipe(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags) {
-        try (Connection connection = DriverManager.getConnection(dbManager.url)) {
-            // Prepare the SQL statement
-            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?)";
-            try (CallableStatement statement = connection.prepareCall(sql)) {
-                // Set the parameters for the stored procedure
-                statement.setString(1, name);
-                statement.setString(2, shortDescription);
-                statement.setString(3, description);
-                statement.setString(4, imageUrl);
-                statement.setInt(5, servings);
-                statement.setString(6, ingredients); // Directly pass the ingredients string
-                statement.setString(7, tags); // Directly pass the tags string
-    
-                // Execute the stored procedure
-                statement.execute();
+    public int addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients) {
+        int recipeId = -1;
+        String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             CallableStatement statement = connection.prepareCall(sql)) {
+            statement.setString(1, name);
+            statement.setString(2, shortDescription);
+            statement.setString(3, description);
+            statement.setString(4, imageUrl);
+            statement.setInt(5, servings);
+            statement.setString(6, ingredients);
+            //statement.setString(7, tags); // Ensure this matches the stored procedure's requirements
+
+            boolean hadResults = statement.execute();
+            if (hadResults) {
+                try (ResultSet rs = statement.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        recipeId = rs.getInt(1);  // Retrieve the ID of the newly inserted recipe
+                    }
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return recipeId;  // Return the recipe ID
     }
+
 
     @Override
     public Recipe getRecipeById(Long id) {
@@ -408,13 +414,70 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return false;
     }
 
-    public void ensureTagsExist(List<String> tags) {
+    public List<Integer> ensureTagsExist(List<String> tags, boolean isPredefined) {
+        List<Integer> tagIds = new ArrayList<>();
         for (String tag : tags) {
-            if (!tagExists(tag)) {
-                addTag(tag);
+            int tagId = getTagId(tag);  // Check if the tag exists and get its ID
+            if (tagId == -1) {  // Tag does not exist
+                addTag(tag, isPredefined ? 1 : 0);  // Add the tag as predetermined or custom based on the parameter
             }
+            tagIds.add(tagId);  // Collect tag ID
+        }
+        return tagIds;
+    }
+
+    private int getTagId(String tag) {
+        String sql = "SELECT ID FROM Tags WHERE tagname = ?";
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, tag);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("ID");  // Return the existing ID
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;  // Return -1 if the tag does not exist
+    }
+
+    // Returning addTag Method
+    private int addTag(String tag, int isPredefined) {
+        String sql = "INSERT INTO Tags (tagname, ispredefined) VALUES (?, ?)";
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, tag);
+            pstmt.setInt(2, isPredefined);
+            pstmt.executeUpdate();
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);  // Return the new ID
+                } else {
+                    throw new SQLException("Creating tag failed, no ID obtained.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;  // Return -1 if insertion fails
+    }
+
+    public void linkTagsToRecipe(int recipeId, List<Integer> tagIds) {
+        String sql = "INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (?, ?)";
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (int tagId : tagIds) {
+                pstmt.setInt(1, recipeId);
+                pstmt.setInt(2, tagId);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
+
 
 
 
