@@ -2,27 +2,29 @@ package cookbook.Controller;
 //handles the detailed view of a recipe
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.io.IOException;
 
 import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
-import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.ComboBox;
+
 
 public class RecipeSceneController implements Initializable{
 
@@ -46,33 +48,27 @@ public class RecipeSceneController implements Initializable{
     private Text IngredientHeadlineText;
 
     @FXML
-    private FlowPane tagsFlowPane;
-
-    @FXML
     private ImageView recipeImageView;
-    
-    @FXML
-    private Button favouritesButton;
 
+    @FXML
+    private ComboBox<Integer> servingsComboBox;
 
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
-    private User user;
 
-    public void setUser(User user){
-        this.user = user;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
-    
+
     public void setRecipeData(Recipe recipe){
-        
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
         this.recipe = recipe;
-        setButtonName();
         
         this.recipeNameText.setText(recipe.getName());
         this.recipeDescriptionText.setText(recipe.getShortDescription());
         this.IngredientHeadlineText.setText("Ingredients (" + recipe.getNumberOfPersons() + " servings)");
-        
+
 
         // Load image
         String imagePath = recipe.getImagePath() != null ? recipe.getImagePath() : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg";
@@ -95,10 +91,7 @@ public class RecipeSceneController implements Initializable{
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
 
-    }
 
     public void editRecipeScene(ActionEvent event){
         try {
@@ -122,24 +115,48 @@ public class RecipeSceneController implements Initializable{
         }
     }
 
-    @FXML
-    void addToFavouritesClicked(ActionEvent event) {
-        if(!recipe.getIsFavourite()){
-            recipeRepos.saveToFavorites(recipe, user);
-        }
-        else{
-            recipeRepos.removeFromFavorites(recipe, user);
-        }
-        setButtonName();
+    public void changeServings(ActionEvent event){
+       
+            int ogServings = this.recipe.getNumberOfPersons();
+    
+            // Read the new servings from the dropdown menu
+            int newServings = servingsComboBox.getValue();;// Code to read the new servings from the dropdown menu
+    
+            // Calculate the ratio of new servings to original servings
+            double scaleFactor = (double)newServings / (double)ogServings;
+    
+            // Create a new ingredients list and multiply ingredients
+            List<Ingredient> ingredients = this.recipe.getIngredients();
+            List<Ingredient> newIngredients = new ArrayList<>();
+    
+            for (Ingredient ingredient : ingredients) {
+                double newAmount = ingredient.getAmount() * scaleFactor;
+                Ingredient newIngredient = new Ingredient();
+                newIngredient.setName(ingredient.getName());
+                newIngredient.setAmount((int)newAmount);
+                newIngredient.setUnit(ingredient.getUnit());
+                newIngredients.add(newIngredient);
+            }
+    
+            // Set new servings and ingredients
+            this.recipe.setNumberOfPersons(newServings);
+            this.recipe.setIngredients(newIngredients);
+    
+            // Update ingredients list
+            ingredientsFlowPane.getChildren().clear();
+            for (Ingredient ingredient : newIngredients) {
+                ingredientsFlowPane.getChildren().add(new Text(ingredient.getName() +" (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
+            }
+    
+            // Refresh the scene to reflect the changes
+            Stage stage = (Stage) ingredientsFlowPane.getScene().getWindow();
+            stage.show();
+    
+        
     }
-
-    private void setButtonName(){
-        if(recipe.getIsFavourite()){
-            favouritesButton.setText("Remove from favourites");
-        }
-        else {
-            favouritesButton.setText("Add to favourites");
-        }
-    }
-
 }
+    
+    
+
+
+
