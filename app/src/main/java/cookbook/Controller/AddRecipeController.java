@@ -99,44 +99,6 @@ public class AddRecipeController implements Initializable {
         }
     }
 
-/*
-    @FXML
-    void addRecipe(ActionEvent event) {
-        try {
-            List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
-            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
-                    .map(String::trim)
-                    .filter(tag -> !tag.isEmpty())
-                    .collect(Collectors.toList());
-
-            // Assume code to insert the recipe and retrieve its ID
-            int recipeId = ...; // Obtain after inserting the recipe
-
-            List<Integer> tagIds = sqlRepos.ensureTagsExist(selectedTags, true);  // For predetermined tags
-            tagIds.addAll(sqlRepos.ensureTagsExist(customTags, false));  // For custom tags
-
-            sqlRepos.linkTagsToRecipe(recipeId, tagIds);  // Link all tags to the new recipe
-        }
-
-            // Add the recipe to the database
-            sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(),
-                    imageUrlField.getText(), Integer.parseInt(servingsField.getText()),
-                    ingredientsArea.getText());
-
-            // Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            // stage.close();
-
-            // Change scene or close window
-            // Redirect or refresh the UI as necessary
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")),
-                    (Stage)((Node)event.getSource()).getScene().getWindow());
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-*/
 
     @FXML
     void clearFields(ActionEvent event) {
