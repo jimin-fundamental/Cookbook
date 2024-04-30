@@ -1,6 +1,7 @@
 package cookbook.repository;
 
 import cookbook.DatabaseManager;
+import cookbook.model.User;
 
 import java.sql.*;
 
@@ -43,9 +44,9 @@ public class UserDao implements UserRepository{
 
     }
 
-    public boolean checkUser(String username, String password){
+    public User checkUser(String username, String password) {
 
-        String sql = "SELECT COUNT(*) FROM User WHERE username = ? AND password = ?";
+        String sql = "SELECT COUNT(*), name, id FROM User WHERE username = ? AND password = ?";
 
         try (Connection connection = DriverManager.getConnection(url);
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -60,19 +61,22 @@ public class UserDao implements UserRepository{
             // check the results
             if (rs.next()) {
                 int count = rs.getInt(1);
+                String name = rs.getString("name");
+                Long id = rs.getLong("id");
                 pstmt.close();
                 connection.close();
                 if (count > 0) {
-                    return true;
+                    User user = new User(id, name, username, password);
+                    return user;
                 }
             }
             pstmt.close();
             connection.close();
-            return false;
+            return null;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 }

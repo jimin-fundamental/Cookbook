@@ -34,15 +34,15 @@
                   <VBox fx:id="recipeDetailsVBox" prefHeight="0.0" prefWidth="0.0" spacing="10.0">
 
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
+                              <FontAwesomeIconView onMouseClicked="#addToFavouritesClicked" fill="#ffbd00" glyphName="STAR" selectionFill="#ffce00" size="20" stroke="BLACK" />
       
-                              <Text fx:id="recipeNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Rice Pudding" wrappingWidth="328.0">
+                              <Text fx:id="recipeNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Rice Pudding" wrappingWidth="337.0">
                                  <font>
                                     <Font name="System Bold" size="23.0" />
                                  </font>
                               </Text>
-                              <FontAwesomeIconView fill="#ffbd00" glyphName="STAR" selectionFill="#ffce00" size="20" stroke="BLACK" />
                            </children>
                         </HBox>
                         <Button layoutX="500.0" layoutY="1000.0" onAction="#editRecipeScene" text="edit Recipe" />

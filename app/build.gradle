@@ -33,6 +33,8 @@ dependencies {
 
     implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2'
 
+    implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.2.1'
+
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.3.0'
 }

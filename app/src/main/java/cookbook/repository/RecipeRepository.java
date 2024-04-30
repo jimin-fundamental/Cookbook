@@ -2,6 +2,8 @@ package cookbook.repository;
 
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
+import cookbook.model.User;
+
 import java.util.List;
 
 public interface RecipeRepository {
@@ -15,9 +17,9 @@ public interface RecipeRepository {
     List<Recipe> findByIngredient(String ingredient);
     List<Recipe> findByTag(String tag);
 
-    void saveToFavorites(Recipe recipe);
-    void removeFromFavorites(Recipe recipe);
-    List<Recipe> getFavorites();
+    void saveToFavorites(Recipe recipe, User user);
+    void removeFromFavorites(Recipe recipe, User user);
+    List<Recipe> getFavorites(List<Recipe> recipes, User user);
 
     void addToWeekPlan(Recipe recipe, String week);
     void removeFromWeekPlan(Recipe recipe, String week);

@@ -8,12 +8,14 @@ import java.io.IOException;
 import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
+import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -48,13 +50,24 @@ public class RecipeSceneController implements Initializable{
 
     @FXML
     private ImageView recipeImageView;
+    
+    @FXML
+    private Button favouritesButton;
+
 
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
+    private User user;
 
+    public void setUser(User user){
+        this.user = user;
+    }
+    
     public void setRecipeData(Recipe recipe){
+        
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
         this.recipe = recipe;
+        setButtonName();
         
         this.recipeNameText.setText(recipe.getName());
         this.recipeDescriptionText.setText(recipe.getShortDescription());
@@ -106,6 +119,26 @@ public class RecipeSceneController implements Initializable{
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void addToFavouritesClicked(ActionEvent event) {
+        if(!recipe.getIsFavourite()){
+            recipeRepos.saveToFavorites(recipe, user);
+        }
+        else{
+            recipeRepos.removeFromFavorites(recipe, user);
+        }
+        setButtonName();
+    }
+
+    private void setButtonName(){
+        if(recipe.getIsFavourite()){
+            favouritesButton.setText("Remove from favourites");
+        }
+        else {
+            favouritesButton.setText("Add to favourites");
         }
     }
 
