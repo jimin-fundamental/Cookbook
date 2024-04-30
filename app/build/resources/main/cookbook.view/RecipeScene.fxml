@@ -44,9 +44,9 @@
                               <Font name="System Italic" size="14.0" />
                            </font>
                         </Text>
-                        <FlowPane fx:id="tagsFlowPane" prefHeight="200.0" prefWidth="200.0" >
-                           <fx:include source="Tag.fxml" fx:id="includedTag"/>
-                           <fx:include source="Tag.fxml" fx:id="includedTag"/>
+                        <FlowPane fx:id="tagsFlowPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" vgap="5.0">
+                           <fx:include fx:id="includedTag" source="Tag.fxml" />
+                           <fx:include fx:id="includedTag" source="Tag.fxml" />
                         </FlowPane>
 
                      </children>
