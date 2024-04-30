@@ -33,7 +33,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     @Override
     public int addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, List <String> tags) {
         int recipeId = -1;
-        String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?)";
+        String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              CallableStatement statement = connection.prepareCall(sql)) {
             statement.setString(1, name);
@@ -106,8 +106,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
                 Recipe recipe = new Recipe();
@@ -161,7 +161,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 statement.setInt(6, servings);
                 statement.setString(7, ingredientsText);
                 statement.setString(8, tagsText);
-    
+
                 statement.execute();
             }
         } catch (SQLException e) {
@@ -224,8 +224,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
         List<Ingredient> ingredients = new ArrayList<>();
 
         String sql = "SELECT i.name, ri.amount_int, ri.amount_unit FROM Ingredient i " +
-                     "INNER JOIN RecipeIngredient ri ON i.ID = ri.Ingredient_ID " +
-                     "WHERE ri.Recipe_ID = ?";
+                "INNER JOIN RecipeIngredient ri ON i.ID = ri.Ingredient_ID " +
+                "WHERE ri.Recipe_ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -256,8 +256,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
         List<String> tags = new ArrayList<>();
 
         String sql = "SELECT t.tagname FROM Tags t " +
-                     "INNER JOIN RecipeTag rt ON t.ID = rt.Tags_ID " +
-                     "WHERE rt.Recipe_ID = ?";
+                "INNER JOIN RecipeTag rt ON t.ID = rt.Tags_ID " +
+                "WHERE rt.Recipe_ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -286,7 +286,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         List<String> comments = new ArrayList<>();
 
         String sql = "SELECT comment FROM Comments " +
-                     "WHERE Recipe_ID = ? AND comment IS NOT NULL";
+                "WHERE Recipe_ID = ? AND comment IS NOT NULL";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {

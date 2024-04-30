@@ -150,6 +150,4 @@ public class AddRecipeController implements Initializable {
         titleField.setText("");
     }
 
-
-    // create the data to show in the CheckComboBox
 }
