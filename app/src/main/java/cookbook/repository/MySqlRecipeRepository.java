@@ -31,7 +31,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
 
     @Override
-    public int addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients) {
+    public int addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, List <String> tags) {
         int recipeId = -1;
         String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(dbManager.url);
@@ -42,7 +42,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
             statement.setString(4, imageUrl);
             statement.setInt(5, servings);
             statement.setString(6, ingredients);
-            //statement.setString(7, tags); // Ensure this matches the stored procedure's requirements
+            statement.setString(7, convertTagsToString(tags)); // Ensure this matches the stored procedure's requirements
 
             boolean hadResults = statement.execute();
             if (hadResults) {
@@ -56,6 +56,19 @@ public class MySqlRecipeRepository implements RecipeRepository{
             e.printStackTrace();
         }
         return recipeId;  // Return the recipe ID
+
+    }
+
+    private String convertTagsToString(List<String> tags) {
+        StringBuilder sb = new StringBuilder();
+        for (String tag : tags) {
+            sb.append(tag).append(",");
+        }
+        // Remove the last comma
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
     }
 
 

@@ -79,7 +79,7 @@ public class AddRecipeController implements Initializable {
             // Add the recipe and get its ID
             int recipeId = sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(),
                     imageUrlField.getText(), Integer.parseInt(servingsField.getText()),
-                    ingredientsArea.getText());
+                    ingredientsArea.getText(), selectedTags);
 
             if (recipeId != -1) {  // Check if the recipe was added successfully
                 List<Integer> tagIds = sqlRepos.ensureTagsExist(selectedTags, true);  // For predetermined tags
