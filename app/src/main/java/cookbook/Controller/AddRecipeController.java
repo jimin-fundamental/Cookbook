@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.controlsfx.control.CheckComboBox;
 
@@ -70,21 +71,45 @@ public class AddRecipeController implements Initializable {
     @FXML
     void addRecipe(ActionEvent event) {
         try {
+            System.out.println("addRecipe start");
+
             List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
             List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
                     .map(String::trim)
                     .filter(tag -> !tag.isEmpty())
                     .collect(Collectors.toList());
 
+            System.out.println("start to make allTags String");
+
+
+            // Combine all tags into a single string
+            String allTags = Stream.concat(selectedTags.stream(), customTags.stream())
+                    .collect(Collectors.joining(";"));
+
+
             // Add the recipe and get its ID
+            /*
             int recipeId = sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(),
                     imageUrlField.getText(), Integer.parseInt(servingsField.getText()),
                     ingredientsArea.getText(), selectedTags);
 
+             */
+
+
+            System.out.println("start passing info to addREcipeREpo");
+            int recipeId = sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(),
+                    imageUrlField.getText(), Integer.parseInt(servingsField.getText()),
+                    ingredientsArea.getText(), allTags);
+//            int recipeId = sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(),
+//                    imageUrlField.getText(), Integer.parseInt(servingsField.getText()),
+//                    ingredientsArea.getText());
+
+
             if (recipeId != -1) {  // Check if the recipe was added successfully
+                System.out.println("recipe is added sucessfully");
                 List<Integer> tagIds = sqlRepos.ensureTagsExist(selectedTags, true);  // For predetermined tags
                 tagIds.addAll(sqlRepos.ensureTagsExist(customTags, false));  // For custom tags
-
+                System.out.println("start linking");
                 sqlRepos.linkTagsToRecipe(recipeId, tagIds);  // Link all tags to the new recipe
 
                 // Redirect or refresh the UI as necessary

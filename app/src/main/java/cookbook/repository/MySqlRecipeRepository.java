@@ -31,7 +31,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
 
     @Override
-    public int addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, List <String> tags) {
+    public int addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags) {
         int recipeId = -1;
         String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(dbManager.url);
@@ -42,13 +42,20 @@ public class MySqlRecipeRepository implements RecipeRepository{
             statement.setString(4, imageUrl);
             statement.setInt(5, servings);
             statement.setString(6, ingredients);
-            statement.setString(7, convertTagsToString(tags)); // Ensure this matches the stored procedure's requirements
+            //statement.setString(7, convertTagsToString(tags)); // Ensure this matches the stored procedure's requirements
+            statement.setString(7, tags); //starter;dessert;test <- passed liked this
+            System.out.println("MySqlRecipeRepository: statement: " + statement);
 
             boolean hadResults = statement.execute();
+            System.out.println("MySqlRecipeRepository: hadResults: " + hadResults); //-> false
+
             if (hadResults) {
                 try (ResultSet rs = statement.getGeneratedKeys()) {
+                    System.out.println("MySqlRecipeRepository: getGeneratedKeys returned: " + rs);
                     if (rs.next()) {
+                        System.out.println("MySqlRecipeRepository: getGeneratedKeys returned: " + rs.getInt(1));
                         recipeId = rs.getInt(1);  // Retrieve the ID of the newly inserted recipe
+                        System.out.println("MySqlRecipeRepository: recipeId: " + recipeId);
                     }
                 }
             }
