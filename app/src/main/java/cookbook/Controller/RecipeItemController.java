@@ -6,6 +6,7 @@ import com.google.common.cache.CacheLoader.InvalidCacheLoadException;
 
 import cookbook.SceneModifier;
 import cookbook.model.Recipe;
+import cookbook.model.User;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,6 +45,11 @@ public class RecipeItemController {
     private StackPane tagsPane;
 
     private Recipe recipe;
+    private User user;
+
+    public void setUser(User user){
+        this.user = user;
+    }
 
     public void setRecipeData(Recipe recipe, String tagHits) {
         this.recipe = recipe;
@@ -81,6 +87,7 @@ public class RecipeItemController {
         // get the controller to call the method to set the data
         RecipeSceneController controller = fxmlLoader.getController();
         controller.setRecipeData(this.recipe);
+        controller.setUser(user);
 
         stage.show();
 
