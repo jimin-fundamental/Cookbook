@@ -33,6 +33,7 @@ import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
+import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import cookbook.Controller.AddRecipeController;
 
@@ -58,11 +59,20 @@ public class RecipeViewController implements Initializable {
 
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
-    private String userName;
+    private User user;
 
-    public void setUserName(String uName) {
-        this.userName = uName;
-        greetingText.setText("Hi, " + uName + "!");
+    public void setUserName(User user) {
+        this.user = user;
+        greetingText.setText("Hi, " + user.getUserName() + "!");
+
+        // get information about favourite recipes
+        recipeList = recipeRepos.getFavorites(recipeList, user);
+        int number = 0;
+        for (Recipe recipe : recipeList) {
+            displayRecipeItem(recipe, number++, "");
+
+        }
+        
     }
 
     @Override
@@ -71,11 +81,7 @@ public class RecipeViewController implements Initializable {
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
 
         recipeList = recipeRepos.getAllRecipes();
-        int number = 0;
-        for (Recipe recipe : recipeList) {
-            displayRecipeItem(recipe, number++, "");
 
-        }
     }
 
     @FXML
@@ -103,7 +109,7 @@ public class RecipeViewController implements Initializable {
                     Stage s = new Stage();
                     s.setScene(new Scene(fxmlLoader2.load()));
                     RecipeViewController controller = fxmlLoader2.getController();
-                    controller.setUserName(this.userName);
+                    controller.setUserName(this.user);
                     s.show();
                 } catch (Exception e) {
                     // TODO: handle exception
@@ -185,6 +191,7 @@ public class RecipeViewController implements Initializable {
             StackPane recipeBox = fxmlLoader.load();
             RecipeItemController controller = fxmlLoader.getController();
             controller.setRecipeData(recipe, searchHits);
+            controller.setUser(user);
             int column = number % 5;
             int row = number / 5 + 1;
             recipeContainer.add(recipeBox, column, row);
