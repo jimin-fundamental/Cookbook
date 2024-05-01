@@ -18,16 +18,16 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     public MySqlRecipeRepository(DatabaseManager dbManager) {
         this.dbManager = dbManager;
-        loadPredeterminedTags();  // Pre-load tags to optimize later checks
+        //loadPredeterminedTags();  // Pre-load tags to optimize later checks
     }
 
 
     private List<String> cachedPredeterminedTags;
 
     //Cache Predetermined Tags
-    private void loadPredeterminedTags() {
-        cachedPredeterminedTags = getAllPredeterminedTags();
-    }
+//    private void loadPredeterminedTags() {
+//        cachedPredeterminedTags = getAllPredeterminedTags();
+//    }
 
 
     @Override

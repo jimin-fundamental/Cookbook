@@ -16,8 +16,11 @@ import javafx.scene.Node;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.controlsfx.control.CheckComboBox;
 
@@ -69,10 +72,21 @@ public class AddRecipeController implements Initializable {
         try{
             // Collect selected tags from CheckComboBox
             List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
-            String tagString = String.join(";", selectedTags); // Join tags into a single string separated by semicolons
+            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
+                    .map(String::trim)
+                    .filter(tag -> !tag.isEmpty())
+                    .collect(Collectors.toList());
+
+            System.out.println("start to make allTags String");
+            // Combine all tags into a single string
+            String allTagsString = Stream.concat(selectedTags.stream(), customTags.stream())
+                    .collect(Collectors.joining(","));//changed!!!
+            System.out.println("allTagsString: " + allTagsString);
+
+//            String tagString = String.join(";", selectedTags); // Join tags into a single string separated by semicolons
 
             // add new Recipe
-            sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), tagString);
+            sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), allTagsString);
 
             // Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             // stage.close();
