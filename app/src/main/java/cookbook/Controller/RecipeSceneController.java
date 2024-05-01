@@ -10,19 +10,25 @@ import java.io.IOException;
 import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
+import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.ComboBox;
 
 
@@ -51,19 +57,24 @@ public class RecipeSceneController implements Initializable{
     private ImageView recipeImageView;
 
     @FXML
+    private FontAwesomeIconView star;
+    
+    @FXML
     private ComboBox<Integer> servingsComboBox;
 
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
+    private User user;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
+    public void setUser(User user){
+        this.user = user;
     }
-
+    
     public void setRecipeData(Recipe recipe){
+        
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
         this.recipe = recipe;
+        setStar();
         
         this.recipeNameText.setText(recipe.getName());
         this.recipeDescriptionText.setText(recipe.getShortDescription());
@@ -91,7 +102,10 @@ public class RecipeSceneController implements Initializable{
         }
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
+    }
 
     public void editRecipeScene(ActionEvent event){
         try {
@@ -116,19 +130,14 @@ public class RecipeSceneController implements Initializable{
     }
 
     public void changeServings(ActionEvent event){
-       
             int ogServings = this.recipe.getNumberOfPersons();
-    
             // Read the new servings from the dropdown menu
             int newServings = servingsComboBox.getValue();;// Code to read the new servings from the dropdown menu
-    
             // Calculate the ratio of new servings to original servings
             double scaleFactor = (double)newServings / (double)ogServings;
-    
             // Create a new ingredients list and multiply ingredients
             List<Ingredient> ingredients = this.recipe.getIngredients();
             List<Ingredient> newIngredients = new ArrayList<>();
-    
             for (Ingredient ingredient : ingredients) {
                 double newAmount = ingredient.getAmount() * scaleFactor;
                 Ingredient newIngredient = new Ingredient();
@@ -137,26 +146,39 @@ public class RecipeSceneController implements Initializable{
                 newIngredient.setUnit(ingredient.getUnit());
                 newIngredients.add(newIngredient);
             }
-    
             // Set new servings and ingredients
             this.recipe.setNumberOfPersons(newServings);
             this.recipe.setIngredients(newIngredients);
-    
             // Update ingredients list
             ingredientsFlowPane.getChildren().clear();
             for (Ingredient ingredient : newIngredients) {
                 ingredientsFlowPane.getChildren().add(new Text(ingredient.getName() +" (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
             }
-    
             // Refresh the scene to reflect the changes
             Stage stage = (Stage) ingredientsFlowPane.getScene().getWindow();
             stage.show();
-    
-        
     }
+    
+    @FXML
+    void addToFavouritesClicked(MouseEvent event) {
+        if(!recipe.getIsFavourite()){
+            recipeRepos.saveToFavorites(recipe, user);
+        }
+        else{
+            recipeRepos.removeFromFavorites(recipe, user);
+        }
+        setStar();
+    }
+
+    private void setStar(){
+        if(recipe.getIsFavourite()){
+            star.setFill(Color.YELLOW);
+        }
+        else {
+            star.setFill(Color.WHITE);
+            
+
+        }
+    }
+
 }
-    
-    
-
-
-

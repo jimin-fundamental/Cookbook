@@ -182,6 +182,19 @@ public class RecipeViewController implements Initializable {
             }
         }
     }
+    
+    @FXML
+    void favouritesButtonClicked(ActionEvent event) {
+        int number = 0;
+        // clear all displayed elements
+        recipeContainer.getChildren().clear();
+        // iterate through all recipes
+        for (Recipe recipe : recipeList){
+            if(recipe.getIsFavourite()){
+                displayRecipeItem(recipe, number++, "");
+            }
+        }
+    }
 
     private void displayRecipeItem(Recipe recipe, int number, String searchHits) {
         try {

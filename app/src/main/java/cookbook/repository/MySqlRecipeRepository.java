@@ -120,7 +120,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
     @Override
     public List<Recipe> getFavorites(List<Recipe> recipes, User user){
-        System.out.println("getting favourites...");
         // add Information for favourite recipes
         List<Long> favourites = fetchFavourites(user);
         for (Recipe recipe : recipes){
@@ -177,7 +176,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     @Override
     public void saveToFavorites(Recipe recipe, User user) {
-        System.out.println("adding favourite...");
         String sql = "INSERT INTO UserRecipe (User_ID, Recipe_ID, isstar)" +
             	     "VALUES (?, ?, true)" +
                      "ON DUPLICATE KEY UPDATE isstar = true";
@@ -193,7 +191,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
             pstmt.close();
             connection.close();
-            System.out.println("added favourite...");
             recipe.setIsFavourite(true);
 
 
@@ -338,7 +335,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         List<Long> favourites = new ArrayList<>();
 
         String sql = "SELECT Recipe_ID FROM UserRecipe " +
-                     "WHERE User_ID = ? AND Recipe_ID IS NOT NULL";
+                     "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
