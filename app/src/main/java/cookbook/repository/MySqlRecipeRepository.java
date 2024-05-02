@@ -33,19 +33,20 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
 
     @Override
-    public void addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags) {
+    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
             // Prepare the SQL statement
-            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?)";
+            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
             try (CallableStatement statement = connection.prepareCall(sql)) {
                 // Set the parameters for the stored procedure
-                statement.setString(1, name);
-                statement.setString(2, shortDescription);
-                statement.setString(3, description);
-                statement.setString(4, imageUrl);
-                statement.setInt(5, servings);
-                statement.setString(6, ingredients); // Directly pass the ingredients string
-                statement.setString(7, tags); // Directly pass the tags string
+                statement.setInt(1, userID); // Pass the userID to the stored procedure
+                statement.setString(2, name);
+                statement.setString(3, shortDescription);
+                statement.setString(4, description);
+                statement.setString(5, imageUrl);
+                statement.setInt(6, servings);
+                statement.setString(7, ingredients); // Directly pass the ingredients string
+                statement.setString(8, tags); // Directly pass the tags string
 
                 System.out.println("statement: " + statement);
                 // Execute the stored procedure

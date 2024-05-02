@@ -7,7 +7,7 @@ import cookbook.model.User;
 import java.util.List;
 
 public interface RecipeRepository {
-    void addRecipeRepo(String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags);
+    void addRecipeRepo(int userId, String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags);
     Recipe getRecipeById(Long id);
     List<Recipe> getAllRecipes();
     void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags);

@@ -66,9 +66,8 @@ public class AddRecipeController implements Initializable {
         tagsComboBox.getItems().setAll(tagList);
     }
 
-
     @FXML
-    void addRecipe(ActionEvent event) {
+    void addRecipe(ActionEvent event, int userID) {
         try{
             // Collect selected tags from CheckComboBox
             List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
@@ -80,16 +79,11 @@ public class AddRecipeController implements Initializable {
             System.out.println("start to make allTags String");
             // Combine all tags into a single string
             String allTagsString = Stream.concat(selectedTags.stream(), customTags.stream())
-                    .collect(Collectors.joining(";"));//changed!!!
+                    .collect(Collectors.joining(";"));
             System.out.println("allTagsString: " + allTagsString);
 
-//            String tagString = String.join(";", selectedTags); // Join tags into a single string separated by semicolons
-
-            // add new Recipe
-            sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), allTagsString);
-
-            // Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            // stage.close();
+            // Add new Recipe with userID
+            sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), allTagsString);
 
             // Change scene or close window
             SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
@@ -99,8 +93,44 @@ public class AddRecipeController implements Initializable {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
+
+
+
+//    @FXML
+//    void addRecipe(ActionEvent event) {
+//        try{
+//            // Collect selected tags from CheckComboBox
+//            List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
+//            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
+//                    .map(String::trim)
+//                    .filter(tag -> !tag.isEmpty())
+//                    .collect(Collectors.toList());
+//
+//            System.out.println("start to make allTags String");
+//            // Combine all tags into a single string
+//            String allTagsString = Stream.concat(selectedTags.stream(), customTags.stream())
+//                    .collect(Collectors.joining(";"));//changed!!!
+//            System.out.println("allTagsString: " + allTagsString);
+//
+////            String tagString = String.join(";", selectedTags); // Join tags into a single string separated by semicolons
+//
+//            // add new Recipe
+//            sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), allTagsString);
+//
+//            // Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+//            // stage.close();
+//
+//            // Change scene or close window
+//            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+//
+//        }
+//        catch(Exception e){
+//            System.out.println("Error: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     @FXML
     void clearFields(ActionEvent event) {
