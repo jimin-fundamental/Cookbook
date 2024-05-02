@@ -13,6 +13,7 @@ public class Recipe {
     private List<String> tags; // Tags for the recipe
     private List<String> comments; // User comments on the recipe
     private String imagePath; // URL or path to the recipe's image
+    private boolean isFavourite; // true if the recipe is selected as a favourite by the user
 
     // Default constructor
     public Recipe() {
@@ -126,6 +127,13 @@ public class Recipe {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public void setIsFavourite(boolean isFavourite){
+        this.isFavourite = isFavourite;
+    }
+    public boolean getIsFavourite(){
+        return isFavourite;
     }
 
 }

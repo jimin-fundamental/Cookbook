@@ -3,6 +3,8 @@ package cookbook.repository;
 import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
+import cookbook.model.User;
+
 import java.sql.*;
 
 import java.util.List;
@@ -74,9 +76,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     public void fetchRecipeDetails(Recipe rec) {
 
+
         // Fetch comments for the recipe
-        List<String> comments = fetchComments(rec.getId());
-        rec.setComments(comments);
+        // List<String> comments = fetchComments(rec.getId());
+        // rec.setComments(comments);
     }
 
     @Override
@@ -117,15 +120,26 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
                 recipes.add(recipe);
             }
-
-
+            
             pstmt.close();
             connection.close();
 
-
-
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return recipes;
+    }
+    @Override
+    public List<Recipe> getFavorites(List<Recipe> recipes, User user){
+        // add Information for favourite recipes
+        List<Long> favourites = fetchFavourites(user);
+        for (Recipe recipe : recipes){
+            if (favourites.contains(recipe.getId())){
+                recipe.setIsFavourite(true);
+            }
+            else{
+                recipe.setIsFavourite(false);
+            }
         }
         return recipes;
     }
@@ -172,18 +186,55 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void saveToFavorites(Recipe recipe) {
+    public void saveToFavorites(Recipe recipe, User user) {
+        String sql = "INSERT INTO UserRecipe (User_ID, Recipe_ID, isstar)" +
+            	     "VALUES (?, ?, true)" +
+                     "ON DUPLICATE KEY UPDATE isstar = true";
 
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // set values
+            pstmt.setLong(1, user.getId());
+            pstmt.setLong(2, recipe.getId());
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
+            connection.close();
+            recipe.setIsFavourite(true);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("problem while adding favourite");
+
+        }
     }
 
     @Override
-    public void removeFromFavorites(Recipe recipe) {
+    public void removeFromFavorites(Recipe recipe, User user) {
+        String sql = "UPDATE UserRecipe " +
+            	     "SET isstar = false " +
+                     "WHERE User_ID = ? AND Recipe_ID = ?";
 
-    }
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-    @Override
-    public List<Recipe> getFavorites() {
-        return List.of();
+            // set values
+            pstmt.setLong(1, user.getId());
+            pstmt.setLong(2, recipe.getId());
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
+            connection.close();
+            recipe.setIsFavourite(false);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -289,6 +340,33 @@ public class MySqlRecipeRepository implements RecipeRepository{
         }
 
         return comments;
+    }
+
+    public List<Long> fetchFavourites(User user) {
+        List<Long> favourites = new ArrayList<>();
+
+        String sql = "SELECT Recipe_ID FROM UserRecipe " +
+                     "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // Set the recipe ID parameter
+            pstmt.setLong(1, user.getId());
+
+            // Execute the query
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Long ingredientName = rs.getLong("Recipe_ID");
+                    favourites.add(ingredientName);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return favourites;
     }
 
     @Override

@@ -80,7 +80,7 @@ public class AddRecipeController implements Initializable {
             System.out.println("start to make allTags String");
             // Combine all tags into a single string
             String allTagsString = Stream.concat(selectedTags.stream(), customTags.stream())
-                    .collect(Collectors.joining(","));//changed!!!
+                    .collect(Collectors.joining(";"));//changed!!!
             System.out.println("allTagsString: " + allTagsString);
 
 //            String tagString = String.join(";", selectedTags); // Join tags into a single string separated by semicolons
