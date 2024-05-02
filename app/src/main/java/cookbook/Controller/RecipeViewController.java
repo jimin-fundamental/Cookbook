@@ -25,6 +25,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -35,6 +36,7 @@ import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import cookbook.Controller.AddRecipeController;
 
 public class RecipeViewController implements Initializable {
@@ -55,11 +57,15 @@ public class RecipeViewController implements Initializable {
     private Label greetingText;
 
     @FXML
+    private FontAwesomeIconView star;
+
+    @FXML
     private Button searchButton;
 
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
     private User user;
+    private boolean favoritesShowing = false;
 
     public void setUserName(User user) {
         this.user = user;
@@ -184,14 +190,24 @@ public class RecipeViewController implements Initializable {
     }
     
     @FXML
-    void favouritesButtonClicked(ActionEvent event) {
-        int number = 0;
-        // clear all displayed elements
-        recipeContainer.getChildren().clear();
-        // iterate through all recipes
-        for (Recipe recipe : recipeList){
-            if(recipe.getIsFavourite()){
-                displayRecipeItem(recipe, number++, "");
+    void favouritesButtonClicked() {
+        if(this.favoritesShowing == true){
+            this.favoritesShowing = false;
+            star.setFill(Paint.valueOf("#ffbb0000"));
+            searchBar.setText("");
+            filterRecipes();
+            
+        } else {
+            this.favoritesShowing = true;
+            star.setFill(Paint.valueOf("#ffbd00"));
+            int number = 0;
+            // clear all displayed elements
+            recipeContainer.getChildren().clear();
+            // iterate through all recipes
+            for (Recipe recipe : recipeList){
+                if(recipe.getIsFavourite()){
+                    displayRecipeItem(recipe, number++, "");
+                }
             }
         }
     }
