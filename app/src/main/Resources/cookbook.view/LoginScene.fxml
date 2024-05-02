@@ -46,11 +46,6 @@
                         <Button fx:id="createProfileButton" mnemonicParsing="false" onAction="#createProfileButtonPressed" text="create profile" textAlignment="CENTER" />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="200.0">
-                     <children>
-                        <Button fx:id="startPageButton" mnemonicParsing="false" onAction="#startPageButtonPressed" text="skip" />
-                     </children>
-                  </HBox>
                   <Label fx:id="errorLabel" prefHeight="26.0" prefWidth="182.0" text="Credentials not correct!" textAlignment="CENTER" textFill="#ff1a1a" visible="false">
                      <font>
                         <Font size="17.0" />
