@@ -102,10 +102,12 @@ public class RecipeSceneController implements Initializable {
         // recipe contains certain values and this.recipe different values so you have
         // to differ.
         // There must be a better solution but for now it is that.
+        vBoxProcessSteps.getChildren().clear();
         for (String step : recipe.getProcessSteps()) {
             vBoxProcessSteps.getChildren().add(new Text(i++ + ": " + step));
         }
 
+        ingredientsFlowPane.getChildren().clear();
         for (Ingredient ingredient : recipe.getIngredients()) {
             ingredientsFlowPane.getChildren().add(
                     new Text(ingredient.getName() + " (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
@@ -133,11 +135,12 @@ public class RecipeSceneController implements Initializable {
         }
     }
 
-    public void changeServings(ActionEvent event) {
+    @FXML
+    void changeServings(ActionEvent event) {
         Integer ogServings = this.recipe.getNumberOfPersons();
         // Read the new servings from the dropdown menu
         Integer newServings = servingsComboBox.getValue();
-        ;// Code to read the new servings from the dropdown menu
+        // Code to read the new servings from the dropdown menu
          // Calculate the ratio of new servings to original servings
         double scaleFactor = (double) newServings / (double) ogServings;
         // Create a new ingredients list and multiply ingredients
@@ -154,12 +157,7 @@ public class RecipeSceneController implements Initializable {
         // Set new servings and ingredients
         this.recipe.setNumberOfPersons(newServings);
         this.recipe.setIngredients(newIngredients);
-        // Update ingredients list
-        ingredientsFlowPane.getChildren().clear();
-        for (Ingredient ingredient : newIngredients) {
-            ingredientsFlowPane.getChildren().add(
-                    new Text(ingredient.getName() + " (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
-        }
+        setRecipeData(this.recipe);
         // Refresh the scene to reflect the changes
         Stage stage = (Stage) ingredientsFlowPane.getScene().getWindow();
         stage.show();
