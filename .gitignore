@@ -2,7 +2,7 @@
 .vscode/
 ./idea
 build/
-app/
-src/test/
+app/bin/
+app/build/
 *.bin
 *.lock
