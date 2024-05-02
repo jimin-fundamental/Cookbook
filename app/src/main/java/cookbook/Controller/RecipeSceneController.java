@@ -136,7 +136,7 @@ public class RecipeSceneController implements Initializable {
     }
 
     @FXML
-    void addToWeeklyDinner(ActionEvent event) {
+    void addToWeeklyList(ActionEvent event) {
         try {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddToWeeklyList.fxml"));

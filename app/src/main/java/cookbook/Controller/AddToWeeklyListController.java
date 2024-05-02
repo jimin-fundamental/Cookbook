@@ -11,7 +11,7 @@ public class AddToWeeklyListController {
     }
 
     @FXML
-    public void addToWeeklyList() {
+    void addToWeeklyList() {
     }
 
 }
