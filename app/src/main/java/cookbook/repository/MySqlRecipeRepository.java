@@ -7,20 +7,33 @@ import cookbook.model.User;
 
 import java.sql.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.mysql.cj.protocol.Resultset;
 
 public class MySqlRecipeRepository implements RecipeRepository{
 
     private DatabaseManager dbManager;
+    private UserDao userDao;
+    private User currentUser; // Current user object
 
     public MySqlRecipeRepository(DatabaseManager dbManager) {
         this.dbManager = dbManager;
+        this.currentUser = currentUser; // Initialize with current user
+        this.userDao = new UserDao(dbManager);
+
         //loadPredeterminedTags();  // Pre-load tags to optimize later checks
+    }
+    public MySqlRecipeRepository(DatabaseManager dbManager, User currentUser) {
+        this.dbManager = dbManager;
+        this.currentUser = currentUser; // Initialize with current user
+        this.userDao = new UserDao(dbManager);
+
     }
 
 
@@ -74,6 +87,72 @@ public class MySqlRecipeRepository implements RecipeRepository{
         recipe.setComments(comments);
         return recipe;
     }
+
+    //String tags = 'starter;fruit; <- this form'
+    //1. split tags spring divided by ';' and make List<String>
+    //2. add each of a tag to Tags table - ID is auto generated, ispredifined = 0, tagname is what is entered
+    //3. get each of tagID from Tags table and start fill out RecipeCustomTag table - fill out Tags_ID with that
+    //4. get ID from User table(which is UserId)
+    //5. get ID from Recipe table(which is recipeId)
+    public void addCustomTagsRepo(String tags, Long userId, Recipe recipe) {
+        if (tags == null || tags.isEmpty()) {
+            System.out.println("No tags provided.");
+            return;
+        }
+
+        // Split tags string divided by ';' and make List<String>
+        List<String> tagList = Arrays.stream(tags.split(";"))
+                .filter(tag -> !tag.isEmpty())
+                .collect(Collectors.toList());
+
+        if (tagList.isEmpty()) {
+            System.out.println("No valid tags to process.");
+            return;
+        }
+
+        String insertTagSql = "INSERT INTO Tags (tagname, ispredefined) VALUES (?, 0) ON DUPLICATE KEY UPDATE ID=LAST_INSERT_ID(ID)";
+        String fetchTagIdSql = "SELECT ID FROM Tags WHERE tagname = ?";
+        String insertRecipeTagSql = "INSERT INTO RecipeCustomTag (Recipe_ID, User_ID, Tags_ID) VALUES (?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement insertTagStmt = connection.prepareStatement(insertTagSql, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement fetchTagIdStmt = connection.prepareStatement(fetchTagIdSql);
+             PreparedStatement insertRecipeTagStmt = connection.prepareStatement(insertRecipeTagSql)) {
+
+            for (String tag : tagList) {
+                // Insert the tag or update it to get the last insert ID
+                insertTagStmt.setString(1, tag);
+                insertTagStmt.executeUpdate();
+                ResultSet tagIds = insertTagStmt.getGeneratedKeys();
+
+                long tagId;
+                if (tagIds.next()) {
+                    tagId = tagIds.getLong(1);  // Get the generated tag ID
+                } else {
+                    // Fetch existing tag ID
+                    fetchTagIdStmt.setString(1, tag);
+                    ResultSet rs = fetchTagIdStmt.executeQuery();
+                    rs.next();
+                    tagId = rs.getLong("ID");
+                }
+
+                // Associate tag with user and recipe in RecipeCustomTag table
+                Long recipeId = recipe.getId();
+
+                insertRecipeTagStmt.setLong(1, recipeId);
+                insertRecipeTagStmt.setLong(2, userId);
+                insertRecipeTagStmt.setLong(3, tagId);
+                insertRecipeTagStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+    }
+
+
+
+
 
     public void fetchRecipeDetails(Recipe rec) {
 
@@ -148,6 +227,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
     @Override
     public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredientsText, String tagsText) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
+//            String sql = "SELECT Recipe_ID FROM UserRecipe " +
+//                    "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
             String sql = "CALL UpdateRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
             try (CallableStatement statement = connection.prepareCall(sql)) {
                 statement.setLong(1, id);
@@ -465,6 +546,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
         return tags;
     }
+
+
 
 //    private boolean tagExists(String tag) {
 //        // Check in cached predetermined tags first

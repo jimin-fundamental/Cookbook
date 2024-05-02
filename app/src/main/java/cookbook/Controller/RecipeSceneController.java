@@ -67,6 +67,7 @@ public class RecipeSceneController implements Initializable {
 
     public void setUser(User user) {
         this.user = user;
+        this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
     }
 
     @Override
@@ -138,7 +139,6 @@ public class RecipeSceneController implements Initializable {
     @FXML
     void addCustomTags(MouseEvent event) {
         try {
-
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddCustomTags.fxml"));
 
             // create new stage for new window of the recipe
@@ -148,6 +148,8 @@ public class RecipeSceneController implements Initializable {
 
             // get the controller to call the method to set the data
             AddCustomTagsController controller = fxmlLoader.getController();
+//            controller.setRecipe(this.recipe);
+            controller.setUser(this.user);  // Assuming 'user' is available in this context
             controller.setRecipe(this.recipe);
 
             stage.show();
