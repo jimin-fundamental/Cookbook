@@ -136,12 +136,34 @@ public class RecipeSceneController implements Initializable {
     }
 
     @FXML
+    void addCustomTags(MouseEvent event) {
+        try {
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddCustomTags.fxml"));
+
+            // create new stage for new window of the recipe
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(new Scene(fxmlLoader.load()));
+
+            // get the controller to call the method to set the data
+            AddCustomTagsController controller = fxmlLoader.getController();
+            controller.setRecipe(this.recipe);
+
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
     void changeServings(ActionEvent event) {
         Integer ogServings = this.recipe.getNumberOfPersons();
         // Read the new servings from the dropdown menu
         Integer newServings = servingsComboBox.getValue();
         // Code to read the new servings from the dropdown menu
-         // Calculate the ratio of new servings to original servings
+        // Calculate the ratio of new servings to original servings
         double scaleFactor = (double) newServings / (double) ogServings;
         // Create a new ingredients list and multiply ingredients
         List<Ingredient> ingredients = this.recipe.getIngredients();
