@@ -136,6 +136,11 @@ public class RecipeSceneController implements Initializable {
     }
 
     @FXML
+    void addToWeeklyDinner(ActionEvent event) {
+        
+    }
+
+    @FXML
     void addCustomTags(MouseEvent event) {
         try {
 

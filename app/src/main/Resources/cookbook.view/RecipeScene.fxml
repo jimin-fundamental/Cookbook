@@ -48,7 +48,12 @@
                               </Text>
                            </children>
                         </HBox>
-                        <Button layoutX="500.0" layoutY="1000.0" onAction="#editRecipeScene" text="edit Recipe" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button onAction="#editRecipeScene" text="Edit Recipe" />
+                              <Button mnemonicParsing="false" onAction="#addToWeeklyDinner" text="+ Weekly Dinner" />
+                           </children>
+                        </HBox>
                         <Text fx:id="recipeDescriptionText" strokeType="OUTSIDE" strokeWidth="0.0" text="This rice pudding is the best I've ever tasted, and it gets rave reviews from everyone who tastes it! Sprinkle with nutmeg or cinnamon, if desired. For creamier pudding, use short or medium-grain rice." wrappingWidth="395.0">
                            <font>
                               <Font name="System Italic" size="14.0" />
