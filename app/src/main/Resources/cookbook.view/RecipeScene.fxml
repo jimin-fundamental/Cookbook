@@ -57,7 +57,7 @@
                         </FlowPane>
                         <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="129.0" spacing="10.0">
                            <children>
-                              <ComboBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="65.0" promptText="2" />
+                              <ComboBox fx:id="servingsComboBox" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="65.0" promptText="2" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="servings" wrappingWidth="50.0">
                                  <font>
                                     <Font name="System Italic" size="14.0" />
