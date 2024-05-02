@@ -72,7 +72,7 @@
       <HBox spacing="10.0">
          <children>
             <DatePicker fx:id="WeekDatePicker" promptText="Week" showWeekNumbers="true" />
-            <TextField fx:id="NameTextField" prefHeight="26.0" prefWidth="201.0" text="Name" />
+            <TextField fx:id="NameTextField" prefHeight="26.0" prefWidth="153.0" text="Name" HBox.hgrow="ALWAYS" />
             <Button onAction="#addWeeklyList" text="Add New" />
          </children>
       </HBox>
