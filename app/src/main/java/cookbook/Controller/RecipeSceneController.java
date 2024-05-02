@@ -137,6 +137,28 @@ public class RecipeSceneController implements Initializable {
     }
 
     @FXML
+    void addToWeeklyList(ActionEvent event) {
+        try {
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddToWeeklyList.fxml"));
+
+            // create new stage for new window of the recipe
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(new Scene(fxmlLoader.load()));
+
+            // get the controller to call the method to set the data
+            AddToWeeklyListController controller = fxmlLoader.getController();
+            controller.setRecipe(this.recipe);
+
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     void addCustomTags(MouseEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddCustomTags.fxml"));

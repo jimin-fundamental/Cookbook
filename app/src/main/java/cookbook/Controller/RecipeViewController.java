@@ -212,6 +212,18 @@ public class RecipeViewController implements Initializable {
         }
     }
 
+    @FXML
+    void openWeeklyLists(ActionEvent event){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/WeeklyListsScene.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void displayRecipeItem(Recipe recipe, int number, String searchHits) {
         try {
 
