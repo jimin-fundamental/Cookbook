@@ -13,7 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -44,6 +44,9 @@ public class RecipeItemController {
     @FXML
     private StackPane tagsPane;
 
+    @FXML
+    private StackPane recipeItemPane;
+
     private Recipe recipe;
     private User user;
 
@@ -71,6 +74,10 @@ public class RecipeItemController {
         if(tagHits != ""){
             tagsPane.setStyle("-fx-background-color: green; -fx-background-radius: 4;");
         }
+
+        Tooltip t = new Tooltip(recipe.getShortDescription());
+        Tooltip.install(recipeItemPane, t);
+
     }
 
     // show the clicked recipe with more details

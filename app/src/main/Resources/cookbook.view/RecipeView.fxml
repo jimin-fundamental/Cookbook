@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -40,8 +41,9 @@
                         <GridPane prefWidth="930.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="579.0" minWidth="10.0" prefWidth="213.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="380.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="191.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="40.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="475.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="142.0" />
                               <ColumnConstraints hgrow="SOMETIMES" maxWidth="784.0" minWidth="10.0" prefWidth="142.0" />
                           </columnConstraints>
                           <rowConstraints>
@@ -62,10 +64,10 @@
                                     </Label>
                                  </children>
                               </VBox>
-                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxHeight="25.0" maxWidth="300.0" onAction="#searchBarKeyTyped" prefHeight="25.0" prefWidth="200.0" promptText="search..." GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <Button fx:id="searchButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#searchButtonClicked" text="search" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
-                              <Button fx:id="addButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#addButtonClicked" text="+ Add Recipe" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
-                              <Button alignment="TOP_LEFT" mnemonicParsing="false" onAction="#favouritesButtonClicked" text="show favourites" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
+                              <FontAwesomeIconView fx:id="star" fill="#ffbb0000" glyphName="STAR" onMouseClicked="#favouritesButtonClicked" selectionFill="#ffcc0000" size="20" stroke="BLACK" GridPane.columnIndex="1" />
+                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxHeight="26.0" maxWidth="435.0" onAction="#searchBarKeyTyped" prefHeight="26.0" prefWidth="435.0" promptText="search..." GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <Button fx:id="searchButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#searchButtonClicked" text="search" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                              <Button fx:id="addButton" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#addButtonClicked" text="+ Add Recipe" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
                            </children>
                            <VBox.margin>
                               <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
