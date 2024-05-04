@@ -71,6 +71,18 @@ CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`RecipeTag` (
     ON UPDATE CASCADE
 );
 
+CREATE TABLE `RecipeCustomTag` (
+  `Recipe_ID` int(11) NOT NULL,
+  `User_ID` int(11) NOT NULL,
+  `Tags_ID` int(11) NOT NULL,
+  PRIMARY KEY (`Recipe_ID`,`User_ID`,`Tags_ID`),
+  KEY `fk_RecipeCustomTag_User` (`User_ID`),
+  KEY `fk_RecipeCustomTag_Tags` (`Tags_ID`),
+  CONSTRAINT `fk_RecipeCustomTag_Recipe` FOREIGN KEY (`Recipe_ID`) REFERENCES `Recipe` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_RecipeCustomTag_Tags` FOREIGN KEY (`Tags_ID`) REFERENCES `Tags` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_RecipeCustomTag_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`User` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
@@ -81,26 +93,27 @@ CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`User` (
   UNIQUE INDEX `username_UNIQUE` (`username` ASC)
 );
 
-CREATE TABLE IF NOT EXISTS UserRecipe (
-  User_ID INT NOT NULL,
-  Recipe_ID INT NOT NULL,
-  isstar TINYINT NOT NULL DEFAULT 0,
-  isweekly TINYINT NOT NULL DEFAULT 0,
-  day DATE NULL,
-  INDEX fk_UserRecipe_User1_idx (User_ID ASC),
-  INDEX fk_UserRecipe_Recipe1_idx (Recipe_ID ASC),
-  PRIMARY KEY (User_ID, Recipe_ID),
-  CONSTRAINT fk_UserRecipe_User1
-    FOREIGN KEY (User_ID)
-    REFERENCES User (ID)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT fk_UserRecipe_Recipe1
-    FOREIGN KEY (Recipe_ID)
-    REFERENCES Recipe (ID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-);
+CREATE TABLE `UserRecipeStar` (
+  `User_ID` int(11) NOT NULL,
+  `Recipe_ID` int(11) NOT NULL,
+  `isstar` tinyint(4) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`User_ID`,`Recipe_ID`),
+  KEY `fk_UserRecipe_User1_idx` (`User_ID`),
+  KEY `fk_UserRecipe_Recipe1_idx` (`Recipe_ID`),
+  CONSTRAINT `fk_UserRecipe_Recipe1` FOREIGN KEY (`Recipe_ID`) REFERENCES `Recipe` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_UserRecipe_User1` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+
+CREATE TABLE `UserRecipeWeeklyList` (
+  `User_ID` int(11) NOT NULL,
+  `Recipe_ID` int(11) NOT NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`User_ID`,`Recipe_ID`,`date`),
+  KEY `fk_UserRecipeDates_Recipe` (`Recipe_ID`),
+  CONSTRAINT `fk_UserRecipeDates_Recipe` FOREIGN KEY (`Recipe_ID`) REFERENCES `Recipe` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_UserRecipeDates_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE TABLE IF NOT EXISTS Comments (
   Comment_ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -157,32 +170,47 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 -- Views
+CREATE ALGORITHM=UNDEFINED DEFINER=`u689018343_nulla`@`%` SQL SECURITY DEFINER VIEW `FullRecipeView` AS 
+SELECT 
+    `r`.`ID` AS `Recipe_ID`,
+    `r`.`name` AS `Recipe_Name`,
+    `r`.`sdecr` AS `Short_Description`,
+    `r`.`descr` AS `Description`,
+    `r`.`imgUrl` AS `Image_URL`,
+    `r`.`servings` AS `Servings`,
+    CONCAT('[', 
+        IFNULL(
+            CONCAT(
+                GROUP_CONCAT(DISTINCT '{"tagname": "', `t`.`tagname`,'"}' SEPARATOR ','),
+                IF(
+                    GROUP_CONCAT(DISTINCT `t`.`tagname`) IS NOT NULL 
+                    AND GROUP_CONCAT(DISTINCT `tc`.`tagname`) IS NOT NULL, 
+                    ',',
+                    ''
+                )
+            ),
+            ''
+        ), 
+        IFNULL(
+            GROUP_CONCAT(DISTINCT '{"tagname": "', `tc`.`tagname`,'"}' SEPARATOR ','),
+            ''
+        ), 
+    ']') AS `Tags_JSON`,
+    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"name": "', `i`.`name`,'", "amount": "',`ri`.`amount_int`,'", "unit": "',`ri`.`amount_unit`,'"}' SEPARATOR ','),''), ']') AS `Ingredients_JSON`,
+    IFNULL(GROUP_CONCAT(DISTINCT CONCAT('{"comment_id": "',`c`.`Comment_ID`,'", "comment": "',`c`.`Comment`,'"}') SEPARATOR ', '),'') AS `Comments_JSON`
+FROM 
+    (((((((`Recipe` `r` 
+    LEFT JOIN `RecipeIngredient` `ri` ON (`r`.`ID` = `ri`.`Recipe_ID`)) 
+    LEFT JOIN `Ingredient` `i` ON (`ri`.`Ingredient_ID` = `i`.`ID`)) 
+    LEFT JOIN `RecipeTag` `rt` ON (`r`.`ID` = `rt`.`Recipe_ID`)) 
+    LEFT JOIN `Tags` `t` ON (`rt`.`Tags_ID` = `t`.`ID`)) 
+    LEFT JOIN `RecipeCustomTag` `rct` ON (`r`.`ID` = `rct`.`Recipe_ID`)) 
+    LEFT JOIN `Tags` `tc` ON (`rct`.`Tags_ID` = `tc`.`ID`)) 
+    LEFT JOIN `Comments` `c` ON (`r`.`ID` = `c`.`Recipe_ID`)) 
+GROUP BY `r`.`ID`;
 
-CREATE VIEW FullRecipeView AS
-SELECT
-    r.ID AS Recipe_ID,
-    r.name AS Recipe_Name,
-    r.sdecr AS Short_Description,
-    r.descr AS Description,
-    r.imgUrl AS Image_URL,
-    r.servings AS Servings,
-    CONCAT('[', GROUP_CONCAT('{"name": "', i.name, '", "amount": "', ri.amount_int, '", "unit": "', ri.amount_unit, '"}'), ']') AS Ingredients_JSON,
-    CONCAT('[', GROUP_CONCAT('{"tagname": "', t.tagname, '"}'), ']') AS Tags_JSON,
-    GROUP_CONCAT(CONCAT('{"comment_id": "', c.Comment_ID, '", "comment": "', c.Comment, '"}') SEPARATOR ', ') AS Comments_JSON
-FROM
-    Recipe r
-JOIN
-    RecipeIngredient ri ON r.ID = ri.Recipe_ID
-JOIN
-    Ingredient i ON ri.Ingredient_ID = i.ID
-LEFT JOIN
-    RecipeTag rt ON r.ID = rt.Recipe_ID
-LEFT JOIN
-    Tags t ON rt.Tags_ID = t.ID
-LEFT JOIN
-    Comments c ON r.ID = c.Recipe_ID
-GROUP BY
-    r.ID;
+
+
 
 CREATE VIEW ShortRecipeView AS
 SELECT
@@ -199,17 +227,23 @@ LEFT JOIN
 GROUP BY
     r.ID;
 
-CREATE VIEW FavoriteRecipes AS
-SELECT User_ID, Recipe_ID
-FROM UserRecipe
-WHERE isstar = 1;
 
 
 
 -- Procedures
 
 DELIMITER $$
-CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `AddNewRecipe`(IN `p_name` VARCHAR(255), IN `p_shortDescr` MEDIUMTEXT, IN `p_descr` LONGTEXT, IN `p_imgUrl` LONGTEXT, IN `p_servings` INT, IN `p_ingredients` TEXT, IN `p_tags` TEXT)
+
+CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `AddNewRecipe`(
+    IN p_userID INT,
+    IN p_name VARCHAR(255),
+    IN p_shortDescr MEDIUMTEXT,
+    IN p_descr LONGTEXT,
+    IN p_imgUrl LONGTEXT,
+    IN p_servings INT,
+    IN p_ingredients TEXT,
+    IN p_tags TEXT
+)
 BEGIN
     DECLARE recipeID INT;
     DECLARE currentIngredient VARCHAR(255);
@@ -217,13 +251,13 @@ BEGIN
     DECLARE currentAmountUnit VARCHAR(255);
     DECLARE currentTagName VARCHAR(255);
     DECLARE tagID INT;
-    DECLARE stepJson LONGTEXT;
+    DECLARE tagIsPredefined TINYINT;
 
     -- Convert description to JSON format
-    SET stepJson = CONCAT('{"steps": ["', REPLACE(p_descr, ';', '", "'), '"]}');
+    SET p_descr = CONCAT('{"steps": ["', REPLACE(p_descr, ';', '","'), '"]}');
 
     -- Insert into Recipe table
-    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings) VALUES (p_name, p_shortDescr, stepJson, p_imgUrl, p_servings);
+    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings) VALUES (p_name, p_shortDescr, p_descr, p_imgUrl, p_servings);
     SET recipeID = LAST_INSERT_ID();
 
     -- Split ingredients string and insert into RecipeIngredient table
@@ -242,35 +276,43 @@ BEGIN
         INSERT INTO RecipeIngredient (Recipe_ID, Ingredient_ID, amount_int, amount_unit) VALUES (recipeID, (SELECT ID FROM Ingredient WHERE name = currentIngredient LIMIT 1), currentAmountInt, currentAmountUnit);
     END WHILE;
 
-    -- Split tags string and insert into Tags and RecipeTag tables
+    -- Split tags string and insert into Tags and RecipeTag/RecipeCustomTag tables
     WHILE LENGTH(p_tags) > 0 DO
-        SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ', ', 1));
-        SET p_tags = TRIM(BOTH ', ' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 3));
+        SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ';', 1));
+        SET p_tags = TRIM(BOTH ';' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 2));
 
-        -- Retrieve the tag ID or insert if not exists
-        INSERT INTO Tags (ispredefined, tagname) VALUES (0, currentTagName)
-            ON DUPLICATE KEY UPDATE ID = LAST_INSERT_ID(ID);
+        -- Check if tag exists
+        SELECT ID, ispredefined INTO tagID, tagIsPredefined FROM Tags WHERE tagname = currentTagName;
 
-        SELECT LAST_INSERT_ID() INTO tagID;
+        -- If tag does not exist, insert into Tags table
+        IF tagID IS NULL THEN
+            INSERT INTO Tags (ispredefined, tagname) VALUES (0, currentTagName);
+            SET tagID = LAST_INSERT_ID();
+        END IF;
 
-        -- Insert into RecipeTag
-        IF tagID IS NOT NULL THEN
+        -- Insert into appropriate table based on ispredefined value
+        IF tagIsPredefined = 1 THEN
+            -- Insert into RecipeTag
             INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (recipeID, tagID);
+        ELSE
+            -- Insert into RecipeCustomTag
+            INSERT INTO RecipeCustomTag (Recipe_ID, User_ID, Tags_ID) VALUES (recipeID, p_userID, tagID);
         END IF;
     END WHILE;
 END$$
-DELIMITER ;
-DELIMITER //
 
-CREATE PROCEDURE UpdateRecipe (
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateRecipe`(
     IN p_recipeID INT,
     IN p_name VARCHAR(255),
     IN p_shortDescr MEDIUMTEXT,
     IN p_descr LONGTEXT,
     IN p_imgUrl LONGTEXT,
     IN p_servings INT,
-    IN p_ingredients TEXT, -- Format: ingredient_name1,amount_int1,amount_unit1;ingredient_name2,amount_int2,amount_unit2;...
-    IN p_tags TEXT -- Format: tag1,tag2,tag3,...
+    IN p_ingredients TEXT,
+    IN p_tags TEXT
 )
 BEGIN
     DECLARE existingName VARCHAR(255);
@@ -280,6 +322,8 @@ BEGIN
     DECLARE existingServings INT;
     DECLARE existingIngredients TEXT;
     DECLARE existingTags TEXT;
+    DECLARE currentTagName VARCHAR(255);
+    DECLARE tagID INT;
 
     -- Get existing recipe details
     SELECT name, sdecr, descr, imgUrl, servings, GROUP_CONCAT(CONCAT(ri.Ingredient_ID, ',', ri.amount_int, ',', ri.amount_unit) SEPARATOR ';') INTO existingName, existingShortDescr, existingDescr, existingImgUrl, existingServings, existingIngredients
@@ -325,17 +369,25 @@ BEGIN
 
         -- Insert updated tags into RecipeTag table
         WHILE LENGTH(p_tags) > 0 DO
-            INSERT IGNORE INTO Tags (ispredefined, tagname) VALUES (0, SUBSTRING_INDEX(p_tags, ',', 1));
-            INSERT INTO RecipeTag (Recipe_ID, Tags_ID) 
-            VALUES (
-                p_recipeID, 
-                (SELECT ID FROM Tags WHERE tagname = SUBSTRING_INDEX(p_tags, ',', 1))
-            );
-            SET p_tags = TRIM(BOTH ',' FROM SUBSTRING(p_tags, LENGTH(SUBSTRING_INDEX(p_tags, ',', 1)) + 2));
+            SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ',', 1));
+            SET p_tags = TRIM(BOTH ',' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 2));
+
+            -- Check if tag exists in predefined tags table
+            SELECT ID INTO tagID FROM Tags WHERE tagname = currentTagName AND ispredefined = 1;
+
+            -- If tag does not exist in predefined tags table, insert into custom tags table
+            IF tagID IS NULL THEN
+                INSERT INTO Tags (ispredefined, tagname) VALUES (0, currentTagName);
+                SET tagID = LAST_INSERT_ID();
+                -- Insert into RecipeTag
+                INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (p_recipeID, tagID);
+            ELSE
+                -- Insert into RecipeTag
+                INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (p_recipeID, tagID);
+            END IF;
         END WHILE;
     END IF;
-END //
-
+END$$
 DELIMITER ;
 
 
@@ -357,60 +409,51 @@ END //
 
 DELIMITER ;
 
-DELIMITER //
 
-CREATE PROCEDURE AddOrUpdateFavoriteRecipe(
-    IN p_UserID INT,
-    IN p_RecipeID INT
-)
+DELIMITER $$
+CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateFavoriteRecipe`(IN `p_UserID` INT, IN `p_RecipeID` INT)
 BEGIN
     DECLARE v_Exists INT;
 
-       SELECT COUNT(*)
-    INTO v_Exists
-    FROM UserRecipe
+    -- Überprüfen, ob der Benutzer das Rezept bereits als Favorit markiert hat
+    SELECT COUNT(*) INTO v_Exists
+    FROM UserRecipeStar
     WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID;
 
-       IF v_Exists > 0 THEN
-        UPDATE UserRecipe
+    IF v_Exists > 0 THEN
+        -- Aktualisieren des vorhandenen Favoriten-Eintrags
+        UPDATE UserRecipeStar
         SET isstar = 1
         WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID;
-           ELSE
-      
-        INSERT INTO UserRecipe (User_ID, Recipe_ID, isstar)
+    ELSE
+        -- Einfügen eines neuen Favoriten-Eintrags
+        INSERT INTO UserRecipeStar (User_ID, Recipe_ID, isstar)
         VALUES (p_UserID, p_RecipeID, 1);
-           END IF;
-END //
-
+    END IF;
+END$$
 DELIMITER ;
 
-DELIMITER //
-
-CREATE PROCEDURE AddOrUpdateWeeklyRecipe(
+DELIMITER $$
+CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateWeeklyRecipe`(
     IN p_UserID INT,
     IN p_RecipeID INT,
-    IN p_Day DATE
+    IN p_Date DATE
 )
 BEGIN
     DECLARE v_Exists INT;
 
-      SELECT COUNT(*)
+    SELECT COUNT(*)
     INTO v_Exists
-    FROM UserRecipe
-    WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID AND isweekly = 1;
+    FROM UserRecipeDates
+    WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID AND date = p_Date;
 
-      IF v_Exists > 0 THEN
-        UPDATE UserRecipe
-        SET day = p_Day
-        WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID;
-           ELSE
-        INSERT INTO UserRecipe (User_ID, Recipe_ID, isweekly, day)
-        VALUES (p_UserID, p_RecipeID, 1, p_Day);
-        
+    IF v_Exists > 0 THEN
+        UPDATE UserRecipeDates
+        SET date = p_Date
+        WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID AND date = p_Date;
+    ELSE
+        INSERT INTO UserRecipeDates (User_ID, Recipe_ID, date)
+        VALUES (p_UserID, p_RecipeID, p_Date);
     END IF;
-END //
-
+END$$
 DELIMITER ;
-
-
-
