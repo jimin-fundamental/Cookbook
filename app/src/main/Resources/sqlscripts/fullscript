@@ -304,8 +304,10 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+
 CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateRecipe`(
     IN p_recipeID INT,
+    IN p_userID INT,
     IN p_name VARCHAR(255),
     IN p_shortDescr MEDIUMTEXT,
     IN p_descr LONGTEXT,
@@ -324,6 +326,7 @@ BEGIN
     DECLARE existingTags TEXT;
     DECLARE currentTagName VARCHAR(255);
     DECLARE tagID INT;
+    DECLARE ispredefined INT; -- Neue Variable zur Deklaration von ispredefined
 
     -- Get existing recipe details
     SELECT name, sdecr, descr, imgUrl, servings, GROUP_CONCAT(CONCAT(ri.Ingredient_ID, ',', ri.amount_int, ',', ri.amount_unit) SEPARATOR ';') INTO existingName, existingShortDescr, existingDescr, existingImgUrl, existingServings, existingIngredients
@@ -351,8 +354,9 @@ BEGIN
         -- Delete existing RecipeIngredient entries for the recipe
         DELETE FROM RecipeIngredient WHERE Recipe_ID = p_recipeID;
 
-        -- Delete existing RecipeTag entries for the recipe
+        -- Delete existing RecipeTag and RecipeCustomTag entries for the recipe
         DELETE FROM RecipeTag WHERE Recipe_ID = p_recipeID;
+        DELETE FROM RecipeCustomTag WHERE Recipe_ID = p_recipeID;
 
         -- Insert updated ingredients into RecipeIngredient table
         WHILE LENGTH(p_ingredients) > 0 DO
@@ -367,28 +371,37 @@ BEGIN
             SET p_ingredients = TRIM(BOTH ';' FROM SUBSTRING(p_ingredients, LENGTH(SUBSTRING_INDEX(p_ingredients, ',', 1)) + 2));
         END WHILE;
 
-        -- Insert updated tags into RecipeTag table
+        -- Split tags string and insert into RecipeTag and RecipeCustomTag tables
         WHILE LENGTH(p_tags) > 0 DO
             SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ',', 1));
             SET p_tags = TRIM(BOTH ',' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 2));
 
-            -- Check if tag exists in predefined tags table
-            SELECT ID INTO tagID FROM Tags WHERE tagname = currentTagName AND ispredefined = 1;
+            -- Check if tag exists
+            SELECT ID, ispredefined INTO tagID, ispredefined FROM Tags WHERE tagname = currentTagName;
 
-            -- If tag does not exist in predefined tags table, insert into custom tags table
+            -- If tag does not exist, insert into Tags table
             IF tagID IS NULL THEN
                 INSERT INTO Tags (ispredefined, tagname) VALUES (0, currentTagName);
                 SET tagID = LAST_INSERT_ID();
-                -- Insert into RecipeTag
-                INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (p_recipeID, tagID);
-            ELSE
-                -- Insert into RecipeTag
-                INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (p_recipeID, tagID);
+                SET ispredefined = 0; -- Setze ispredefined auf 0, da es sich um einen benutzerdefinierten Tag handelt
+            END IF;
+
+            -- Insert into appropriate table based on ispredefined value
+            IF tagID IS NOT NULL THEN
+                IF ispredefined = 1 THEN
+                    -- Insert into RecipeTag
+                    INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (p_recipeID, tagID);
+                ELSE
+                    -- Insert into RecipeCustomTag
+                    INSERT INTO RecipeCustomTag (Recipe_ID, User_ID, Tags_ID) VALUES (p_recipeID, p_userID, tagID);
+                END IF;
             END IF;
         END WHILE;
     END IF;
 END$$
+
 DELIMITER ;
+
 
 
 DELIMITER //
