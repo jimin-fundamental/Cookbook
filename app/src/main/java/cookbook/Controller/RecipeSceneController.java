@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import cookbook.DatabaseManager;
+import cookbook.SceneModifier;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
@@ -18,7 +20,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
@@ -61,6 +65,9 @@ public class RecipeSceneController implements Initializable {
     @FXML
     private ComboBox<Integer> servingsComboBox;
 
+    @FXML
+    private VBox tagsVBox;
+
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
     private User user;
@@ -77,9 +84,22 @@ public class RecipeSceneController implements Initializable {
     public void setRecipeData(Recipe recipe) {
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
         this.recipe = recipe;
+
+        List<String> tags = recipe.getTags();
+
+        // Clear existing tags
+        tagsVBox.getChildren().clear();
+
+        // Add tags to the VBox
+        for (String tag : tags) {
+            Label tagLabel = new Label(tag);
+            // Apply any desired styling to the tag label
+            tagsVBox.getChildren().add(tagLabel);
+        }
+
         setStar();
 
-        Integer[] servings = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        Integer[] servings = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         for (int index = 0; index < servings.length; index++) {
             servings[index] = servings[index] * this.recipe.getNumberOfPersons();
         }
@@ -158,6 +178,7 @@ public class RecipeSceneController implements Initializable {
         }
     }
 
+    //MouseEvent
     @FXML
     void addCustomTags(MouseEvent event) {
         try {
@@ -170,9 +191,21 @@ public class RecipeSceneController implements Initializable {
 
             // get the controller to call the method to set the data
             AddCustomTagsController controller = fxmlLoader.getController();
-//            controller.setRecipe(this.recipe);
             controller.setUser(this.user);  // Assuming 'user' is available in this context
             controller.setRecipe(this.recipe);
+            /*
+            controller.setOnCustomTagsAdded(v -> this.refreshRecipeView());
+            controller.setRecipeSceneStage((Stage) ((Node) event.getSource()).getScene().getWindow()); // Pass the Stage object of the RecipeScene
+            stage.showAndWait();
+             */
+
+            // Set callback to refresh RecipeView after adding custom tags
+//            controller.setOnCustomTagsAdded(new Consumer<Void>() {
+//                @Override
+//                public void accept(Void v) {
+//                    refreshRecipeView();
+//                }
+//            });
 
             stage.show();
 
@@ -180,7 +213,9 @@ public class RecipeSceneController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
+
+
     @FXML
     void changeServings(ActionEvent event) {
         Integer ogServings = this.recipe.getNumberOfPersons();
@@ -228,4 +263,17 @@ public class RecipeSceneController implements Initializable {
         }
     }
 
+    private void refreshRecipeView() {
+        System.out.println("refreshRecipeView");
+        // Assuming RecipeView.fxml is the FXML file for the RecipeView page
+        try {
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook/view/RecipeView.fxml")), null);
+            System.out.println("Recipe view refreshed");
+        } catch (IOException e) {
+            System.out.println("Error refreshing RecipeView: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+    }
 }

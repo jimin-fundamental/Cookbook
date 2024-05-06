@@ -1,3 +1,5 @@
+<?language groovy?>
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
@@ -17,6 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import java.util.ArrayList?>
 <ScrollPane fx:id="wrapperScrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeSceneController">
    <content>
       <VBox fx:id="wrapperVBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="272.0" prefWidth="32.0" spacing="10.0">
@@ -59,10 +62,43 @@
                               <Font name="System Italic" size="14.0" />
                            </font>
                         </Text>
-                        <FlowPane fx:id="tagsFlowPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" vgap="5.0">
-                           <fx:include fx:id="includedTag" source="Tag.fxml" />
-                           <fx:include fx:id="includedTag" source="Tag.fxml" />
-                           <StackPane fx:id="addCustomTagsStackPane" onMouseClicked="#addCustomTags" style="-fx-background-color: green; -fx-background-radius: 4;">
+
+<!--                        <FlowPane fx:id="tagsFlowPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" vgap="5.0">-->
+<!--                                                <FlowPane fx:id="tagsFlowPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" vgap="5.0">-->
+<!--                           <fx:include fx:id="includedTag" source="Tag.fxml" />-->
+<!--                           <fx:include fx:id="includedTag" source="Tag.fxml" />-->
+
+<!--                           <StackPane fx:id="addCustomTagsStackPane" onMouseClicked="#addCustomTags" style="-fx-background-color: green; -fx-background-radius: 4;">-->
+<!--                              <children>-->
+<!--                                 <Label alignment="CENTER" contentDisplay="CENTER" text="+ Add Custom Tags" textFill="WHITE">-->
+<!--                                    <font>-->
+<!--                                       <Font name="System Bold" size="9.0" />-->
+<!--                                    </font>-->
+<!--                                 </Label>-->
+<!--                              </children>-->
+<!--                              <padding>-->
+<!--                                 <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />-->
+<!--                              </padding>-->
+<!--                              <cursor>-->
+<!--                                 <Cursor fx:constant="HAND" />-->
+<!--                              </cursor>-->
+<!--                           </StackPane>-->
+<!--                        </FlowPane>-->
+
+                        <VBox fx:id="tagsVBox" prefWidth="200.0" spacing="5.0">
+                           <!-- Dynamically populate tags from the database -->
+                           <fx:define>
+                              <ArrayList fx:id="dbTags" />
+                           </fx:define>
+                           <fx:script>
+                              <![CDATA[
+                                 dbTags.addAll(recipe.tags);
+                              ]]>
+                           </fx:script>
+                           <Label text="${tag}" fx:for="tag in dbTags" />
+
+                           <!-- StackPane for adding custom tags -->
+                           <StackPane onMouseClicked="#addCustomTags" style="-fx-background-color: green; -fx-background-radius: 4;">
                               <children>
                                  <Label alignment="CENTER" contentDisplay="CENTER" text="+ Add Custom Tags" textFill="WHITE">
                                     <font>
@@ -77,7 +113,9 @@
                                  <Cursor fx:constant="HAND" />
                               </cursor>
                            </StackPane>
-                        </FlowPane>
+                        </VBox>
+
+
                         <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="129.0" spacing="10.0">
                            <children>
                               <ComboBox fx:id="servingsComboBox" maxWidth="-Infinity" minWidth="-Infinity" onAction="#changeServings" prefWidth="65.0" promptText="2" />
