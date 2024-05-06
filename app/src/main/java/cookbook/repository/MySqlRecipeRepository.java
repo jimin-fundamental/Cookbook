@@ -269,9 +269,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     @Override
     public void saveToFavorites(Recipe recipe, User user) {
-        String sql = "INSERT INTO UserRecipe (User_ID, Recipe_ID, isstar)" +
-            	     "VALUES (?, ?, true)" +
-                     "ON DUPLICATE KEY UPDATE isstar = true";
+        String sql = "{CALL UpdateFavoriteRecipe(?, ?)}";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -296,8 +294,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     @Override
     public void removeFromFavorites(Recipe recipe, User user) {
-        String sql = "UPDATE UserRecipe " +
-            	     "SET isstar = false " +
+        String sql = "UPDATE UserRecipeStar " +
+                     "SET isstar = 0 " +
                      "WHERE User_ID = ? AND Recipe_ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
@@ -427,7 +425,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     public List<Long> fetchFavourites(User user) {
         List<Long> favourites = new ArrayList<>();
 
-        String sql = "SELECT Recipe_ID FROM UserRecipe " +
+        String sql = "SELECT Recipe_ID FROM UserRecipeStar " +
                      "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
