@@ -61,6 +61,9 @@ public class RecipeSceneController implements Initializable {
     @FXML
     private ComboBox<Integer> servingsComboBox;
 
+    @FXML
+    private Button removeFromWeeklyListButton;
+
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
     private User user;
@@ -117,7 +120,7 @@ public class RecipeSceneController implements Initializable {
 
     public void editRecipeScene(ActionEvent event) {
         try {
-
+            
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/ChangeRecipe.fxml"));
 
             // create new stage for new window of the recipe
@@ -140,7 +143,7 @@ public class RecipeSceneController implements Initializable {
     void addToWeeklyList(ActionEvent event) {
         try {
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddToWeeklyList.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddToWeeklyList_new.fxml"));
 
             // create new stage for new window of the recipe
             Stage stage = new Stage();
@@ -150,6 +153,7 @@ public class RecipeSceneController implements Initializable {
             // get the controller to call the method to set the data
             AddToWeeklyListController controller = fxmlLoader.getController();
             controller.setRecipe(this.recipe);
+            controller.setUser(user);
 
             stage.show();
 

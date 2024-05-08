@@ -1,5 +1,6 @@
 package cookbook.model;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,8 @@ public class Recipe {
     private List<String> comments; // User comments on the recipe
     private String imagePath; // URL or path to the recipe's image
     private boolean isFavourite; // true if the recipe is selected as a favourite by the user
-
+    private List<Date> weeklyDates; // null if it is not in a weekly list
+    private Date comparableDate; // null if it is not in a weekly list
     // Default constructor
     public Recipe() {
         // Initialize lists
@@ -45,7 +47,10 @@ public class Recipe {
         this.comments = comments;
     }
     // Constructor with all parameters including image path
-    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags, List<String> comments, String imagePath) {
+    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, 
+        List<String> processSteps, int numberOfPersons, List<String> tags, 
+        List<String> comments, String imagePath, boolean isFavourite, 
+        List<Date> weeklyDates, Date comparableDate) {
         this.id = id;
         this.name = name;
         this.shortDescription = shortDescription;
@@ -55,6 +60,9 @@ public class Recipe {
         this.tags = tags;
         this.comments = comments;
         this.imagePath = imagePath;
+        this.isFavourite = isFavourite;
+        this.weeklyDates = weeklyDates;
+        this.comparableDate = comparableDate;
     }
 
     public Long getId() {
@@ -135,6 +143,17 @@ public class Recipe {
     public boolean getIsFavourite(){
         return isFavourite;
     }
-
+    public void setWeeklyDates(List<Date> weeklyDates){
+        this.weeklyDates = weeklyDates;
+    }
+    public List<Date> getWeeklyDates(){
+        return weeklyDates;
+    }
+    public void setComparableDate(Date comparaleDate){
+        this.comparableDate = comparaleDate;
+    }
+    public Date setComparableDate(){
+        return comparableDate;
+    }
 }
 

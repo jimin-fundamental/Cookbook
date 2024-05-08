@@ -4,6 +4,7 @@ import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface RecipeRepository {
@@ -21,9 +22,9 @@ public interface RecipeRepository {
     void removeFromFavorites(Recipe recipe, User user);
     List<Recipe> getFavorites(List<Recipe> recipes, User user);
 
-    void addToWeekPlan(Recipe recipe, String week);
-    void removeFromWeekPlan(Recipe recipe, String week);
-    List<Recipe> getWeekPlan(String week);
+    void addToWeekPlan(Recipe recipe, User user, Date date);
+    void removeFromWeekPlan(Recipe recipe, User user, Date date);
+    List<Recipe> getRecipeWeeklyDates(List<Recipe> recipes, User user);
 
     List<Ingredient> fetchIngredients(Long id);
     List<String> fetchTags(Long id);
