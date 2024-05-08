@@ -69,6 +69,9 @@ public class RecipeSceneController implements Initializable {
     @FXML
     private FlowPane tagsFlowPane;
 
+    @FXML
+    private Button removeFromWeeklyListButton;
+
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
     private User user;
@@ -165,7 +168,7 @@ public class RecipeSceneController implements Initializable {
 
     public void editRecipeScene(ActionEvent event) {
         try {
-
+            
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/ChangeRecipe.fxml"));
 
             // create new stage for new window of the recipe
@@ -188,7 +191,7 @@ public class RecipeSceneController implements Initializable {
     void addToWeeklyList(ActionEvent event) {
         try {
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddToWeeklyList.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddToWeeklyList_new.fxml"));
 
             // create new stage for new window of the recipe
             Stage stage = new Stage();
@@ -205,7 +208,7 @@ public class RecipeSceneController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    
     @FXML
     void changeServings(ActionEvent event) {
         Integer ogServings = this.recipe.getNumberOfPersons();

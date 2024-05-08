@@ -4,11 +4,14 @@ import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
+import javafx.geometry.Point2D;
 
 import java.sql.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +49,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
 
     @Override
-    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags) {
+    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl, int servings, int author, String ingredients, String tags) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
             // Prepare the SQL statement
             String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -58,8 +61,9 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 statement.setString(4, description);
                 statement.setString(5, imageUrl);
                 statement.setInt(6, servings);
-                statement.setString(7, ingredients); // Directly pass the ingredients string
-                statement.setString(8, tags); // Directly pass the tags string
+                statement.setInt(7, author);
+                statement.setString(8, ingredients); // Directly pass the ingredients string
+                statement.setString(9, tags); // Directly pass the tags string
 
                 System.out.println("statement: " + statement);
                 // Execute the stored procedure
@@ -225,7 +229,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredientsText, String tagsText) {
+    public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, int author, String ingredientsText, String tagsText) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
 //            String sql = "SELECT Recipe_ID FROM UserRecipe " +
 //                    "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
@@ -237,8 +241,9 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 statement.setString(4, description);
                 statement.setString(5, imageUrl);
                 statement.setInt(6, servings);
-                statement.setString(7, ingredientsText);
-                statement.setString(8, tagsText);
+                statement.setInt(7, author);
+                statement.setString(8, ingredientsText);
+                statement.setString(9, tagsText);
 
                 statement.execute();
             }
@@ -318,18 +323,77 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void addToWeekPlan(Recipe recipe, String week) {
+    public void addToWeekPlan(Recipe recipe, User user, Date date) {
+        String sql = "INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date) " +
+                     "VALUES (?, ?, ?)";
 
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // set values
+            pstmt.setLong(1, user.getId());
+            pstmt.setLong(2, recipe.getId());
+            pstmt.setDate(3, date);
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
+            connection.close();
+            List<Date> dates = recipe.getWeeklyDates();
+            if(dates == null){
+                dates = new ArrayList<Date>(); 
+                recipe.setWeeklyDates(dates);
+            }
+            dates.add(date);
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
     }
 
     @Override
-    public void removeFromWeekPlan(Recipe recipe, String week) {
+    public void removeFromWeekPlan(Recipe recipe, User user, Date date) {
+        String sql = "DELETE FROM UserRecipeWeeklyList " +
+                     "WHERE User_ID = ? AND Recipe_ID = ? AND date = ?";
 
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // set values
+            pstmt.setLong(1, user.getId());
+            pstmt.setLong(2, recipe.getId());
+            pstmt.setDate(3, date);
+
+            pstmt.executeUpdate();
+
+            pstmt.close();  
+            connection.close();
+
+            // remove the element from the list
+            recipe.getWeeklyDates().removeIf(d -> d.equals(date));
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public List<Recipe> getWeekPlan(String week) {
-        return List.of();
+    public List<Recipe> getRecipeWeeklyDates(List<Recipe> recipes, User user) {
+         // add Information for favourite recipes
+         Map<Long, List<Date>> map = fetchWeeklyRecipes(user);
+         for (Recipe recipe : recipes){
+             if (map.containsKey(recipe.getId())){
+                recipe.setWeeklyDates(map.get(recipe.getId()));
+             }
+             else{
+                 recipe.setWeeklyDates(null);
+             }
+         }
+         return recipes;
     }
 
     @Override
@@ -437,8 +501,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
             // Execute the query
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    Long ingredientName = rs.getLong("Recipe_ID");
-                    favourites.add(ingredientName);
+                    Long id = rs.getLong("Recipe_ID");
+                    favourites.add(id);
                 }
             }
 
@@ -447,6 +511,43 @@ public class MySqlRecipeRepository implements RecipeRepository{
         }
 
         return favourites;
+    }
+
+    private Map<Long,List<Date>> fetchWeeklyRecipes(User user){
+        Map<Long,List<Date>> weekly = new HashMap<Long, List<Date>>();
+
+        String sql = "SELECT Recipe_ID, date FROM UserRecipeWeeklyList " +
+                     "WHERE User_ID = ? AND Recipe_ID IS NOT NULL";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // Set the recipe ID parameter
+            pstmt.setLong(1, user.getId());
+
+            // Execute the query
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Long id = rs.getLong("Recipe_ID");
+                    Date date = rs.getDate("date");
+                    List<Date> dates = weekly.get(id);
+                    if(dates == null){
+                        List<Date> list = new ArrayList<>();
+                        list.add(date);
+                        weekly.put(id, list);
+                    }
+                    else{
+                        dates.add(date);
+
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return weekly;
     }
 
     @Override

@@ -71,13 +71,15 @@ public class RecipeViewController implements Initializable {
         this.user = user;
         greetingText.setText("Hi, " + user.getUserName() + "!");
 
-        // get information about favourite recipes
-        recipeList = recipeRepos.getFavorites(recipeList, user);
         int number = 0;
         for (Recipe recipe : recipeList) {
             displayRecipeItem(recipe, number++, "");
 
         }
+        // get information about favourite recipes
+        recipeList = recipeRepos.getFavorites(recipeList, user);
+        // get information about weekly recipes
+        recipeList = recipeRepos.getRecipeWeeklyDates(recipeList, user);
         
     }
 
@@ -215,9 +217,12 @@ public class RecipeViewController implements Initializable {
     @FXML
     void openWeeklyLists(ActionEvent event){
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/WeeklyListsScene.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/WeeklyListsScene_new.fxml"));
             Stage stage = new Stage();
             stage.setScene(new Scene(fxmlLoader.load()));
+            WeeklyListsSceneController controller = fxmlLoader.getController();
+            controller.setUser(user);
+            controller.setRecipeList(recipeList);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

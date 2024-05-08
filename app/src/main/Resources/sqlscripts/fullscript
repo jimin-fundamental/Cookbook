@@ -4,16 +4,25 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+
 CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`Recipe` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `sdecr` MEDIUMTEXT NOT NULL,
   `descr` LONGTEXT NOT NULL,
   `imgUrl` LONGTEXT NOT NULL, 
-  `servings` INT NOT NULL DEFAULT 1, 
+  `servings` INT NOT NULL DEFAULT 1,
+  `author` INT NOT NULL DEFAULT 8,
   PRIMARY KEY (`ID`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
+  INDEX `fk_Recipe_User_idx` (`author` ASC),
+  CONSTRAINT `fk_Recipe_User`
+    FOREIGN KEY (`author`)
+    REFERENCES `u689018343_cookbook`.`User` (`ID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`Ingredient` (
   `ID` INT NOT NULL AUTO_INCREMENT,
@@ -104,15 +113,17 @@ CREATE TABLE `UserRecipeStar` (
   CONSTRAINT `fk_UserRecipe_User1` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
-CREATE TABLE `UserRecipeWeeklyList` (
-  `User_ID` int(11) NOT NULL,
-  `Recipe_ID` int(11) NOT NULL,
-  `date` date NOT NULL,
+CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`UserRecipeWeeklyList` (
+  `User_ID` INT NOT NULL,
+  `Recipe_ID` INT NOT NULL,
+  `date` DATE NOT NULL,
+  `w_servings` INT NOT NULL DEFAULT 1, 
   PRIMARY KEY (`User_ID`,`Recipe_ID`,`date`),
   KEY `fk_UserRecipeDates_Recipe` (`Recipe_ID`),
   CONSTRAINT `fk_UserRecipeDates_Recipe` FOREIGN KEY (`Recipe_ID`) REFERENCES `Recipe` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_UserRecipeDates_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 
 CREATE TABLE IF NOT EXISTS Comments (
@@ -170,7 +181,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 -- Views
-CREATE ALGORITHM=UNDEFINED DEFINER=`u689018343_nulla`@`%` SQL SECURITY DEFINER VIEW `FullRecipeView` AS 
+DELIMITER $$
+CREATE OR REPLACE VIEW `FullRecipeView` AS 
 SELECT 
     `r`.`ID` AS `Recipe_ID`,
     `r`.`name` AS `Recipe_Name`,
@@ -178,6 +190,7 @@ SELECT
     `r`.`descr` AS `Description`,
     `r`.`imgUrl` AS `Image_URL`,
     `r`.`servings` AS `Servings`,
+    `r`.`author` AS `Author`,
     CONCAT('[', 
         IFNULL(
             CONCAT(
@@ -207,8 +220,8 @@ FROM
     LEFT JOIN `RecipeCustomTag` `rct` ON (`r`.`ID` = `rct`.`Recipe_ID`)) 
     LEFT JOIN `Tags` `tc` ON (`rct`.`Tags_ID` = `tc`.`ID`)) 
     LEFT JOIN `Comments` `c` ON (`r`.`ID` = `c`.`Recipe_ID`)) 
-GROUP BY `r`.`ID`;
-
+GROUP BY `r`.`ID`$$
+DELIMITER ;
 
 
 
@@ -227,20 +240,32 @@ LEFT JOIN
 GROUP BY
     r.ID;
 
+CREATE OR REPLACE VIEW CommentsView AS
+SELECT 
+    c.Comment_ID,
+    c.Comment,
+    c.User_ID,
+    u.name AS User_Name, 
+    c.Recipe_ID
+FROM 
+    Comments c
+JOIN 
+    User u ON c.User_ID = u.ID;
+
 
 
 
 -- Procedures
 
 DELIMITER $$
-
-CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `AddNewRecipe`(
+CREATE OR REPLACE PROCEDURE `AddNewRecipe`(
     IN p_userID INT,
     IN p_name VARCHAR(255),
     IN p_shortDescr MEDIUMTEXT,
     IN p_descr LONGTEXT,
     IN p_imgUrl LONGTEXT,
     IN p_servings INT,
+    IN p_author INT, 
     IN p_ingredients TEXT,
     IN p_tags TEXT
 )
@@ -257,7 +282,7 @@ BEGIN
     SET p_descr = CONCAT('{"steps": ["', REPLACE(p_descr, ';', '","'), '"]}');
 
     -- Insert into Recipe table
-    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings) VALUES (p_name, p_shortDescr, p_descr, p_imgUrl, p_servings);
+    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings, author) VALUES (p_name, p_shortDescr, p_descr, p_imgUrl, p_servings, p_author); -- Spalte "author" hinzugefügt
     SET recipeID = LAST_INSERT_ID();
 
     -- Split ingredients string and insert into RecipeIngredient table
@@ -300,12 +325,11 @@ BEGIN
         END IF;
     END WHILE;
 END$$
-
 DELIMITER ;
 
-DELIMITER $$
 
-CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateRecipe`(
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE `UpdateRecipe`(
     IN p_recipeID INT,
     IN p_userID INT,
     IN p_name VARCHAR(255),
@@ -313,6 +337,7 @@ CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateRecipe`(
     IN p_descr LONGTEXT,
     IN p_imgUrl LONGTEXT,
     IN p_servings INT,
+    IN p_author INT, 
     IN p_ingredients TEXT,
     IN p_tags TEXT
 )
@@ -326,8 +351,7 @@ BEGIN
     DECLARE existingTags TEXT;
     DECLARE currentTagName VARCHAR(255);
     DECLARE tagID INT;
-    DECLARE ispredefined INT; -- Neue Variable zur Deklaration von ispredefined
-
+    DECLARE ispredefined INT; 
     -- Get existing recipe details
     SELECT name, sdecr, descr, imgUrl, servings, GROUP_CONCAT(CONCAT(ri.Ingredient_ID, ',', ri.amount_int, ',', ri.amount_unit) SEPARATOR ';') INTO existingName, existingShortDescr, existingDescr, existingImgUrl, existingServings, existingIngredients
     FROM Recipe
@@ -348,7 +372,8 @@ BEGIN
             sdecr = p_shortDescr,
             descr = p_descr,
             imgUrl = p_imgUrl,
-            servings = p_servings
+            servings = p_servings,
+            author = p_author 
         WHERE ID = p_recipeID;
 
         -- Delete existing RecipeIngredient entries for the recipe
@@ -373,8 +398,8 @@ BEGIN
 
         -- Split tags string and insert into RecipeTag and RecipeCustomTag tables
         WHILE LENGTH(p_tags) > 0 DO
-            SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ',', 1));
-            SET p_tags = TRIM(BOTH ',' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 2));
+            SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ';', 1));
+            SET p_tags = TRIM(BOTH ';' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 2));
 
             -- Check if tag exists
             SELECT ID, ispredefined INTO tagID, ispredefined FROM Tags WHERE tagname = currentTagName;
@@ -383,7 +408,7 @@ BEGIN
             IF tagID IS NULL THEN
                 INSERT INTO Tags (ispredefined, tagname) VALUES (0, currentTagName);
                 SET tagID = LAST_INSERT_ID();
-                SET ispredefined = 0; -- Setze ispredefined auf 0, da es sich um einen benutzerdefinierten Tag handelt
+                SET ispredefined = 0; 
             END IF;
 
             -- Insert into appropriate table based on ispredefined value
@@ -399,7 +424,6 @@ BEGIN
         END WHILE;
     END IF;
 END$$
-
 DELIMITER ;
 
 
@@ -428,18 +452,18 @@ CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateFavoriteRecipe`(IN `p_Use
 BEGIN
     DECLARE v_Exists INT;
 
-    -- Überprüfen, ob der Benutzer das Rezept bereits als Favorit markiert hat
+    
     SELECT COUNT(*) INTO v_Exists
     FROM UserRecipeStar
     WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID;
 
     IF v_Exists > 0 THEN
-        -- Aktualisieren des vorhandenen Favoriten-Eintrags
+        -
         UPDATE UserRecipeStar
         SET isstar = 1
         WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID;
     ELSE
-        -- Einfügen eines neuen Favoriten-Eintrags
+       
         INSERT INTO UserRecipeStar (User_ID, Recipe_ID, isstar)
         VALUES (p_UserID, p_RecipeID, 1);
     END IF;
@@ -447,26 +471,30 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateWeeklyRecipe`(
+
+CREATE OR REPLACE PROCEDURE `UpdateWeeklyRecipe`(
     IN p_UserID INT,
     IN p_RecipeID INT,
-    IN p_Date DATE
+    IN p_Date DATE,
+    IN p_WServings INT 
 )
 BEGIN
     DECLARE v_Exists INT;
 
     SELECT COUNT(*)
     INTO v_Exists
-    FROM UserRecipeDates
+    FROM UserRecipeWeeklyList
     WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID AND date = p_Date;
 
     IF v_Exists > 0 THEN
-        UPDATE UserRecipeDates
-        SET date = p_Date
+        UPDATE UserRecipeWeeklyList
+        SET date = p_Date,
+            w_servings = p_WServings 
         WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID AND date = p_Date;
     ELSE
-        INSERT INTO UserRecipeDates (User_ID, Recipe_ID, date)
-        VALUES (p_UserID, p_RecipeID, p_Date);
+        INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date, w_servings)
+        VALUES (p_UserID, p_RecipeID, p_Date, p_WServings);
     END IF;
 END$$
+
 DELIMITER ;

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="2.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.WeeklyViewItemController">
+    <children>
+        <Text fx:id="recipeName" onMouseClicked="#recipeClicked" strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
+            <font>
+                <Font size="11.0" />
+            </font>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Text>
+        <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+      <Button fx:id="removeWeeklyItemButton" mnemonicParsing="false" onAction="#removeWeeklyClicked" text="remove">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Button>
+    </children>
+</HBox>

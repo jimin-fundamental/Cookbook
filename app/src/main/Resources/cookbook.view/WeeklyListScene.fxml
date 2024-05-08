@@ -21,7 +21,7 @@
                </font>
             </Text>
             <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <Text fx:id="weeklyListTitle1" strokeType="OUTSIDE" strokeWidth="0.0" text="06/05/2024 - 13/05/2024">
+            <Text fx:id="weeklyListTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="06/05/2024 - 13/05/2024">
                <font>
                   <Font size="18.0" />
                </font>
@@ -39,51 +39,7 @@
                   </Text>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                           </children>
+                        <VBox fx:id="mondayItemContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                         </VBox>
                      </content>
                      <VBox.margin>
@@ -107,51 +63,7 @@
                   </Text>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                           </children>
+                        <VBox fx:id="tuesdayItemContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                         </VBox>
                      </content>
                      <padding>
@@ -172,51 +84,7 @@
                   </Text>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                           </children>
+                        <VBox fx:id="wednesdayItemContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                         </VBox>
                      </content>
                      <padding>
@@ -237,51 +105,7 @@
                   </Text>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                           </children>
+                        <VBox fx:id="thursdayItemContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                         </VBox>
                      </content>
                      <padding>
@@ -306,51 +130,7 @@
                   </Text>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                           </children>
+                        <VBox fx:id="fridayItemContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                         </VBox>
                      </content>
                      <padding>
@@ -371,51 +151,7 @@
                   </Text>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                           </children>
+                        <VBox fx:id="saturdayItemContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                         </VBox>
                      </content>
                      <padding>
@@ -436,51 +172,7 @@
                   </Text>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Spaghetti Carbonara">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Text>
-                                    <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-                                    <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-                                 </children>
-                              </HBox>
-                           </children>
+                        <VBox fx:id="sundayItemContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                         </VBox>
                      </content>
                      <padding>
@@ -493,7 +185,7 @@
                </padding>
             </VBox>
             <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <Button graphicTextGap="7.0" mnemonicParsing="false" text="Delete List">
+            <Button onAction="#deleteListClicked" graphicTextGap="7.0" mnemonicParsing="false" text="Delete List">
                <graphic>
                   <FontAwesomeIconView fill="RED" glyphName="TRASH" />
                </graphic>

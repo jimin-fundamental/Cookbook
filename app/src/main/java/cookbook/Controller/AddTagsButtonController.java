@@ -15,7 +15,7 @@ public class AddTagsButtonController {
     private User user;
     private Recipe recipe;
 
-    //MouseEvent
+    // MouseEvent
     @FXML
     void addCustomTags(MouseEvent event) {
         try {
@@ -28,21 +28,9 @@ public class AddTagsButtonController {
 
             // get the controller to call the method to set the data
             AddCustomTagsController controller = fxmlLoader.getController();
-            controller.setUser(this.user);  // Assuming 'user' is available in this context
+            // controller.setRecipe(this.recipe);
+            controller.setUser(this.user); // Assuming 'user' is available in this context
             controller.setRecipe(this.recipe);
-            /*
-            controller.setOnCustomTagsAdded(v -> this.refreshRecipeView());
-            controller.setRecipeSceneStage((Stage) ((Node) event.getSource()).getScene().getWindow()); // Pass the Stage object of the RecipeScene
-            stage.showAndWait();
-             */
-
-            // Set callback to refresh RecipeView after adding custom tags
-//            controller.setOnCustomTagsAdded(new Consumer<Void>() {
-//                @Override
-//                public void accept(Void v) {
-//                    refreshRecipeView();
-//                }
-//            });
 
             stage.show();
 
