@@ -13,8 +13,10 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,11 +27,39 @@ public class AddCustomTagsController {
     private Recipe recipe;
     private MySqlRecipeRepository sqlRepos;
     private User user;
+    private Consumer<Void> onCustomTagsAddedCallback;
+
+    /*
+    //private ActionEvent event;
+    private Stage recipeSceneStage; // Add this field to store the Stage object of the RecipeScene
+
+    // Method to set the Stage object of the RecipeScene
+    public void setRecipeSceneStage(Stage recipeSceneStage) {
+        this.recipeSceneStage = recipeSceneStage;
+    }
+
+    public AddCustomTagsController(Stage recipeSceneStage) {
+        this.recipeSceneStage = recipeSceneStage; // Initialize the Stage object of the RecipeScene
+    }
+
+    public void setOnCustomTagsAdded(Consumer<Void> callback) {
+        this.onCustomTagsAddedCallback = callback;
+        System.out.println("on custom tags added");
+    }
+
+    // Method to call the callback after custom tags are added
+    // used internally to call the callback when needed.
+    private void callOnCustomTagsAddedCallback() {
+        if (onCustomTagsAddedCallback != null) {
+            onCustomTagsAddedCallback.accept(null);
+        }
+    }
+
+     */
 
     public AddCustomTagsController() {
         // Empty constructor required by FXML
     }
-
     public void setUser(User user) {
         this.user = user;
         this.sqlRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
@@ -42,6 +72,7 @@ public class AddCustomTagsController {
     //need to get userId from other method
     @FXML
     public void addCustomTags(ActionEvent event) {
+        //this.event = event;
         if (user == null) {
             System.out.println("User not initialized.");
             return;
@@ -57,7 +88,11 @@ public class AddCustomTagsController {
 
             // close window
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-//            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeScene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+
+            //Call method to refresh RecipeView page
+            //refreshRecipeView();
+            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+
 
         }
         catch(Exception e){
@@ -66,5 +101,25 @@ public class AddCustomTagsController {
         }
 
     }
+
+/*
+    private void refreshRecipeView() {
+        System.out.println("refreshRecipeView");
+        // Assuming RecipeView.fxml is the FXML file for the RecipeView page
+        try {
+            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), null);
+            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), recipeSceneStage);
+
+            System.out.println("Recipe view refreshed");
+        } catch (IOException e) {
+            System.out.println("Error refreshing RecipeView: " + e.getMessage());
+            e.printStackTrace();
+
+        }
+
+    }
+
+ */
 
 }
