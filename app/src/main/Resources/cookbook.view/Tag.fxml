@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="tagsPane" onMouseClicked="#mouseClicked" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color: green; -fx-background-radius: 4;" fx:controller="cookbook.Controller.TagController">
+<StackPane fx:id="tagsPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" style="-fx-background-color: green; -fx-background-radius: 4;" fx:controller="cookbook.Controller.TagController">
    <children>
       <Label fx:id="tagsLabel" alignment="CENTER" contentDisplay="CENTER" text="tags" textFill="WHITE">
          <font>

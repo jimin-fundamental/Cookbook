@@ -4,8 +4,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.Cursor?>
 
- <StackPane fx:id="addCustomTagsStackPane" onMouseClicked="#addCustomTags" style="-fx-background-color: green; -fx-background-radius: 4;" fx:controller="cookbook.Controller.AddTagsButtonController">
+<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" onMouseClicked="#addCustomTags" style="-fx-background-color: green; -fx-background-radius: 4;" fx:controller="cookbook.Controller.AddTagsButtonController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" text="+ Add Custom Tags" textFill="WHITE">
          <font>

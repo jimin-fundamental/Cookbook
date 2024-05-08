@@ -72,6 +72,10 @@ public class RecipeSceneController implements Initializable {
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
     private User user;
+    private List<FXMLLoader> loaders = new ArrayList<>();
+    private List<StackPane> tagStacks = new ArrayList<>();
+    private List<TagController> controllers = new ArrayList<>();
+    private AddTagsButtonController addTagsButtonController = null;
 
     public void setUser(User user) {
         this.user = user;
@@ -94,27 +98,29 @@ public class RecipeSceneController implements Initializable {
         // Add tags to the FlowPane
         for (String tag : tags) {
             try {
-                FXMLLoader loader = new FXMLLoader(
+                this.loaders.add(new FXMLLoader(
                         getClass().getResource(
-                                "/cookbook.view/Tag.fxml"));
-                StackPane tagStack = loader.load();
+                                "/cookbook.view/Tag.fxml")));
+                this.tagStacks.add(this.loaders.get(this.loaders.size() - 1).load());
                 // Apply any desired styling to the tag label
-                TagController controller = loader.getController();
-                controller.setTagName(tag);
-                tagsFlowPane.getChildren().add(tagStack);
+                this.controllers.add(this.loaders.get(this.loaders.size() - 1).getController());
+                this.controllers.get(this.controllers.size() - 1).setTagName(tag);
+
+                this.tagsFlowPane.getChildren().add(this.tagStacks.get(this.tagStacks.size() - 1));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         try {
-            FXMLLoader loader = new FXMLLoader(
+            this.loaders.add(new FXMLLoader(
                     getClass().getResource(
-                            "/cookbook.view/AddTagsButton.fxml"));
-            AddTagsButtonController controller = loader.getController();
-            controller.initializeData(this.user, this.recipe);
-            StackPane tagStack = loader.load();
+                            "/cookbook.view/AddTagsButton.fxml")));
+            this.tagStacks.add(this.loaders.get(this.loaders.size() - 1).load());
             // Apply any desired styling to the tag label
-            tagsFlowPane.getChildren().add(tagStack);
+            this.addTagsButtonController = loaders.get(loaders.size() - 1).getController();
+            this.addTagsButtonController.initializeData(this.user, this.recipe);
+
+            this.tagsFlowPane.getChildren().add(tagStacks.get(tagStacks.size() - 1));
         } catch (IOException e) {
             e.printStackTrace();
         }
