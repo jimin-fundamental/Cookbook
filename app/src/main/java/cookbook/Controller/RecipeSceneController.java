@@ -26,6 +26,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -66,7 +67,7 @@ public class RecipeSceneController implements Initializable {
     private ComboBox<Integer> servingsComboBox;
 
     @FXML
-    private VBox tagsVBox;
+    private FlowPane tagsFlowPane;
 
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
@@ -88,18 +89,39 @@ public class RecipeSceneController implements Initializable {
         List<String> tags = recipe.getTags();
 
         // Clear existing tags
-        tagsVBox.getChildren().clear();
+        tagsFlowPane.getChildren().clear();
 
-        // Add tags to the VBox
+        // Add tags to the FlowPane
         for (String tag : tags) {
-            Label tagLabel = new Label(tag);
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource(
+                                "/cookbook.view/Tag.fxml"));
+                StackPane tagStack = loader.load();
+                // Apply any desired styling to the tag label
+                TagController controller = loader.getController();
+                controller.setTagName(tag);
+                tagsFlowPane.getChildren().add(tagStack);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/cookbook.view/AddTagsButton.fxml"));
+            AddTagsButtonController controller = loader.getController();
+            controller.initializeData(this.user, this.recipe);
+            StackPane tagStack = loader.load();
             // Apply any desired styling to the tag label
-            tagsVBox.getChildren().add(tagLabel);
+            tagsFlowPane.getChildren().add(tagStack);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         setStar();
 
-        Integer[] servings = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        Integer[] servings = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         for (int index = 0; index < servings.length; index++) {
             servings[index] = servings[index] * this.recipe.getNumberOfPersons();
         }
@@ -177,44 +199,6 @@ public class RecipeSceneController implements Initializable {
             e.printStackTrace();
         }
     }
-
-    //MouseEvent
-    @FXML
-    void addCustomTags(MouseEvent event) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/AddCustomTags.fxml"));
-
-            // create new stage for new window of the recipe
-            Stage stage = new Stage();
-            stage.setResizable(false);
-            stage.setScene(new Scene(fxmlLoader.load()));
-
-            // get the controller to call the method to set the data
-            AddCustomTagsController controller = fxmlLoader.getController();
-            controller.setUser(this.user);  // Assuming 'user' is available in this context
-            controller.setRecipe(this.recipe);
-            /*
-            controller.setOnCustomTagsAdded(v -> this.refreshRecipeView());
-            controller.setRecipeSceneStage((Stage) ((Node) event.getSource()).getScene().getWindow()); // Pass the Stage object of the RecipeScene
-            stage.showAndWait();
-             */
-
-            // Set callback to refresh RecipeView after adding custom tags
-//            controller.setOnCustomTagsAdded(new Consumer<Void>() {
-//                @Override
-//                public void accept(Void v) {
-//                    refreshRecipeView();
-//                }
-//            });
-
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 
     @FXML
     void changeServings(ActionEvent event) {
