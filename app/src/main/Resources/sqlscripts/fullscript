@@ -4,16 +4,25 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+
 CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`Recipe` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `sdecr` MEDIUMTEXT NOT NULL,
   `descr` LONGTEXT NOT NULL,
   `imgUrl` LONGTEXT NOT NULL, 
-  `servings` INT NOT NULL DEFAULT 1, 
+  `servings` INT NOT NULL DEFAULT 1,
+  `author` INT NOT NULL DEFAULT 8,
   PRIMARY KEY (`ID`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC)
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
+  INDEX `fk_Recipe_User_idx` (`author` ASC),
+  CONSTRAINT `fk_Recipe_User`
+    FOREIGN KEY (`author`)
+    REFERENCES `u689018343_cookbook`.`User` (`ID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`Ingredient` (
   `ID` INT NOT NULL AUTO_INCREMENT,
@@ -170,7 +179,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 -- Views
-CREATE ALGORITHM=UNDEFINED DEFINER=`u689018343_nulla`@`%` SQL SECURITY DEFINER VIEW `FullRecipeView` AS 
+DELIMITER $$
+CREATE OR REPLACE VIEW `FullRecipeView` AS 
 SELECT 
     `r`.`ID` AS `Recipe_ID`,
     `r`.`name` AS `Recipe_Name`,
@@ -178,6 +188,7 @@ SELECT
     `r`.`descr` AS `Description`,
     `r`.`imgUrl` AS `Image_URL`,
     `r`.`servings` AS `Servings`,
+    `r`.`author` AS `Author`,
     CONCAT('[', 
         IFNULL(
             CONCAT(
@@ -207,8 +218,8 @@ FROM
     LEFT JOIN `RecipeCustomTag` `rct` ON (`r`.`ID` = `rct`.`Recipe_ID`)) 
     LEFT JOIN `Tags` `tc` ON (`rct`.`Tags_ID` = `tc`.`ID`)) 
     LEFT JOIN `Comments` `c` ON (`r`.`ID` = `c`.`Recipe_ID`)) 
-GROUP BY `r`.`ID`;
-
+GROUP BY `r`.`ID`$$
+DELIMITER ;
 
 
 
@@ -233,14 +244,14 @@ GROUP BY
 -- Procedures
 
 DELIMITER $$
-
-CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `AddNewRecipe`(
+CREATE OR REPLACE PROCEDURE `AddNewRecipe`(
     IN p_userID INT,
     IN p_name VARCHAR(255),
     IN p_shortDescr MEDIUMTEXT,
     IN p_descr LONGTEXT,
     IN p_imgUrl LONGTEXT,
     IN p_servings INT,
+    IN p_author INT, 
     IN p_ingredients TEXT,
     IN p_tags TEXT
 )
@@ -257,7 +268,7 @@ BEGIN
     SET p_descr = CONCAT('{"steps": ["', REPLACE(p_descr, ';', '","'), '"]}');
 
     -- Insert into Recipe table
-    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings) VALUES (p_name, p_shortDescr, p_descr, p_imgUrl, p_servings);
+    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings, author) VALUES (p_name, p_shortDescr, p_descr, p_imgUrl, p_servings, p_author); -- Spalte "author" hinzugefügt
     SET recipeID = LAST_INSERT_ID();
 
     -- Split ingredients string and insert into RecipeIngredient table
@@ -300,12 +311,11 @@ BEGIN
         END IF;
     END WHILE;
 END$$
-
 DELIMITER ;
 
-DELIMITER $$
 
-CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateRecipe`(
+DELIMITER $$
+CREATE OR REPLACE PROCEDURE `UpdateRecipe`(
     IN p_recipeID INT,
     IN p_userID INT,
     IN p_name VARCHAR(255),
@@ -313,6 +323,7 @@ CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateRecipe`(
     IN p_descr LONGTEXT,
     IN p_imgUrl LONGTEXT,
     IN p_servings INT,
+    IN p_author INT, 
     IN p_ingredients TEXT,
     IN p_tags TEXT
 )
@@ -348,7 +359,8 @@ BEGIN
             sdecr = p_shortDescr,
             descr = p_descr,
             imgUrl = p_imgUrl,
-            servings = p_servings
+            servings = p_servings,
+            author = p_author 
         WHERE ID = p_recipeID;
 
         -- Delete existing RecipeIngredient entries for the recipe
@@ -373,8 +385,8 @@ BEGIN
 
         -- Split tags string and insert into RecipeTag and RecipeCustomTag tables
         WHILE LENGTH(p_tags) > 0 DO
-            SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ',', 1));
-            SET p_tags = TRIM(BOTH ',' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 2));
+            SET currentTagName = TRIM(SUBSTRING_INDEX(p_tags, ';', 1));
+            SET p_tags = TRIM(BOTH ';' FROM SUBSTRING(p_tags, LENGTH(currentTagName) + 2));
 
             -- Check if tag exists
             SELECT ID, ispredefined INTO tagID, ispredefined FROM Tags WHERE tagname = currentTagName;
@@ -399,7 +411,6 @@ BEGIN
         END WHILE;
     END IF;
 END$$
-
 DELIMITER ;
 
 
