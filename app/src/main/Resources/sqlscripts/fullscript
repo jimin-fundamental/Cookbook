@@ -113,15 +113,17 @@ CREATE TABLE `UserRecipeStar` (
   CONSTRAINT `fk_UserRecipe_User1` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
-CREATE TABLE `UserRecipeWeeklyList` (
-  `User_ID` int(11) NOT NULL,
-  `Recipe_ID` int(11) NOT NULL,
-  `date` date NOT NULL,
+CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`UserRecipeWeeklyList` (
+  `User_ID` INT NOT NULL,
+  `Recipe_ID` INT NOT NULL,
+  `date` DATE NOT NULL,
+  `w_servings` INT NOT NULL DEFAULT 1, 
   PRIMARY KEY (`User_ID`,`Recipe_ID`,`date`),
   KEY `fk_UserRecipeDates_Recipe` (`Recipe_ID`),
   CONSTRAINT `fk_UserRecipeDates_Recipe` FOREIGN KEY (`Recipe_ID`) REFERENCES `Recipe` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_UserRecipeDates_User` FOREIGN KEY (`User_ID`) REFERENCES `User` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 
 CREATE TABLE IF NOT EXISTS Comments (
@@ -238,6 +240,18 @@ LEFT JOIN
 GROUP BY
     r.ID;
 
+CREATE OR REPLACE VIEW CommentsView AS
+SELECT 
+    c.Comment_ID,
+    c.Comment,
+    c.User_ID,
+    u.name AS User_Name, 
+    c.Recipe_ID
+FROM 
+    Comments c
+JOIN 
+    User u ON c.User_ID = u.ID;
+
 
 
 
@@ -337,8 +351,7 @@ BEGIN
     DECLARE existingTags TEXT;
     DECLARE currentTagName VARCHAR(255);
     DECLARE tagID INT;
-    DECLARE ispredefined INT; -- Neue Variable zur Deklaration von ispredefined
-
+    DECLARE ispredefined INT; 
     -- Get existing recipe details
     SELECT name, sdecr, descr, imgUrl, servings, GROUP_CONCAT(CONCAT(ri.Ingredient_ID, ',', ri.amount_int, ',', ri.amount_unit) SEPARATOR ';') INTO existingName, existingShortDescr, existingDescr, existingImgUrl, existingServings, existingIngredients
     FROM Recipe
@@ -395,7 +408,7 @@ BEGIN
             IF tagID IS NULL THEN
                 INSERT INTO Tags (ispredefined, tagname) VALUES (0, currentTagName);
                 SET tagID = LAST_INSERT_ID();
-                SET ispredefined = 0; -- Setze ispredefined auf 0, da es sich um einen benutzerdefinierten Tag handelt
+                SET ispredefined = 0; 
             END IF;
 
             -- Insert into appropriate table based on ispredefined value
@@ -439,18 +452,18 @@ CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateFavoriteRecipe`(IN `p_Use
 BEGIN
     DECLARE v_Exists INT;
 
-    -- Überprüfen, ob der Benutzer das Rezept bereits als Favorit markiert hat
+    
     SELECT COUNT(*) INTO v_Exists
     FROM UserRecipeStar
     WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID;
 
     IF v_Exists > 0 THEN
-        -- Aktualisieren des vorhandenen Favoriten-Eintrags
+        -
         UPDATE UserRecipeStar
         SET isstar = 1
         WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID;
     ELSE
-        -- Einfügen eines neuen Favoriten-Eintrags
+       
         INSERT INTO UserRecipeStar (User_ID, Recipe_ID, isstar)
         VALUES (p_UserID, p_RecipeID, 1);
     END IF;
@@ -458,26 +471,30 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `UpdateWeeklyRecipe`(
+
+CREATE OR REPLACE PROCEDURE `UpdateWeeklyRecipe`(
     IN p_UserID INT,
     IN p_RecipeID INT,
-    IN p_Date DATE
+    IN p_Date DATE,
+    IN p_WServings INT 
 )
 BEGIN
     DECLARE v_Exists INT;
 
     SELECT COUNT(*)
     INTO v_Exists
-    FROM UserRecipeDates
+    FROM UserRecipeWeeklyList
     WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID AND date = p_Date;
 
     IF v_Exists > 0 THEN
-        UPDATE UserRecipeDates
-        SET date = p_Date
+        UPDATE UserRecipeWeeklyList
+        SET date = p_Date,
+            w_servings = p_WServings 
         WHERE User_ID = p_UserID AND Recipe_ID = p_RecipeID AND date = p_Date;
     ELSE
-        INSERT INTO UserRecipeDates (User_ID, Recipe_ID, date)
-        VALUES (p_UserID, p_RecipeID, p_Date);
+        INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date, w_servings)
+        VALUES (p_UserID, p_RecipeID, p_Date, p_WServings);
     END IF;
 END$$
+
 DELIMITER ;
