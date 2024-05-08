@@ -11,6 +11,7 @@ public class Recipe {
     private List<Ingredient> ingredients; // A list of ingredients as strings
     private List<String> processSteps; // A detailed description of the process
     private int numberOfPersons; // The number of persons the recipe serves
+    private int author;
     private List<String> tags; // Tags for the recipe
     private List<String> comments; // User comments on the recipe
     private String imagePath; // URL or path to the recipe's image
@@ -27,28 +28,30 @@ public class Recipe {
     }
 
     // Constructor, getters, and setters
-    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags) {
+    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, int author, List<String> tags) {
         this.id = id;
         this.name = name;
         this.shortDescription = shortDescription;
         this.ingredients = ingredients;
         this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
+        this.author = author;
         this.tags = tags;
     }
-    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, List<String> tags, List<String> comments) {
+    public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, int author, List<String> tags, List<String> comments) {
         this.id = id;
         this.name = name;
         this.shortDescription = shortDescription;
         this.ingredients = ingredients;
         this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
+        this.author = author;
         this.tags = tags;
         this.comments = comments;
     }
     // Constructor with all parameters including image path
     public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, 
-        List<String> processSteps, int numberOfPersons, List<String> tags, 
+        List<String> processSteps, int numberOfPersons, int author, List<String> tags, 
         List<String> comments, String imagePath, boolean isFavourite, 
         List<Date> weeklyDates, Date comparableDate) {
         this.id = id;
@@ -57,6 +60,7 @@ public class Recipe {
         this.ingredients = ingredients;
         this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
+        this.author = author;
         this.tags = tags;
         this.comments = comments;
         this.imagePath = imagePath;
@@ -111,6 +115,10 @@ public class Recipe {
 
     public void setNumberOfPersons(int numberOfPersons) {
         this.numberOfPersons = numberOfPersons;
+    }
+
+    public int getAuthor() {
+        return author;
     }
 
     public List<String> getTags() {

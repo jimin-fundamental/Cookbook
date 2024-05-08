@@ -8,10 +8,10 @@ import java.sql.Date;
 import java.util.List;
 
 public interface RecipeRepository {
-    void addRecipeRepo(int userId, String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags);
+    void addRecipeRepo(int userId, String name, String shortDescription, String description, String imageUrl, int servings, int author, String ingredients, String tags);
     Recipe getRecipeById(Long id);
     List<Recipe> getAllRecipes();
-    void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, String ingredients, String tags);
+    void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, int author, String ingredients, String tags);
     void deleteRecipe(Long id);
 
     List<Recipe> findByName(String name);
