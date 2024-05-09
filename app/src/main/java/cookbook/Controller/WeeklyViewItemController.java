@@ -21,10 +21,19 @@ public class WeeklyViewItemController {
     @FXML
     private Text recipeName;
 
+    @FXML
+    private Text numberOfServings;
+
     private Recipe recipe;
     private User user;
     private LocalDate date;
     private MySqlRecipeRepository recipeRepos;
+    private int servings;
+
+    public void setServings(int servings){
+        this.servings = servings;
+        this.numberOfServings.setText(Integer.toString(servings));
+    }
 
     public void setText(String recipeName){
         this.recipeName.setText(recipeName);
@@ -55,9 +64,8 @@ public class WeeklyViewItemController {
 
         // get the controller to call the method to set the data
         RecipeSceneController controller = fxmlLoader.getController();
-        controller.setRecipeData(this.recipe);
+        controller.setRecipeData(this.recipe, servings);
         controller.setUser(user);
-
         stage.show();
 
     }

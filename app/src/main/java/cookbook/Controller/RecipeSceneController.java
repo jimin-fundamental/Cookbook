@@ -79,6 +79,11 @@ public class RecipeSceneController implements Initializable {
     private List<StackPane> tagStacks = new ArrayList<>();
     private List<TagController> controllers = new ArrayList<>();
     private AddTagsButtonController addTagsButtonController = null;
+    private int servings;
+
+    public void setServings(int servings){
+        this.servings = servings;
+    }
 
     public void setUser(User user) {
         this.user = user;
@@ -89,9 +94,13 @@ public class RecipeSceneController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
-    public void setRecipeData(Recipe recipe) {
+    public void setRecipeData(Recipe recipe, int numberOfServings) {
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
         this.recipe = recipe;
+        this.servings = numberOfServings;
+
+        servingsComboBox.setValue(this.servings);
+        changeNumberOfServings();
 
         List<String> tags = recipe.getTags();
 
@@ -134,7 +143,7 @@ public class RecipeSceneController implements Initializable {
         for (int index = 0; index < servings.length; index++) {
             servings[index] = servings[index] * this.recipe.getNumberOfPersons();
         }
-        servingsComboBox.setValue(this.recipe.getNumberOfPersons());
+        //servingsComboBox.setValue(this.recipe.getNumberOfPersons());
         servingsComboBox.getItems().addAll(servings);
 
         this.recipeNameText.setText(recipe.getName());
@@ -157,12 +166,6 @@ public class RecipeSceneController implements Initializable {
         vBoxProcessSteps.getChildren().clear();
         for (String step : recipe.getProcessSteps()) {
             vBoxProcessSteps.getChildren().add(new Text(i++ + ": " + step));
-        }
-
-        ingredientsFlowPane.getChildren().clear();
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            ingredientsFlowPane.getChildren().add(
-                    new Text(ingredient.getName() + " (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
         }
     }
 
@@ -201,6 +204,8 @@ public class RecipeSceneController implements Initializable {
             // get the controller to call the method to set the data
             AddToWeeklyListController controller = fxmlLoader.getController();
             controller.setRecipe(this.recipe);
+            controller.setUser(user);
+            controller.setServings(servingsComboBox.getValue());
 
             stage.show();
 
@@ -211,30 +216,8 @@ public class RecipeSceneController implements Initializable {
     
     @FXML
     void changeServings(ActionEvent event) {
-        Integer ogServings = this.recipe.getNumberOfPersons();
-        // Read the new servings from the dropdown menu
-        Integer newServings = servingsComboBox.getValue();
-        // Code to read the new servings from the dropdown menu
-        // Calculate the ratio of new servings to original servings
-        double scaleFactor = (double) newServings / (double) ogServings;
-        // Create a new ingredients list and multiply ingredients
-        List<Ingredient> ingredients = this.recipe.getIngredients();
-        List<Ingredient> newIngredients = new ArrayList<>();
-        for (Ingredient ingredient : ingredients) {
-            double newAmount = ingredient.getAmount() * scaleFactor;
-            Ingredient newIngredient = new Ingredient();
-            newIngredient.setName(ingredient.getName());
-            newIngredient.setAmount((int) newAmount);
-            newIngredient.setUnit(ingredient.getUnit());
-            newIngredients.add(newIngredient);
-        }
-        // Set new servings and ingredients
-        this.recipe.setNumberOfPersons(newServings);
-        this.recipe.setIngredients(newIngredients);
-        setRecipeData(this.recipe);
+       changeNumberOfServings();
         // Refresh the scene to reflect the changes
-        Stage stage = (Stage) ingredientsFlowPane.getScene().getWindow();
-        stage.show();
     }
 
     @FXML
@@ -254,6 +237,35 @@ public class RecipeSceneController implements Initializable {
             star.setFill(Color.WHITE);
 
         }
+    }
+
+    private void changeNumberOfServings(){
+        Integer ogServings = this.recipe.getNumberOfPersons();
+        // Read the new servings from the dropdown menu
+        Integer newServings = servingsComboBox.getValue();
+        // Code to read the new servings from the dropdown menu
+        // Calculate the ratio of new servings to original servings
+        double scaleFactor = (double) newServings / (double) ogServings;
+        // Create a new ingredients list and multiply ingredients
+        List<Ingredient> ingredients = this.recipe.getIngredients();
+        List<Ingredient> newIngredients = new ArrayList<>();
+        for (Ingredient ingredient : ingredients) {
+            double newAmount = ingredient.getAmount() * scaleFactor;
+            Ingredient newIngredient = new Ingredient();
+            newIngredient.setName(ingredient.getName());
+            newIngredient.setAmount((int) newAmount);
+            newIngredient.setUnit(ingredient.getUnit());
+            newIngredients.add(newIngredient);
+        }
+        // Set new servings and ingredients
+        ingredientsFlowPane.getChildren().clear();
+        for (Ingredient ingredient : newIngredients) {
+            ingredientsFlowPane.getChildren().add(
+                    new Text(ingredient.getName() + " (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
+        }
+
+        // this.recipe.setNumberOfPersons(newServings);
+        // this.recipe.setIngredients(newIngredients);
     }
 
     private void refreshRecipeView() {

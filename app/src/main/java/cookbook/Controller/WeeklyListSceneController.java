@@ -8,6 +8,7 @@ import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 import com.mysql.cj.protocol.x.SyncFlushDeflaterOutputStream;
 
@@ -68,33 +69,33 @@ public class WeeklyListSceneController {
         this.weeklyListTitle.setText(weeklyListTitle);
 
         for (Recipe recipe : recipeList){
-            for (Date date : recipe.getWeeklyDates()){
-                LocalDate localDate = date.toLocalDate();
+            for (Map.Entry<Date, Integer> entry : recipe.getWeeklyDates().entrySet()){
+                LocalDate localDate = entry.getKey().toLocalDate();
                 WeekFields weekFields = WeekFields.of(Locale.getDefault());
                 int weekOfYear = localDate.get(weekFields.weekOfWeekBasedYear());
                 if(weekOfYear == week){
                     DayOfWeek day = localDate.getDayOfWeek();
                     switch (day.name()) {
                         case "MONDAY":
-                            displayWeeklyViewItem(localDate, recipe, mondayItemContainer);
+                            displayWeeklyViewItem(localDate, recipe, mondayItemContainer, entry.getValue());
                             break;
                         case "TUESDAY":
-                            displayWeeklyViewItem(localDate, recipe, tuesdayItemContainer);
+                            displayWeeklyViewItem(localDate, recipe, tuesdayItemContainer, entry.getValue());
                             break;
                         case "WEDNESDAY":
-                            displayWeeklyViewItem(localDate, recipe, wednesdayItemContainer);
+                            displayWeeklyViewItem(localDate, recipe, wednesdayItemContainer, entry.getValue());
                             break;
                         case "THURSDAY":
-                            displayWeeklyViewItem(localDate, recipe, thursdayItemContainer);
+                            displayWeeklyViewItem(localDate, recipe, thursdayItemContainer, entry.getValue());
                             break;
                         case "FRIDAY":
-                            displayWeeklyViewItem(localDate, recipe, fridayItemContainer);
+                            displayWeeklyViewItem(localDate, recipe, fridayItemContainer, entry.getValue());
                             break;
                         case "SATURDAY":
-                            displayWeeklyViewItem(localDate, recipe, saturdayItemContainer);
+                            displayWeeklyViewItem(localDate, recipe, saturdayItemContainer, entry.getValue());
                             break;
                         case "SUNDAY":
-                            displayWeeklyViewItem(localDate, recipe, sundayItemContainer);
+                            displayWeeklyViewItem(localDate, recipe, sundayItemContainer, entry.getValue());
                             break;
                         default:
                             break;
@@ -105,7 +106,7 @@ public class WeeklyListSceneController {
         } 
     }
 
-    private void displayWeeklyViewItem(LocalDate date, Recipe recipe, VBox container) {
+    private void displayWeeklyViewItem(LocalDate date, Recipe recipe, VBox container, int servings) {
         try {
 
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -114,6 +115,7 @@ public class WeeklyListSceneController {
             WeeklyViewItemController controller = fxmlLoader.getController();
             controller.setText(recipe.getName());
             controller.setData(this.user, date, recipe);
+            controller.setServings(servings);
             controllers.add(controller);
             container.getChildren().add(recipeBox);
         } catch (IOException e) {

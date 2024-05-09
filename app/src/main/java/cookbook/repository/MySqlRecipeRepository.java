@@ -323,9 +323,9 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void addToWeekPlan(Recipe recipe, User user, Date date) {
-        String sql = "INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date) " +
-                     "VALUES (?, ?, ?)";
+    public void addToWeekPlan(Recipe recipe, User user, Date date, int servings) {
+        String sql = "INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date, w_servings) " +
+                     "VALUES (?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -334,17 +334,18 @@ public class MySqlRecipeRepository implements RecipeRepository{
             pstmt.setLong(1, user.getId());
             pstmt.setLong(2, recipe.getId());
             pstmt.setDate(3, date);
+            pstmt.setInt(4, servings);
 
             pstmt.executeUpdate();
 
             pstmt.close();
             connection.close();
-            List<Date> dates = recipe.getWeeklyDates();
+            Map<Date, Integer> dates = recipe.getWeeklyDates();
             if(dates == null){
-                dates = new ArrayList<Date>(); 
+                dates = new HashMap<Date, Integer>(); 
                 recipe.setWeeklyDates(dates);
             }
-            dates.add(date);
+            dates.put(date, servings);
 
 
 
@@ -373,7 +374,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
             connection.close();
 
             // remove the element from the list
-            recipe.getWeeklyDates().removeIf(d -> d.equals(date));
+            recipe.getWeeklyDates().remove(date);
 
 
         } catch (SQLException e) {
@@ -384,7 +385,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     @Override
     public List<Recipe> getRecipeWeeklyDates(List<Recipe> recipes, User user) {
          // add Information for favourite recipes
-         Map<Long, List<Date>> map = fetchWeeklyRecipes(user);
+         Map<Long,Map<Date, Integer>> map = fetchWeeklyRecipes(user);
          for (Recipe recipe : recipes){
              if (map.containsKey(recipe.getId())){
                 recipe.setWeeklyDates(map.get(recipe.getId()));
@@ -513,10 +514,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return favourites;
     }
 
-    private Map<Long,List<Date>> fetchWeeklyRecipes(User user){
-        Map<Long,List<Date>> weekly = new HashMap<Long, List<Date>>();
+    private  Map<Long,Map<Date, Integer>> fetchWeeklyRecipes(User user){
+        Map<Long,Map<Date, Integer>> weekly = new HashMap<Long, Map<Date, Integer>>();
 
-        String sql = "SELECT Recipe_ID, date FROM UserRecipeWeeklyList " +
+        String sql = "SELECT Recipe_ID, date, w_servings FROM UserRecipeWeeklyList " +
                      "WHERE User_ID = ? AND Recipe_ID IS NOT NULL";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
@@ -530,16 +531,13 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 while (rs.next()) {
                     Long id = rs.getLong("Recipe_ID");
                     Date date = rs.getDate("date");
-                    List<Date> dates = weekly.get(id);
+                    int servings = rs.getInt("w_servings");
+                    Map<Date, Integer> dates = weekly.get(id);
                     if(dates == null){
-                        List<Date> list = new ArrayList<>();
-                        list.add(date);
-                        weekly.put(id, list);
+                        dates = new HashMap<>();
+                        weekly.put(id, dates);
                     }
-                    else{
-                        dates.add(date);
-
-                    }
+                    dates.put(date, servings);
                 }
             }
 

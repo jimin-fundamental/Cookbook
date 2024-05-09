@@ -49,10 +49,10 @@ public class WeeklyListsSceneController {
 
         Map<Integer, List<Recipe>> weeksMap = new HashMap<Integer, List<Recipe>>();
         for(Recipe recipe : recipeList){
-            List<Date> dates = recipe.getWeeklyDates();
-            for(Date date : dates){
+            Map<Date, Integer> dates = recipe.getWeeklyDates();
+            for(Map.Entry<Date, Integer> entry : dates.entrySet()){
                 // get the week of which the date is in
-                LocalDate localDate = date.toLocalDate();
+                LocalDate localDate = entry.getKey().toLocalDate();
                 DayOfWeek day = localDate.getDayOfWeek();
                 WeekFields weekFields = WeekFields.of(Locale.getDefault());
                 int weekOfYear = localDate.get(weekFields.weekOfWeekBasedYear());
@@ -72,7 +72,8 @@ public class WeeklyListsSceneController {
         for (Map.Entry<Integer, List<Recipe>> entry : weeksMap.entrySet()) {
             int weekOfYear = entry.getKey();
             List<Recipe> recipesForWeek = entry.getValue();
-            int year = recipesForWeek.get(0).getWeeklyDates().get(0).toLocalDate().getYear();
+            List<Date> list = new ArrayList<>(recipesForWeek.get(0).getWeeklyDates().keySet());
+            int year = list.get(0).toLocalDate().getYear();
             
             // Call a method with the input List<Recipe>
             displayWeeklyListItem(year, weekOfYear, recipesForWeek);

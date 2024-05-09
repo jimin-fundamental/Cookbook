@@ -22,7 +22,7 @@ public interface RecipeRepository {
     void removeFromFavorites(Recipe recipe, User user);
     List<Recipe> getFavorites(List<Recipe> recipes, User user);
 
-    void addToWeekPlan(Recipe recipe, User user, Date date);
+    void addToWeekPlan(Recipe recipe, User user, Date date, int servings);
     void removeFromWeekPlan(Recipe recipe, User user, Date date);
     List<Recipe> getRecipeWeeklyDates(List<Recipe> recipes, User user);
 

@@ -31,15 +31,19 @@ public class AddToWeeklyListController implements Initializable{
     
     private MySqlRecipeRepository recipeRepos;
     private User user;
+    private int servings;
 
-    
+    public void setServings(int servings){
+        this.servings = servings;
+    }
     public void setRecipe(Recipe recipe) {
         
         this.recipe = recipe;
     }
-        public void setUser(User user) {
-        this.user = user;
-        this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
+
+    public void setUser(User user) {
+    this.user = user;
+    this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
     }
 
     @Override
@@ -51,7 +55,7 @@ public class AddToWeeklyListController implements Initializable{
     void addToWeeklyList(ActionEvent event) {
         LocalDate localDate = weekDatePicker.getValue();
         Date date = Date.valueOf(localDate);
-        recipeRepos.addToWeekPlan(recipe, user, date);
+        recipeRepos.addToWeekPlan(recipe, user, date, this.servings);
         System.out.println("recipe added");
 
     }
