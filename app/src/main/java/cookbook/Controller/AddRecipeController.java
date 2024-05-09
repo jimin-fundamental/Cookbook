@@ -2,6 +2,7 @@ package cookbook.Controller;
 
 import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
+import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -53,7 +54,11 @@ public class AddRecipeController implements Initializable {
 
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
+    private User user;
 
+    private void setUser(User user){
+        this.user = user;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -83,7 +88,7 @@ public class AddRecipeController implements Initializable {
             System.out.println("allTagsString: " + allTagsString);
 
             // Add new Recipe with userID
-            sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), allTagsString);
+            sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), user.getId(), ingredientsArea.getText(), allTagsString);
 
             // Change scene or close window
             SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());

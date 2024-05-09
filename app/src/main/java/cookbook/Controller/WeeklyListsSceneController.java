@@ -46,25 +46,6 @@ public class WeeklyListsSceneController {
             }
         }
 
-        // make a new recipeList which contains a element for every date in the dates lists of the recipes
-        // List<Recipe> allDatesRecipeList = new ArrayList<Recipe>();
-        // for (Recipe recipe : recipeList){
-        //      for(Date date : recipe.getWeeklyDates()){
-        //         recipe.setComparableDate()
-        //         allDatesRecipeList.add(recipe);
-        //      }
-        // }
-        
-        // System.out.println(recipeList.size());
-
-        // sort the recipes for their date
-        // Collections.sort(recipeList, new Comparator<Recipe>() {
-        //     @Override
-        //     public int compare(Recipe recipe1, Recipe recipe2) {
-        //         // Compare the dates of the recipes
-        //         return recipe1.getWeeklyDates().compareTo(recipe2.getWeeklyDates());
-        //     }
-        // });
 
         Map<Integer, List<Recipe>> weeksMap = new HashMap<Integer, List<Recipe>>();
         for(Recipe recipe : recipeList){
@@ -87,8 +68,6 @@ public class WeeklyListsSceneController {
 
             }
         }
-
-        System.out.println(weeksMap);
 
         for (Map.Entry<Integer, List<Recipe>> entry : weeksMap.entrySet()) {
             int weekOfYear = entry.getKey();

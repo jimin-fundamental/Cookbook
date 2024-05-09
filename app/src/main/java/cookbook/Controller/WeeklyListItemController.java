@@ -35,7 +35,6 @@ public class WeeklyListItemController {
 
     @SuppressWarnings("deprecation")
     public void setWeeklyList(int year, int week, List<Recipe> weeklyrecipes) {
-        System.out.println(year);
         this.weeklyRecipes = weeklyrecipes;
 
         Calendar calendar = Calendar.getInstance();

@@ -49,7 +49,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
 
     @Override
-    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl, int servings, int author, String ingredients, String tags) {
+    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
             // Prepare the SQL statement
             String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -61,7 +61,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 statement.setString(4, description);
                 statement.setString(5, imageUrl);
                 statement.setInt(6, servings);
-                statement.setInt(7, author);
+                statement.setInt(7, author.intValue());
                 statement.setString(8, ingredients); // Directly pass the ingredients string
                 statement.setString(9, tags); // Directly pass the tags string
 
@@ -229,7 +229,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, int author, String ingredientsText, String tagsText) {
+    public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredientsText, String tagsText) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
 //            String sql = "SELECT Recipe_ID FROM UserRecipe " +
 //                    "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
@@ -241,7 +241,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 statement.setString(4, description);
                 statement.setString(5, imageUrl);
                 statement.setInt(6, servings);
-                statement.setInt(7, author);
+                statement.setInt(7, author.intValue());
                 statement.setString(8, ingredientsText);
                 statement.setString(9, tagsText);
 

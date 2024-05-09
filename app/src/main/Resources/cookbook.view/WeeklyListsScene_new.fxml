@@ -25,13 +25,6 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </ScrollPane>
-      <HBox spacing="10.0">
-         <children>
-            <DatePicker fx:id="WeekDatePicker" promptText="Week" showWeekNumbers="true" />
-            <TextField fx:id="NameTextField" prefHeight="26.0" prefWidth="153.0" text="Name" HBox.hgrow="ALWAYS" />
-            <Button onAction="#addWeeklyList" text="Add New" />
-         </children>
-      </HBox>
    </children>
    <padding>
       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

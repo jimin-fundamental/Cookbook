@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
+import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,6 +41,11 @@ public class ChangeRecipeController implements Initializable{
     
     private Recipe recipe;
     private MySqlRecipeRepository sqlRepos;
+    private User user;
+
+    private void setUser(User user){
+        this.user = user;
+    }
 
     public void setRecipe(Recipe recipe){
         this.recipe = recipe;
@@ -80,7 +86,7 @@ public class ChangeRecipeController implements Initializable{
 
     @FXML
     void changeRecipe(ActionEvent event) {
-        sqlRepos.updateRecipe(recipe.getId(), titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), tagsArea.getText());
+        sqlRepos.updateRecipe(recipe.getId(), titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), user.getId(), ingredientsArea.getText(), tagsArea.getText());
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.close();
     }

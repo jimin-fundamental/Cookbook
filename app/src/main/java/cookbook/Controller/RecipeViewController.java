@@ -121,7 +121,6 @@ public class RecipeViewController implements Initializable {
                     s.show();
                 } catch (Exception e) {
                     // TODO: handle exception
-                    System.out.println(e.getMessage());
                 }
             });
             stage.setTitle("add new recipe");

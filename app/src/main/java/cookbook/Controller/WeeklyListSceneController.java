@@ -56,9 +56,8 @@ public class WeeklyListSceneController {
 
     @FXML
     private void deleteListClicked(ActionEvent event){
-        System.out.println("event fired");
         for(WeeklyViewItemController controller : controllers){
-            System.out.println("controller is removing");
+            System.out.println("is removing...");
             controller.removeWeekly();
         }
     }

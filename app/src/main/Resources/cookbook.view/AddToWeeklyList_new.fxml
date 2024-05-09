@@ -18,21 +18,6 @@
          </font>
       </Text>
       <DatePicker fx:id="weekDatePicker" promptText="Week" showWeekNumbers="true" />
-      <HBox prefHeight="0.0" prefWidth="0.0" spacing="10.0">
-         <children>
-            <RadioButton contentDisplay="BOTTOM" mnemonicParsing="false" text="Mon">
-               <toggleGroup>
-                  <ToggleGroup fx:id="weekday" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton contentDisplay="BOTTOM" mnemonicParsing="false" text="Tue" toggleGroup="$weekday" />
-            <RadioButton contentDisplay="BOTTOM" mnemonicParsing="false" text="Wed" toggleGroup="$weekday" />
-            <RadioButton contentDisplay="BOTTOM" mnemonicParsing="false" text="Thu" toggleGroup="$weekday" />
-            <RadioButton contentDisplay="BOTTOM" mnemonicParsing="false" text="Fri" toggleGroup="$weekday" />
-            <RadioButton contentDisplay="BOTTOM" mnemonicParsing="false" text="Sat" toggleGroup="$weekday" />
-            <RadioButton contentDisplay="BOTTOM" mnemonicParsing="false" text="Sun" toggleGroup="$weekday" />
-         </children>
-      </HBox>
       <HBox spacing="10.0">
          <children>
             <Button onAction="#addToWeeklyList" text="Add to list" />
