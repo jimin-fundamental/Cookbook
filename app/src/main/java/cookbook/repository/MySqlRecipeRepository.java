@@ -225,18 +225,26 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public List<Recipe> getFavorites(List<Recipe> recipes, User user){
-        // add Information for favourite recipes
-        List<Long> favourites = fetchFavourites(user);
-        for (Recipe recipe : recipes){
-            if (favourites.contains(recipe.getId())){
-                recipe.setIsFavourite(true);
+    public void getFavorites(List<Recipe> recipes, User user){
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
+                // add Information for favourite recipes
+                List<Long> favourites = fetchFavourites(user);
+                for (Recipe recipe : recipes){
+                    if (favourites.contains(recipe.getId())){
+                        recipe.setIsFavourite(true);
+                    }
+                    else{
+                        recipe.setIsFavourite(false);
+                    }
+                }
             }
-            else{
-                recipe.setIsFavourite(false);
-            }
-        }
-        return recipes;
+        };
+        
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start();
     }
 
     @Override
@@ -405,18 +413,27 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public List<Recipe> getRecipeWeeklyDates(List<Recipe> recipes, User user) {
-         // add Information for favourite recipes
-         Map<Long,Map<Date, Integer>> map = fetchWeeklyRecipes(user);
-         for (Recipe recipe : recipes){
-             if (map.containsKey(recipe.getId())){
-                recipe.setWeeklyDates(map.get(recipe.getId()));
-             }
-             else{
-                 recipe.setWeeklyDates(null);
-             }
-         }
-         return recipes;
+    public void getRecipeWeeklyDates(List<Recipe> recipes, User user) {
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
+                // add Information for favourite recipes
+                Map<Long,Map<Date, Integer>> map = fetchWeeklyRecipes(user);
+                for (Recipe recipe : recipes){
+                    if (map.containsKey(recipe.getId())){
+                        recipe.setWeeklyDates(map.get(recipe.getId()));
+                    }
+                    else{
+                        recipe.setWeeklyDates(null);
+                    }
+                }
+                System.out.println(recipes);
+            }
+        };
+        
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start(); 
     }
 
     @Override

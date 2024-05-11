@@ -77,9 +77,9 @@ public class RecipeViewController implements Initializable {
 
         }
         // get information about favourite recipes
-        recipeList = recipeRepos.getFavorites(recipeList, user);
+        recipeRepos.getFavorites(recipeList, user);
         // get information about weekly recipes
-        recipeList = recipeRepos.getRecipeWeeklyDates(recipeList, user);
+        recipeRepos.getRecipeWeeklyDates(recipeList, user);
         
     }
 
@@ -90,7 +90,6 @@ public class RecipeViewController implements Initializable {
 
         recipeList = new ArrayList<>();
         recipeRepos.getAllRecipes(recipeList);
-        System.out.println(recipeList);
 
     }
 

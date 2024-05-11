@@ -20,11 +20,11 @@ public interface RecipeRepository {
 
     void saveToFavorites(Recipe recipe, User user);
     void removeFromFavorites(Recipe recipe, User user);
-    List<Recipe> getFavorites(List<Recipe> recipes, User user);
+    void getFavorites(List<Recipe> recipes, User user);
 
     void addToWeekPlan(Recipe recipe, User user, Date date, int servings);
     void removeFromWeekPlan(Recipe recipe, User user, Date date);
-    List<Recipe> getRecipeWeeklyDates(List<Recipe> recipes, User user);
+    void getRecipeWeeklyDates(List<Recipe> recipes, User user);
 
     List<Ingredient> fetchIngredients(Long id);
     List<String> fetchTags(Long id);

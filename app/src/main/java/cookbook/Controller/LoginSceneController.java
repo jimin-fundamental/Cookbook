@@ -113,11 +113,33 @@ public class LoginSceneController implements Initializable{
         }
         else{
 
+            Node node = (Node) scenePane;
+            Scene scene = node.getScene();
+            //List<Object> returnValues = new ArrayList();
             try {
-                this.controller.setUserName(user);
-                this.stage.setScene(this.scene);
-                //this.stage.show();
-
+                if (scene != null) {
+                    Window window = scene.getWindow();
+                    if (window instanceof Stage) {
+                        Stage stage = (Stage) window;
+                        //setStage(stage);
+                        //returnValues.add(stage);
+                        // Proceed with your stage manipulation logic
+                        // FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+                        // Scene newScene = new Scene(fxmlLoader.load());
+                        stage.setScene(this.scene);
+                        // RecipeViewController controller = fxmlLoader.getController();
+                        // setController(controller);
+                        //returnValues.add(controller);
+                        this.controller.setUserName(user);
+                        stage.show();
+        
+                    } else {
+                        System.out.println("The window associated with the scene is not a Stage.");
+                    }
+                } else {
+                    System.out.println("The node is not within a scene.");
+                }
+                
             } catch (Exception e) {
                 // TODO: handle exception
             }

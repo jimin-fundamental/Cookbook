@@ -37,34 +37,26 @@ public class WeeklyListsSceneController {
     public void setRecipeList(List<Recipe> recipeList) {
         this.recipeList = recipeList;
 
-        // remove elements where weeklyDate is null
-        Iterator<Recipe> iterator = recipeList.iterator();
-        while (iterator.hasNext()) {
-            Recipe recipe = iterator.next();
-            if (recipe.getWeeklyDates() == null) {
-                iterator.remove();
-            }
-        }
-
-
         Map<Integer, List<Recipe>> weeksMap = new HashMap<Integer, List<Recipe>>();
         for(Recipe recipe : recipeList){
-            Map<Date, Integer> dates = recipe.getWeeklyDates();
-            for(Map.Entry<Date, Integer> entry : dates.entrySet()){
-                // get the week of which the date is in
-                LocalDate localDate = entry.getKey().toLocalDate();
-                DayOfWeek day = localDate.getDayOfWeek();
-                WeekFields weekFields = WeekFields.of(Locale.getDefault());
-                int weekOfYear = localDate.get(weekFields.weekOfWeekBasedYear());
-                List<Recipe> thatWeeksList = weeksMap.get(weekOfYear);
-                    if(thatWeeksList == null){
-                        thatWeeksList = new ArrayList<>();
-                        weeksMap.put(weekOfYear, thatWeeksList);
-                    }
-                    if(!thatWeeksList.contains(recipe)){
-                        thatWeeksList.add(recipe);
-                    }
-                    
+            if(recipe.getWeeklyDates() != null){
+                Map<Date, Integer> dates = recipe.getWeeklyDates();
+                for(Map.Entry<Date, Integer> entry : dates.entrySet()){
+                    // get the week of which the date is in
+                    LocalDate localDate = entry.getKey().toLocalDate();
+                    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+                    int weekOfYear = localDate.get(weekFields.weekOfWeekBasedYear());
+                    List<Recipe> thatWeeksList = weeksMap.get(weekOfYear);
+                        if(thatWeeksList == null){
+                            thatWeeksList = new ArrayList<>();
+                            weeksMap.put(weekOfYear, thatWeeksList);
+                        }
+                        if(!thatWeeksList.contains(recipe)){
+                            thatWeeksList.add(recipe);
+                        }
+                        
+    
+                }
 
             }
         }
