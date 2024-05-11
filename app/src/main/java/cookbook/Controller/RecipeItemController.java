@@ -93,8 +93,8 @@ public class RecipeItemController {
 
         // get the controller to call the method to set the data
         RecipeSceneController controller = fxmlLoader.getController();
-        controller.setRecipeData(this.recipe, this.recipe.getNumberOfPersons());
         controller.setUser(user);
+        controller.setRecipeData(this.recipe, this.recipe.getNumberOfPersons());
 
         stage.show();
 
