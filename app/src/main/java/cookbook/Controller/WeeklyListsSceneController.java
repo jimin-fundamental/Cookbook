@@ -68,7 +68,10 @@ public class WeeklyListsSceneController {
 
             }
         }
-
+        if(!listsVBox.getProperties().containsKey("Controller")){
+            listsVBox.getProperties().put("Controller", this);
+        }
+        listsVBox.getChildren().clear();
         for (Map.Entry<Integer, List<Recipe>> entry : weeksMap.entrySet()) {
             int weekOfYear = entry.getKey();
             List<Recipe> recipesForWeek = entry.getValue();
@@ -81,6 +84,11 @@ public class WeeklyListsSceneController {
 
     }
 
+    public void updateWeeklyLists(){
+        System.out.println("updating...");
+        setRecipeList(this.recipeList);
+    }
+
     public void setUser(User user) {
         this.user = user;
         this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
@@ -88,23 +96,6 @@ public class WeeklyListsSceneController {
 
     @FXML
     void openWeeklyList() {
-        try {
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/WeeklyListScene.fxml"));
-
-            // create new stage for new window of the recipe
-            Stage stage = new Stage();
-            stage.setResizable(false);
-            stage.setScene(new Scene(fxmlLoader.load()));
-            WeeklyListSceneController controller = fxmlLoader.getController();
-            controller.setUser(user);
-            controller.setRecipes(null, 0, recipeList);
-
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML

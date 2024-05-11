@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -26,6 +27,9 @@ public class WeeklyListItemController {
 
     @FXML
     private Text weekName;
+
+    @FXML
+    private VBox vBox;
 
 
     private MySqlRecipeRepository recipeRepos;
@@ -71,6 +75,7 @@ public class WeeklyListItemController {
             WeeklyListSceneController controller = fxmlLoader.getController();
             controller.setUser(user);
             controller.setRecipes(weeklyListTitle, Integer.parseInt(this.weekName.getText()), weeklyRecipes);
+            controller.setListsController((WeeklyListsSceneController)this.vBox.getParent().getProperties().get("Controller"));
             stage.show();
 
         } catch (IOException e) {

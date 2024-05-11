@@ -12,6 +12,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -167,52 +172,58 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public List<Recipe> getAllRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
+    public void getAllRecipes(List<Recipe> recipes) {
+        // Define an anonymous Callable to perform database query and return the list of recipes
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
 
-        //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings FROM FullRecipeView";
-        String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings, Image_URL FROM FullRecipeView";
+                //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings FROM FullRecipeView";
+                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings, Image_URL FROM FullRecipeView";
 
+                try (Connection connection = DriverManager.getConnection(dbManager.url);
+                    PreparedStatement pstmt = connection.prepareStatement(sql);
+                    ResultSet rs = pstmt.executeQuery()) {
 
-        try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        Recipe recipe = new Recipe();
+                        recipe.setId(rs.getLong("Recipe_ID"));
+                        recipe.setName(rs.getString("Recipe_Name"));
+                        recipe.setShortDescription(rs.getString("Short_Description"));
+                        recipe.setNumberOfPersons(rs.getInt("Servings"));
+                        recipe.setImagePath(rs.getString("Image_URL"));
 
-            while (rs.next()) {
-                Recipe recipe = new Recipe();
-                recipe.setId(rs.getLong("Recipe_ID"));
-                recipe.setName(rs.getString("Recipe_Name"));
-                recipe.setShortDescription(rs.getString("Short_Description"));
-                recipe.setNumberOfPersons(rs.getInt("Servings"));
-                recipe.setImagePath(rs.getString("Image_URL"));
+                        // Extract and parse process steps from JSON
+                        String jsonProcessSteps = rs.getString("Description");
+                        List<String> processSteps = parseProcessSteps(jsonProcessSteps);
+                        recipe.setProcessSteps(processSteps);
 
+                        // Fetch tags for the recipe
+                        String jsonTags = rs.getString("Tags_JSON");
+                        List<String> tags = parseTags(jsonTags);
+                        recipe.setTags(tags);
 
-                // Extract and parse process steps from JSON
-                String jsonProcessSteps = rs.getString("Description");
-                List<String> processSteps = parseProcessSteps(jsonProcessSteps);
-                recipe.setProcessSteps(processSteps);
+                        // Fetch ingredients for the recipe
+                        String jsonIngredients = rs.getString("Ingredients_JSON");
+                        List<Ingredient> ingredients = parseIngredients(jsonIngredients);
+                        recipe.setIngredients(ingredients);
 
-                // Fetch tags for the recipe
-                String jsonTags = rs.getString("Tags_JSON");
-                List<String> tags = parseTags(jsonTags);
-                recipe.setTags(tags);
+                        recipes.add(recipe);
+                    }
+                    System.out.println("thread is done!");
 
-                // Fetch ingredients for the recipe
-                String jsonIngredients = rs.getString("Ingredients_JSON");
-                List<Ingredient> ingredients = parseIngredients(jsonIngredients);
-                recipe.setIngredients(ingredients);
-
-                recipes.add(recipe);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
-            
-            pstmt.close();
-            connection.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return recipes;
+        };
+        
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start();
+        System.out.println("thread is executing");
     }
+
     @Override
     public List<Recipe> getFavorites(List<Recipe> recipes, User user){
         // add Information for favourite recipes
@@ -324,62 +335,73 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     @Override
     public void addToWeekPlan(Recipe recipe, User user, Date date, int servings) {
-        String sql = "INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date, w_servings) " +
-                     "VALUES (?, ?, ?, ?)";
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
+                String sql = "INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date, w_servings) " +
+                            "VALUES (?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                try (Connection connection = DriverManager.getConnection(dbManager.url);
+                    PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-            // set values
-            pstmt.setLong(1, user.getId());
-            pstmt.setLong(2, recipe.getId());
-            pstmt.setDate(3, date);
-            pstmt.setInt(4, servings);
+                    // set values
+                    pstmt.setLong(1, user.getId());
+                    pstmt.setLong(2, recipe.getId());
+                    pstmt.setDate(3, date);
+                    pstmt.setInt(4, servings);
 
-            pstmt.executeUpdate();
+                    pstmt.executeUpdate();
 
-            pstmt.close();
-            connection.close();
-            Map<Date, Integer> dates = recipe.getWeeklyDates();
-            if(dates == null){
-                dates = new HashMap<Date, Integer>(); 
-                recipe.setWeeklyDates(dates);
+                    pstmt.close();
+                    connection.close();
+                    Map<Date, Integer> dates = recipe.getWeeklyDates();
+                    if(dates == null){
+                        dates = new HashMap<Date, Integer>(); 
+                        recipe.setWeeklyDates(dates);
+                    }
+                    dates.put(date, servings);
+                    
+                } catch (SQLException e) {
+                    e.printStackTrace();
+
+                }
             }
-            dates.put(date, servings);
-
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
+        };
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start();                
     }
 
     @Override
     public void removeFromWeekPlan(Recipe recipe, User user, Date date) {
-        String sql = "DELETE FROM UserRecipeWeeklyList " +
-                     "WHERE User_ID = ? AND Recipe_ID = ? AND date = ?";
-
-        try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
-
-            // set values
-            pstmt.setLong(1, user.getId());
-            pstmt.setLong(2, recipe.getId());
-            pstmt.setDate(3, date);
-
-            pstmt.executeUpdate();
-
-            pstmt.close();  
-            connection.close();
-
-            // remove the element from the list
-            recipe.getWeeklyDates().remove(date);
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
+                String sql = "DELETE FROM UserRecipeWeeklyList " +
+                             "WHERE User_ID = ? AND Recipe_ID = ? AND date = ?";
+        
+                try (Connection connection = DriverManager.getConnection(dbManager.url);
+                     PreparedStatement pstmt = connection.prepareStatement(sql)) {
+        
+                    // set values
+                    pstmt.setLong(1, user.getId());
+                    pstmt.setLong(2, recipe.getId());
+                    pstmt.setDate(3, date);
+        
+                    pstmt.executeUpdate();
+        
+                    // remove the element from the list
+                    recipe.getWeeklyDates().remove(date);
+        
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start();
     }
 
     @Override

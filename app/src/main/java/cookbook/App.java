@@ -1,9 +1,11 @@
 package cookbook;
 
+import cookbook.Controller.LoginSceneController;
+import cookbook.Controller.RecipeViewController;
 import cookbook.repository.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -19,8 +21,14 @@ public class App extends Application {
             dbManager = new DatabaseManager();
             userRepo = new UserDao(dbManager);
 
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/LoginScene.fxml"));
+            Scene newScene = new Scene(fxmlLoader.load());
+            stage.setScene(newScene);
+            LoginSceneController controller = fxmlLoader.getController();
+            controller.setStage(stage);
+            stage.show();
             // Set up the initial scene
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")), stage);
+            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")), stage);
         
         } catch(Exception e) {
             e.printStackTrace();

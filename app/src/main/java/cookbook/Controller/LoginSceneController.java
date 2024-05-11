@@ -29,7 +29,7 @@ public class LoginSceneController implements Initializable{
     private TextField pwTextbox;
     
     @FXML
-    private Pane scene1;
+    private Pane scenePane;
     
     @FXML
     private Button signInButton;
@@ -47,7 +47,9 @@ public class LoginSceneController implements Initializable{
     //private List<Object> threadOutput;
     private volatile RecipeViewController controller;
     private volatile Stage stage;
+    private Scene scene;
     Thread thread;
+
 
     public LoginSceneController() {
         DatabaseManager dbManager = new DatabaseManager();
@@ -56,49 +58,48 @@ public class LoginSceneController implements Initializable{
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Node node = (Node) scene1;
-        thread = new Thread(() -> {
-            System.out.println("thread active");
-             startRecipeView(node);
-        });
-        //thread.start();
+       startRecipeView();
     }
-    private void setStage(Stage stage){
+    public void setStage(Stage stage){
         this.stage = stage;
     }
     private void setController(RecipeViewController controller){
         this.controller = controller;
     }
 
-    private void startRecipeView(Node node){
-        Scene scene = node.getScene();
-        //List<Object> returnValues = new ArrayList();
+    private void startRecipeView(){
+        // Node node = (Node)scenePane;
+        // System.out.println(node);;
+        // Scene scene;
+        // System.out.println(node.getParent());
+        // scene = node.getScene();;
+
+        //Scene scene = node.getScene();
         try {
-            if (scene != null) {
-                Window window = scene.getWindow();
-                if (window instanceof Stage) {
-                    Stage stage = (Stage) window;
-                    setStage(stage);
-                    //returnValues.add(stage);
+            // if (scene != null) {
+               
+            //     if (window instanceof Stage) {
+                    // Stage stage = (Stage) window;
+                    // this.setStage(stage);
                     // Proceed with your stage manipulation logic
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
                     Scene newScene = new Scene(fxmlLoader.load());
-                    stage.setScene(newScene);
+                    this.scene = newScene;
+                    // this.stage.setScene(newScene);
                     RecipeViewController controller = fxmlLoader.getController();
-                    setController(controller);
+                    this.setController(controller);
                     //returnValues.add(controller);
     
-                } else {
-                    System.out.println("The window associated with the scene is not a Stage.");
-                }
-            } else {
-                System.out.println("The node is not within a scene.");
-            }
+            //     } else {
+            //         System.out.println("The window associated with the scene is not a Stage.");
+            //     }
+            // } else {
+            //     System.out.println("The node is not within a scene.");
+            // }
             
         } catch (Exception e) {
             // TODO: handle exception
         }
-        //return returnValues;
     }
     @FXML
     void signInButtonPressed(ActionEvent event) throws IOException{
@@ -111,38 +112,12 @@ public class LoginSceneController implements Initializable{
             errorLabel.setVisible(true);
         }
         else{
-            // try {
-            //     thread.join(); // Wait for the thread to finish
-            // } catch (InterruptedException e) {
-            //     e.printStackTrace();
-            // }
-            Node node = (Node) scene1;
-            Scene scene = node.getScene();
-            //List<Object> returnValues = new ArrayList();
+
             try {
-                if (scene != null) {
-                    Window window = scene.getWindow();
-                    if (window instanceof Stage) {
-                        Stage stage = (Stage) window;
-                        setStage(stage);
-                        //returnValues.add(stage);
-                        // Proceed with your stage manipulation logic
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
-                        Scene newScene = new Scene(fxmlLoader.load());
-                        stage.setScene(newScene);
-                        RecipeViewController controller = fxmlLoader.getController();
-                        setController(controller);
-                        //returnValues.add(controller);
-                        controller.setUserName(user);
-                        stage.show();
-        
-                    } else {
-                        System.out.println("The window associated with the scene is not a Stage.");
-                    }
-                } else {
-                    System.out.println("The node is not within a scene.");
-                }
-                
+                this.controller.setUserName(user);
+                this.stage.setScene(this.scene);
+                //this.stage.show();
+
             } catch (Exception e) {
                 // TODO: handle exception
             }

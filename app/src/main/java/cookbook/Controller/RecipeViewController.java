@@ -88,7 +88,9 @@ public class RecipeViewController implements Initializable {
         // has to be the first to initialize the repository
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
 
-        recipeList = recipeRepos.getAllRecipes();
+        recipeList = new ArrayList<>();
+        recipeRepos.getAllRecipes(recipeList);
+        System.out.println(recipeList);
 
     }
 

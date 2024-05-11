@@ -7,8 +7,10 @@ import cookbook.repository.MySqlRecipeRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -23,6 +25,9 @@ public class WeeklyViewItemController {
 
     @FXML
     private Text numberOfServings;
+
+    @FXML
+    private HBox hBox;
 
     private Recipe recipe;
     private User user;
@@ -72,5 +77,10 @@ public class WeeklyViewItemController {
 
     public void removeWeekly(){
         this.recipeRepos.removeFromWeekPlan(recipe, user, Date.valueOf(date));
+
+        Parent parent = hBox.getParent();
+        
+        WeeklyListSceneController parentController = (WeeklyListSceneController)parent.getProperties().get("Controller");
+        parentController.updateView();
     }
 }
