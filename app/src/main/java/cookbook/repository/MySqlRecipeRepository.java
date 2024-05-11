@@ -44,15 +44,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     }
 
-
-    private List<String> cachedPredeterminedTags;
-
-    //Cache Predetermined Tags
-//    private void loadPredeterminedTags() {
-//        cachedPredeterminedTags = getAllPredeterminedTags();
-//    }
-
-
     @Override
     public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
@@ -158,8 +149,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
             System.out.println("SQL Error: " + e.getMessage());
         }
     }
-
-
 
 
 
@@ -661,6 +650,30 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return ingredients;
     }
 
+    public List<String> getAllTags(User user) {
+        List<String> tags = new ArrayList<>();
+
+        // Get all predetermined tags
+        List<String> predeterminedTags = getAllPredeterminedTags();
+        if (predeterminedTags != null) {
+            tags.addAll(predeterminedTags);
+        }
+
+        // Ensure currentUser is properly initialized
+        if (user != null) {
+            List<String> customTags = getAllCustomTags(user);
+            if (customTags != null) {
+                tags.addAll(customTags);
+            }
+        } else {
+            // Handle the case where currentUser is null, possibly by logging or throwing an exception
+            System.out.println("Current user is not initialized.");
+        }
+
+        return tags;
+    }
+
+
     //method for getting whole predeterminedTags
     public List<String> getAllPredeterminedTags() {
         List<String> tags = new ArrayList<>();
@@ -681,6 +694,42 @@ public class MySqlRecipeRepository implements RecipeRepository{
         }
 
         return tags;
+    }
+
+
+    public List<String> getAllCustomTags(User user) {
+        List<String> customTags = new ArrayList<>();
+
+        // SQL to get all Tags_ID for a given User_ID
+        String sql = "SELECT Tags_ID FROM RecipeCustomTag WHERE User_ID = ?";
+        // SQL to fetch tag name based on Tags_ID
+        String sql2 = "SELECT tagname FROM Tags WHERE ID = ?";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql);
+             PreparedStatement pstmt2 = connection.prepareStatement(sql2)) {
+
+            // Set User_ID parameter for the first query
+            pstmt.setLong(1, user.getId());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    long tagId = rs.getLong("Tags_ID");
+
+                    // Set Tags_ID parameter for the second query to fetch tag names
+                    pstmt2.setLong(1, tagId);
+                    try (ResultSet rs2 = pstmt2.executeQuery()) {
+                        if (rs2.next()) {
+                            String tagName = rs2.getString("tagname");
+                            customTags.add(tagName);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customTags;
     }
 
 

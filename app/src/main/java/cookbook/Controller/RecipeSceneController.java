@@ -15,6 +15,7 @@ import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -80,6 +81,7 @@ public class RecipeSceneController implements Initializable {
     private List<TagController> controllers = new ArrayList<>();
     private AddTagsButtonController addTagsButtonController = null;
     private int servings;
+    private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
     public void setServings(int servings){
         this.servings = servings;
@@ -92,7 +94,22 @@ public class RecipeSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+//        loadPredeterminedTags();
+//        loadCustomTags();
     }
+
+//    private void loadCustomTags() {
+//        List<String> customtags = sqlRepos.getAllCustomTags(user);
+//        ObservableList<String> tagList = FXCollections.observableArrayList(customtags);
+////        tagsComboBox.getItems().setAll(tagList);
+//    }
+//
+//    private void loadPredeterminedTags() {
+//        List<String> tags = sqlRepos.getAllPredeterminedTags();
+//        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
+////        tagsComboBox.getItems().setAll(tagList);
+//    }
+
 
     public void setRecipeData(Recipe recipe, int numberOfServings) {
         recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
@@ -102,7 +119,8 @@ public class RecipeSceneController implements Initializable {
         servingsComboBox.setValue(this.servings);
         changeNumberOfServings();
 
-        List<String> tags = recipe.getTags();
+
+        List<String> tags = sqlRepos.getAllTags(user);
 
         // Clear existing tags
         tagsFlowPane.getChildren().clear();

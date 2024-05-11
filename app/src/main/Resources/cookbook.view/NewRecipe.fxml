@@ -65,12 +65,12 @@
                </children>
             </HBox>
 
-            <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">
-               <children>
-                  <Label text="Custom tags (Format: tag1;tag2;tag3...)" />
-                  <TextArea fx:id="tagsArea" prefHeight="200.0" prefWidth="200.0" />
-               </children>
-            </VBox>
+<!--            <VBox prefHeight="0.0" prefWidth="0.0" spacing="5.0">-->
+<!--               <children>-->
+<!--                  <Label text="Custom tags (Format: tag1;tag2;tag3...)" />-->
+<!--                  <TextArea fx:id="tagsArea" prefHeight="200.0" prefWidth="200.0" />-->
+<!--               </children>-->
+<!--            </VBox>-->
 
             <HBox spacing="10.0">
                <padding>

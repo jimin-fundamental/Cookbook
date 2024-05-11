@@ -42,8 +42,8 @@ public class AddRecipeController implements Initializable {
     @FXML
     private TextField shortDescriptionField;
 
-    @FXML
-    private TextArea tagsArea;
+//    @FXML
+//    private TextArea tagsArea;
 
     @FXML
     private CheckComboBox tagsComboBox;
@@ -62,15 +62,23 @@ public class AddRecipeController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadPredeterminedTags();
+//        loadPredeterminedTags();
+//        loadCustomTags();
     }
 
-    private void loadPredeterminedTags() {
-        List<String> tags = sqlRepos.getAllPredeterminedTags();
-        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
-        tagsComboBox.getItems().setAll(tagList);
-    }
+//    private void loadCustomTags() {
+//        List<String> customtags = sqlRepos.getAllPredeterminedTags();
+//        ObservableList<String> tagList = FXCollections.observableArrayList(customtags);
+//        tagsComboBox.getItems().setAll(tagList);
+//    }
+//
+//    private void loadPredeterminedTags() {
+//        List<String> tags = sqlRepos.getAllPredeterminedTags();
+//        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
+//        tagsComboBox.getItems().setAll(tagList);
+//    }
 
+    /*
     @FXML
     void addRecipe(ActionEvent event, int userID) {
         try{
@@ -99,6 +107,7 @@ public class AddRecipeController implements Initializable {
             e.printStackTrace();
         }
     }
+     */
 
 
 
@@ -145,7 +154,7 @@ public class AddRecipeController implements Initializable {
         servingsField.setText("");
         shortDescriptionField.setText("");
         tagsComboBox.getCheckModel().clearChecks(); // Clear selections in CheckComboBox
-        tagsArea.setText("");
+//        tagsArea.setText("");
         titleField.setText("");
     }
 
