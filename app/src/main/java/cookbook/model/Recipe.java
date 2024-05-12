@@ -1,5 +1,8 @@
 package cookbook.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,8 @@ public class Recipe {
     private List<String> processSteps; // A detailed description of the process
     private int numberOfPersons; // The number of persons the recipe serves
     private int author;
-    private List<String> tags; // Tags for the recipe
+//    private List<String> tags; // Tags for the recipe
+    private ObservableList<String> tags = FXCollections.observableArrayList();
     private List<String> comments; // User comments on the recipe
     private String imagePath; // URL or path to the recipe's image
     private boolean isFavourite; // true if the recipe is selected as a favourite by the user
@@ -22,7 +26,7 @@ public class Recipe {
     public Recipe() {
         // Initialize lists
         ingredients = new ArrayList<>();
-        tags = new ArrayList<>();
+//        tags = new ArrayList<>();
         comments = new ArrayList<>();
         processSteps = new ArrayList<>();
     }
@@ -36,7 +40,7 @@ public class Recipe {
         this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
         this.author = author;
-        this.tags = tags;
+//        this.tags = tags;
     }
     public Recipe(Long id, String name, String shortDescription, List<Ingredient> ingredients, List<String> processSteps, int numberOfPersons, int author, List<String> tags, List<String> comments) {
         this.id = id;
@@ -46,7 +50,7 @@ public class Recipe {
         this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
         this.author = author;
-        this.tags = tags;
+//        this.tags = tags;
         this.comments = comments;
     }
     // Constructor with all parameters including image path
@@ -61,7 +65,7 @@ public class Recipe {
         this.processSteps = processSteps;
         this.numberOfPersons = numberOfPersons;
         this.author = author;
-        this.tags = tags;
+//        this.tags = tags;
         this.comments = comments;
         this.imagePath = imagePath;
         this.isFavourite = isFavourite;
@@ -120,12 +124,22 @@ public class Recipe {
         return author;
     }
 
-    public List<String> getTags() {
+//    public List<String> getTags() {
+//        return tags;
+//    }
+    public ObservableList<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+//    public void setTags(List<String> tags) {
+//        this.tags = tags;
+//    }
+
+    public void setTags(List<String> newTags) {
+        if (newTags == null) {
+            throw new IllegalArgumentException("Tags cannot be null");
+        }
+        this.tags.setAll(newTags);
     }
 
     public List<String> getComments() {

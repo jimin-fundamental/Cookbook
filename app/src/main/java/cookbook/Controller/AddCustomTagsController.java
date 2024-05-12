@@ -32,6 +32,7 @@ public class AddCustomTagsController{
     private Recipe recipe;
     private MySqlRecipeRepository sqlRepos;
     private User user;
+    private RecipeSceneController recipeSceneController;
 
     public AddCustomTagsController() {
         // Empty constructor required by FXML
@@ -48,36 +49,29 @@ public class AddCustomTagsController{
     //need to get userId from other method
     @FXML
     public void addCustomTags(ActionEvent event) {
-        //this.event = event;
         if (user == null) {
             System.out.println("User not initialized.");
             return;
         }
 
-        //tags in form of tag1;tag2;tag3
-        String customTags = tagsArea.getText();
-        System.out.println("custom tags: " + customTags);
+        String customTag = tagsArea.getText();
+        try {
+            sqlRepos.addCustomTagsRepo(customTag, user.getId(), recipe);
 
-        try{
-            // Add new Recipe with userID
-            sqlRepos.addCustomTagsRepo(customTags, user.getId(), recipe);
+            // Fetch updated tags
+            List<String> updatedTags = sqlRepos.getAllTags(recipe, user);
+            System.out.println("Updated Tags: " + updatedTags);  // Debug log
+            recipe.getTags().setAll(updatedTags); // Update the observable list, notifying listeners
+            System.out.println("Recipe.getTags: "+ recipe.getTags());
 
-            // close window
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
-
-            //Call method to refresh RecipeView page
-            //refreshRecipeView();
-            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeScene.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
-
-
-
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
+
+
 
 /*
     private void refreshRecipeView() {

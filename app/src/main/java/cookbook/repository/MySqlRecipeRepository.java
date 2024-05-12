@@ -206,7 +206,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 }
             }
         };
-        
+
         // Start a new thread to execute the database operation
         Thread dbThread = new Thread(dbOperationTask);
         dbThread.start();
@@ -230,7 +230,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 }
             }
         };
-        
+
         // Start a new thread to execute the database operation
         Thread dbThread = new Thread(dbOperationTask);
         dbThread.start();
@@ -353,11 +353,11 @@ public class MySqlRecipeRepository implements RecipeRepository{
                     connection.close();
                     Map<Date, Integer> dates = recipe.getWeeklyDates();
                     if(dates == null){
-                        dates = new HashMap<Date, Integer>(); 
+                        dates = new HashMap<Date, Integer>();
                         recipe.setWeeklyDates(dates);
                     }
                     dates.put(date, servings);
-                    
+
                 } catch (SQLException e) {
                     e.printStackTrace();
 
@@ -366,7 +366,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         };
         // Start a new thread to execute the database operation
         Thread dbThread = new Thread(dbOperationTask);
-        dbThread.start();                
+        dbThread.start();
     }
 
     @Override
@@ -376,26 +376,26 @@ public class MySqlRecipeRepository implements RecipeRepository{
             public void run() {
                 String sql = "DELETE FROM UserRecipeWeeklyList " +
                              "WHERE User_ID = ? AND Recipe_ID = ? AND date = ?";
-        
+
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
                      PreparedStatement pstmt = connection.prepareStatement(sql)) {
-        
+
                     // set values
                     pstmt.setLong(1, user.getId());
                     pstmt.setLong(2, recipe.getId());
                     pstmt.setDate(3, date);
-        
+
                     pstmt.executeUpdate();
-        
+
                     // remove the element from the list
                     recipe.getWeeklyDates().remove(date);
-        
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
         };
-        
+
         // Start a new thread to execute the database operation
         Thread dbThread = new Thread(dbOperationTask);
         dbThread.start();
@@ -419,10 +419,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 System.out.println(recipes);
             }
         };
-        
+
         // Start a new thread to execute the database operation
         Thread dbThread = new Thread(dbOperationTask);
-        dbThread.start(); 
+        dbThread.start();
     }
 
     @Override
@@ -674,6 +674,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
         // Print all tags for the recipe and user
         System.out.println("All tags for recipe ID " + recipe.getId() + ": " + tags);
+
+        recipe.setTags(tags);
 
         return tags;
     }

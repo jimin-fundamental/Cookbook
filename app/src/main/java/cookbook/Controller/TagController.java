@@ -8,7 +8,11 @@ public class TagController {
     private Label tagsLabel;
 
     public void setTagName(String name) {
-        this.tagsLabel.setText(name);
+        tagsLabel.setText(name);
     }
 
+    public String getTagName() {  // Ensure it returns String
+        return tagsLabel.getText();
+    }
 }
+
