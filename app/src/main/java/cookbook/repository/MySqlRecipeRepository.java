@@ -650,18 +650,20 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return ingredients;
     }
 
-    public List<String> getAllTags(User user) {
+    //Get all tags which are match to that recipe
+    public List<String> getAllTags(Recipe recipe, User user) {
         List<String> tags = new ArrayList<>();
 
         // Get all predetermined tags
-        List<String> predeterminedTags = getAllPredeterminedTags();
+        List<String> predeterminedTags = getAllPredeterminedTags(recipe);
         if (predeterminedTags != null) {
             tags.addAll(predeterminedTags);
+            System.out.println("All predeterminedTags for recipe ID " + recipe.getId() + ": " + tags);
         }
 
         // Ensure currentUser is properly initialized
         if (user != null) {
-            List<String> customTags = getAllCustomTags(user);
+            List<String> customTags = getAllCustomTags(recipe, user);
             if (customTags != null) {
                 tags.addAll(customTags);
             }
@@ -670,38 +672,57 @@ public class MySqlRecipeRepository implements RecipeRepository{
             System.out.println("Current user is not initialized.");
         }
 
+        // Print all tags for the recipe and user
+        System.out.println("All tags for recipe ID " + recipe.getId() + ": " + tags);
+
         return tags;
     }
 
 
-    //method for getting whole predeterminedTags
-    public List<String> getAllPredeterminedTags() {
+
+    //method for getting whole predeterminedTags for that recipe
+    public List<String> getAllPredeterminedTags(Recipe recipe) {
         List<String> tags = new ArrayList<>();
 
-        String sql = "SELECT ID, tagname FROM Tags WHERE ispredefined = 1";
+        // SQL to get all Tags_ID for a given Recipe_ID
+        String sql = "SELECT Tags_ID FROM RecipeTag WHERE Recipe_ID = ?";
+        // SQL to fetch tag name based on Tags_ID
+        String sql2 = "SELECT tagname FROM Tags WHERE ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt2 = connection.prepareStatement(sql2)) {
 
-            while (rs.next()) {
-                String tag = rs.getString("tagname");
-                tags.add(tag);
+            // Set User_ID parameter for the first query
+            pstmt.setLong(1, recipe.getId());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    long tagId = rs.getLong("Tags_ID");
+
+                    // Set Tags_ID parameter for the second query to fetch tag names
+                    pstmt2.setLong(1, tagId);
+                    try (ResultSet rs2 = pstmt2.executeQuery()) {
+                        if (rs2.next()) {
+                            String tagName = rs2.getString("tagname");
+                            tags.add(tagName);
+                        }
+                    }
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+
         return tags;
     }
 
-
-    public List<String> getAllCustomTags(User user) {
+    //method for getting whole customTags for that recipe and for that user
+    public List<String> getAllCustomTags(Recipe recipe, User user) {
         List<String> customTags = new ArrayList<>();
 
         // SQL to get all Tags_ID for a given User_ID
-        String sql = "SELECT Tags_ID FROM RecipeCustomTag WHERE User_ID = ?";
+        String sql = "SELECT Tags_ID FROM RecipeCustomTag WHERE User_ID = ? AND Recipe_ID = ?";
         // SQL to fetch tag name based on Tags_ID
         String sql2 = "SELECT tagname FROM Tags WHERE ID = ?";
 
@@ -711,6 +732,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
             // Set User_ID parameter for the first query
             pstmt.setLong(1, user.getId());
+            pstmt.setLong(2, recipe.getId());
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     long tagId = rs.getLong("Tags_ID");

@@ -94,21 +94,7 @@ public class RecipeSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        loadPredeterminedTags();
-//        loadCustomTags();
     }
-
-//    private void loadCustomTags() {
-//        List<String> customtags = sqlRepos.getAllCustomTags(user);
-//        ObservableList<String> tagList = FXCollections.observableArrayList(customtags);
-////        tagsComboBox.getItems().setAll(tagList);
-//    }
-//
-//    private void loadPredeterminedTags() {
-//        List<String> tags = sqlRepos.getAllPredeterminedTags();
-//        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
-////        tagsComboBox.getItems().setAll(tagList);
-//    }
 
 
     public void setRecipeData(Recipe recipe, int numberOfServings) {
@@ -120,7 +106,7 @@ public class RecipeSceneController implements Initializable {
         changeNumberOfServings();
 
 
-        List<String> tags = sqlRepos.getAllTags(user);
+        List<String> tags = sqlRepos.getAllTags(recipe, user);
 
         // Clear existing tags
         tagsFlowPane.getChildren().clear();
@@ -189,7 +175,7 @@ public class RecipeSceneController implements Initializable {
 
     public void editRecipeScene(ActionEvent event) {
         try {
-            
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/ChangeRecipe.fxml"));
 
             // create new stage for new window of the recipe
@@ -231,7 +217,7 @@ public class RecipeSceneController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     void changeServings(ActionEvent event) {
        changeNumberOfServings();
