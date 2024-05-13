@@ -84,6 +84,8 @@ public class RecipeSceneController implements Initializable {
     @FXML
     private Button removeFromWeeklyListButton;
 
+
+
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
     private User user;

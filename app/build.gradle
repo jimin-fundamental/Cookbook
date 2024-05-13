@@ -37,6 +37,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.3.0'
+
+    implementation 'org.json:json:20210307'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
