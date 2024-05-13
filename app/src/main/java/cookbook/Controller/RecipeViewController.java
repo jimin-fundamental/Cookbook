@@ -80,6 +80,9 @@ public class RecipeViewController implements Initializable {
         recipeRepos.getFavorites(recipeList, user);
         // get information about weekly recipes
         recipeRepos.getRecipeWeeklyDates(recipeList, user);
+        for (Recipe recipe : recipeList){
+            recipeRepos.getAllCustomTags( recipe, user);
+        }
         
     }
 
@@ -147,6 +150,7 @@ public class RecipeViewController implements Initializable {
         recipeContainer.getChildren().clear();
         // iterate through all recipes
         for (Recipe recipe : recipeList) {
+            System.out.println(recipe.getCustomTags());
             String searchHits = "";
             int numberOfHits = 0;
             
@@ -159,6 +163,16 @@ public class RecipeViewController implements Initializable {
                 }
                 // check if the search word is in the recipe tags
                 for (String tag : recipe.getTags()) {
+                    if (tag.toLowerCase().contains(searchWord.toLowerCase())) {
+                        if (hit != true)
+                            numberOfHits += 1;
+                        hit = true;
+                        if (!searchWord.isEmpty() && !searchHits.contains(tag)) {
+                            searchHits += tag + ", ";
+                        }
+                    }
+                }
+                for (String tag : recipe.getCustomTags()) {
                     if (tag.toLowerCase().contains(searchWord.toLowerCase())) {
                         if (hit != true)
                             numberOfHits += 1;

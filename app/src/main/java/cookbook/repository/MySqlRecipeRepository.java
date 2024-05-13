@@ -754,7 +754,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        System.out.println();
         return customTags;
     }
 
