@@ -59,9 +59,8 @@ public class AddCustomTagsController{
             sqlRepos.addCustomTagsRepo(customTag, user.getId(), recipe);
 
             // Fetch updated tags
-            List<String> updatedTags = sqlRepos.getAllTags(recipe, user);
-            System.out.println("Updated Tags: " + updatedTags);  // Debug log
-            recipe.getTags().setAll(updatedTags); // Update the observable list, notifying listeners
+            sqlRepos.getAllTags(recipe, user);
+            System.out.println("Recipe.getCustomTags: " + recipe.getCustomTags());  // Debug log
             System.out.println("Recipe.getTags: "+ recipe.getTags());
 
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();

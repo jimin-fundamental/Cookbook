@@ -138,12 +138,12 @@ public class RecipeSceneController implements Initializable {
     private void setupTagChangeListener() {
         if (!tagsListenerAdded) {
             // Take an initial snapshot of the tags list
-            final List<String> oldTags = new ArrayList<>(recipe.getTags());
+            final List<String> oldTags = new ArrayList<>(recipe.getCustomTags());
 
-            recipe.getTags().addListener((ListChangeListener.Change<? extends String> change) -> {
+            recipe.getCustomTags().addListener((ListChangeListener.Change<? extends String> change) -> {
                 Platform.runLater(() -> {
                     // Take a new snapshot after changes
-                    List<String> newTags = new ArrayList<>(recipe.getTags());
+                    List<String> newTags = new ArrayList<>(recipe.getCustomTags());
 
                     // Determine removed tags by checking what's in oldTags but not in newTags
                     List<String> removedTags = oldTags.stream()

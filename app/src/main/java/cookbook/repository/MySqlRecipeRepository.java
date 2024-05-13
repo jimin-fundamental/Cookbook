@@ -674,7 +674,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         }
 
         // Print all tags for the recipe and user
-        System.out.println("All tags for recipe ID " + recipe.getId() + ": " + tags);
+        System.out.println("All tags for recipe ID " + recipe.getId() + ": " + tags + ctags);
 
         recipe.setTags(FXCollections.observableArrayList(tags));
         recipe.setCustomTags(FXCollections.observableArrayList(ctags));
