@@ -3,16 +3,13 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -60,9 +57,12 @@
                            </font>
                         </Text>
                         <FlowPane fx:id="tagsFlowPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" vgap="5.0">
-                          
                         </FlowPane>
-
+                        <VBox fillWidth="false" prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <fx:include fx:id="addTagsButton" source="AddTagsButton.fxml" />
+                           </children>
+                        </VBox>
 
                         <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="129.0" spacing="10.0">
                            <children>

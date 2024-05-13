@@ -76,12 +76,17 @@ public class RecipeSceneController implements Initializable {
     private FlowPane tagsFlowPane;
 
     @FXML
+    private StackPane addTagsButton;
+
+    @FXML
+    private AddTagsButtonController addTagsButtonController;
+
+    @FXML
     private Button removeFromWeeklyListButton;
 
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
     private User user;
-    private AddTagsButtonController addTagsButtonController = null;
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
     private boolean tagsListenerAdded = false;
 
@@ -209,15 +214,8 @@ public class RecipeSceneController implements Initializable {
     }
 
     private void addAddTagsButton() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/AddTagsButton.fxml"));
-            Node addTagButton = loader.load();
-            addTagsButtonController = loader.getController();
-            addTagsButtonController.initializeData(user, recipe);
-            tagsFlowPane.getChildren().add(addTagButton);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        addTagsButtonController.initializeData(user, recipe);
     }
 
     private void initializeServings(int numberOfServings) {
