@@ -4,6 +4,7 @@ import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
+import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 
 import java.sql.*;
@@ -653,19 +654,19 @@ public class MySqlRecipeRepository implements RecipeRepository{
     //Get all tags which are match to that recipe
     public List<String> getAllTags(Recipe recipe, User user) {
         List<String> tags = new ArrayList<>();
+        List<String> ctags = new ArrayList<>();
 
         // Get all predetermined tags
         List<String> predeterminedTags = getAllPredeterminedTags(recipe);
         if (predeterminedTags != null) {
             tags.addAll(predeterminedTags);
-            System.out.println("All predeterminedTags for recipe ID " + recipe.getId() + ": " + tags);
         }
 
         // Ensure currentUser is properly initialized
         if (user != null) {
             List<String> customTags = getAllCustomTags(recipe, user);
             if (customTags != null) {
-                tags.addAll(customTags);
+                ctags.addAll(customTags);
             }
         } else {
             // Handle the case where currentUser is null, possibly by logging or throwing an exception
@@ -675,7 +676,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
         // Print all tags for the recipe and user
         System.out.println("All tags for recipe ID " + recipe.getId() + ": " + tags);
 
-        recipe.setTags(tags);
+        recipe.setTags(FXCollections.observableArrayList(tags));
+        recipe.setCustomTags(FXCollections.observableArrayList(ctags));
 
         return tags;
     }

@@ -18,6 +18,7 @@ public class Recipe {
     private int author;
 //    private List<String> tags; // Tags for the recipe
     private ObservableList<String> tags = FXCollections.observableArrayList();
+    private ObservableList<String> customTags = FXCollections.observableArrayList();
     private List<String> comments; // User comments on the recipe
     private String imagePath; // URL or path to the recipe's image
     private boolean isFavourite; // true if the recipe is selected as a favourite by the user
@@ -124,16 +125,13 @@ public class Recipe {
         return author;
     }
 
-//    public List<String> getTags() {
-//        return tags;
-//    }
     public ObservableList<String> getTags() {
         return tags;
     }
 
-//    public void setTags(List<String> tags) {
-//        this.tags = tags;
-//    }
+    public ObservableList<String> getCustomTags() {
+        return customTags;
+    }
 
     public void setTags(List<String> newTags) {
         if (newTags == null) {
@@ -141,6 +139,14 @@ public class Recipe {
         }
         this.tags.setAll(newTags);
     }
+
+    public void setCustomTags(List<String> newTags) {
+        if (newTags == null) {
+            throw new IllegalArgumentException("Tags cannot be null");
+        }
+        this.customTags.setAll(newTags);
+    }
+
 
     public List<String> getComments() {
         return comments;
