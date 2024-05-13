@@ -3,9 +3,11 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.FlowPane?>
@@ -14,12 +16,12 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane fx:id="wrapperScrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeSceneController">
+<ScrollPane fx:id="wrapperScrollPane" maxHeight="1080.0" maxWidth="1920.0" minHeight="-Infinity" prefHeight="500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeSceneController">
    <content>
-      <VBox fx:id="wrapperVBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="272.0" prefWidth="32.0" spacing="10.0">
+      <VBox fx:id="wrapperVBox" spacing="10.0">
          <children>
 
-            <HBox prefHeight="0.0" spacing="15.0">
+            <HBox spacing="15.0">
                <children>
                   <!-- ImageView for displaying the recipe photo, with default image setup -->
                   <ImageView fx:id="recipeImageView" fitHeight="192.0" fitWidth="192.0" pickOnBounds="true" preserveRatio="true">
@@ -31,40 +33,40 @@
                      </viewport>
                   </ImageView>
                   
-                  <VBox fx:id="recipeDetailsVBox" prefHeight="0.0" prefWidth="0.0" spacing="10.0">
+                  <VBox fx:id="recipeDetailsVBox" spacing="10.0">
 
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <FontAwesomeIconView fx:id="star" fill="#ffbd00" glyphName="STAR" onMouseClicked="#addToFavouritesClicked" selectionFill="#ffce00" size="20" stroke="BLACK" />
       
-                              <Text fx:id="recipeNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Rice Pudding" wrappingWidth="337.0">
+                              <Text fx:id="recipeNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Rice Pudding" wrappingWidth="300.0">
                                  <font>
                                     <Font name="System Bold" size="23.0" />
                                  </font>
                               </Text>
                            </children>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                        <HBox spacing="10.0">
                            <children>
                               <Button onAction="#editRecipeScene" text="Edit Recipe" />
                               <Button mnemonicParsing="false" onAction="#addToWeeklyList" text="+ Weekly Dinner" />
                            </children>
                         </HBox>
-                        <Text fx:id="recipeDescriptionText" strokeType="OUTSIDE" strokeWidth="0.0" text="This rice pudding is the best I've ever tasted, and it gets rave reviews from everyone who tastes it! Sprinkle with nutmeg or cinnamon, if desired. For creamier pudding, use short or medium-grain rice." wrappingWidth="395.0">
+                        <Text fx:id="recipeDescriptionText" strokeType="OUTSIDE" strokeWidth="0.0" text="This rice pudding is the best I've ever tasted, and it gets rave reviews from everyone who tastes it! Sprinkle with nutmeg or cinnamon, if desired. For creamier pudding, use short or medium-grain rice." wrappingWidth="330.0">
                            <font>
                               <Font name="System Italic" size="14.0" />
                            </font>
                         </Text>
-                        <FlowPane fx:id="tagsFlowPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" vgap="5.0">
+                        <FlowPane fx:id="tagsFlowPane" hgap="5.0" prefWrapLength="330.0" vgap="5.0">
                         </FlowPane>
-                        <VBox fillWidth="false" prefHeight="200.0" prefWidth="100.0">
+                        <VBox fillWidth="false">
                            <children>
                               <fx:include fx:id="addTagsButton" source="AddTagsButton.fxml" />
                            </children>
                         </VBox>
 
-                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="129.0" spacing="10.0">
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <ComboBox fx:id="servingsComboBox" maxWidth="-Infinity" minWidth="-Infinity" onAction="#changeServings" prefWidth="65.0" promptText="2" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="servings" wrappingWidth="50.0">
@@ -81,7 +83,7 @@
                </children>
             </HBox>
 
-            <VBox prefHeight="237.0" prefWidth="627.0" spacing="15.0">
+            <VBox spacing="15.0" VBox.vgrow="ALWAYS">
                <children>
 
                   <Text fx:id="IngredientHeadlineText" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingredients">
@@ -99,6 +101,95 @@
                   </Text>
 
                   <VBox fx:id="vBoxProcessSteps" prefHeight="0.0" prefWidth="100.0" spacing="5.0" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Comments">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Text>
+                  <VBox fx:id="vBoxProcessSteps1" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox>
+                           <children>
+                              <TextField HBox.hgrow="ALWAYS" />
+                              <Button mnemonicParsing="false" text="Comment" />
+                           </children>
+                        </HBox>
+                        <HBox style="-fx-border-width: 1; -fx-border-color: #aaa; -fx-border-radius: 8;">
+                           <children>
+                              <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="tu2024">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This recipe is awesome!" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER_RIGHT">
+                                 <children>
+                                    <Text fill="#0036ff" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Text>
+                                    <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </padding>
+                        </HBox>
+                        <HBox style="-fx-border-width: 1; -fx-border-color: #aaa; -fx-border-radius: 8;">
+                           <children>
+                              <VBox spacing="2.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="tu2024">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="This recipe is awesome!" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER_RIGHT">
+                                 <children>
+                                    <Text fill="#0036ff" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Text>
+                                    <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Text>
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
 
                </children>
             </VBox>
