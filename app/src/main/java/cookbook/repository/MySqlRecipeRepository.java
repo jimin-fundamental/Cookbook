@@ -72,24 +72,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
         }
     }
 
-    @Override
-    public Recipe getRecipeById(Long id) {
-        Recipe recipe = new Recipe();
-
-        // Fetch ingredients for the recipe
-        List<Ingredient> ingredients = fetchIngredients(id);
-        recipe.setIngredients(ingredients);
-
-        // Fetch tags for the recipe
-        List<String> tags = fetchTags(id);
-        recipe.setTags(tags);
-
-        // Fetch comments for the recipe
-        List<Comment> comments = fetchComments(id);
-        recipe.setComments(comments);
-        return recipe;
-    }
-
 
     public void addCustomTagsRepo(String tags, Long userId, Recipe recipe) {
         if (tags == null || tags.isEmpty()) {
@@ -163,7 +145,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
         Runnable dbOperationTask = new Runnable() {
             @Override
             public void run() {
-                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL, Comments_JSON FROM FullRecipeView";
+
+                //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings FROM FullRecipeView";
+                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL FROM FullRecipeView";
+
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
                      PreparedStatement pstmt = connection.prepareStatement(sql);
                      ResultSet rs = pstmt.executeQuery()) {
@@ -179,6 +164,21 @@ public class MySqlRecipeRepository implements RecipeRepository{
                         recipe.setImagePath(rs.getString("Image_URL"));
                         recipe.setComments(parseComments(rs.getString("Comments_JSON"))); // Parse comments JSON
 
+
+                        // Extract and parse process steps from JSON
+                        String jsonProcessSteps = rs.getString("Description");
+                        List<String> processSteps = parseProcessSteps(jsonProcessSteps);
+                        recipe.setProcessSteps(processSteps);
+
+                        // Fetch tags for the recipe
+                        String jsonTags = rs.getString("Predefined_Tags_JSON");
+                        List<String> tags = parseTags(jsonTags);
+                        recipe.setTags(tags);
+
+                        // Fetch ingredients for the recipe
+                        String jsonIngredients = rs.getString("Ingredients_JSON");
+                        List<Ingredient> ingredients = parseIngredients(jsonIngredients);
+                        recipe.setIngredients(ingredients);
 
                         recipes.add(recipe);
                     }
@@ -693,118 +693,68 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return comments;
     }
 
-
-
-
-    //Get all tags which are match to that recipe
-    public List<String> getAllTags(Recipe recipe, User user) {
-        List<String> tags = new ArrayList<>();
-        List<String> ctags = new ArrayList<>();
-
-        // Get all predetermined tags
-        List<String> predeterminedTags = getAllPredeterminedTags(recipe);
-        if (predeterminedTags != null) {
-            tags.addAll(predeterminedTags);
-        }
-
-        // Ensure currentUser is properly initialized
-        if (user != null) {
-            List<String> customTags = getAllCustomTags(recipe, user);
-            if (customTags != null) {
-                ctags.addAll(customTags);
-            }
-        } else {
-            // Handle the case where currentUser is null, possibly by logging or throwing an exception
-            System.out.println("Current user is not initialized.");
-        }
-
-        // Print all tags for the recipe and user
-        System.out.println("All tags for recipe ID " + recipe.getId() + ": " + tags + ctags);
-
-        recipe.setTags(FXCollections.observableArrayList(tags));
-        recipe.setCustomTags(FXCollections.observableArrayList(ctags));
-
-        return tags;
-    }
-
-
-
-    //method for getting whole predeterminedTags for that recipe
-    public List<String> getAllPredeterminedTags(Recipe recipe) {
-        List<String> tags = new ArrayList<>();
-
-        // SQL to get all Tags_ID for a given Recipe_ID
-        String sql = "SELECT Tags_ID FROM RecipeTag WHERE Recipe_ID = ?";
-        // SQL to fetch tag name based on Tags_ID
-        String sql2 = "SELECT tagname FROM Tags WHERE ID = ?";
-
-        try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql);
-             PreparedStatement pstmt2 = connection.prepareStatement(sql2)) {
-
-            // Set User_ID parameter for the first query
-            pstmt.setLong(1, recipe.getId());
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    long tagId = rs.getLong("Tags_ID");
-
-                    // Set Tags_ID parameter for the second query to fetch tag names
-                    pstmt2.setLong(1, tagId);
-                    try (ResultSet rs2 = pstmt2.executeQuery()) {
-                        if (rs2.next()) {
-                            String tagName = rs2.getString("tagname");
-                            tags.add(tagName);
-                        }
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return tags;
-    }
-
     //method for getting whole customTags for that recipe and for that user
-    public List<String> getAllCustomTags(Recipe recipe, User user) {
-        List<String> customTags = new ArrayList<>();
-
-        // SQL to get all Tags_ID for a given User_ID
-        String sql = "SELECT Tags_ID FROM RecipeCustomTag WHERE User_ID = ? AND Recipe_ID = ?";
-        // SQL to fetch tag name based on Tags_ID
-        String sql2 = "SELECT tagname FROM Tags WHERE ID = ?";
+    public void getAllCustomTags(List<Recipe> recipes, User user) {
+  // SQL to get all Tags_ID for a given Recipe_ID
+        String sql = "SELECT rt.Recipe_ID, t.TagName "+
+                     "FROM RecipeCustomTag rt "+
+                     "JOIN Tags t ON rt.Tags_ID = t.ID "+
+                     "WHERE rt.User_ID = ?;";
+         
+        Map<Long, List<String>> customTagsMap = new HashMap<>();
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql);
-             PreparedStatement pstmt2 = connection.prepareStatement(sql2)) {
+             PreparedStatement pstmt = connection.prepareStatement(sql);) {
 
             // Set User_ID parameter for the first query
             pstmt.setLong(1, user.getId());
-            pstmt.setLong(2, recipe.getId());
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    long tagId = rs.getLong("Tags_ID");
-
-                    // Set Tags_ID parameter for the second query to fetch tag names
-                    pstmt2.setLong(1, tagId);
-                    try (ResultSet rs2 = pstmt2.executeQuery()) {
-                        if (rs2.next()) {
-                            String tagName = rs2.getString("tagname");
-                            customTags.add(tagName);
-                        }
+                    long recipeId = rs.getLong("Recipe_ID");
+                    String tagname = rs.getString("TagName");
+                    if (!customTagsMap.containsKey(recipeId)) {
+                        customTagsMap.put(recipeId, new ArrayList<>());
                     }
+                    customTagsMap.get(recipeId).add(tagname);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println();
-        return customTags;
+
+        for (Recipe recipe : recipes){
+            if(customTagsMap.containsKey(recipe.getId())){
+                recipe.getCustomTags().addAll(customTagsMap.get(recipe.getId()));
+            }
+        }
     }
 
+    public void getCustomTags(Recipe recipe, User user) {
+        // SQL to get Tags_ID for a given Recipe_ID
+              String sql = "SELECT t.TagName "+
+                           "FROM RecipeCustomTag rt "+
+                           "JOIN Tags t ON rt.Tags_ID = t.ID "+
+                           "WHERE rt.Recipe_ID = ? AND rt.User_ID = ?;";
+               
+              List<String> customTags = new ArrayList<String>();
+      
+              try (Connection connection = DriverManager.getConnection(dbManager.url);
+                   PreparedStatement pstmt = connection.prepareStatement(sql);) {
+      
+                  // Set User_ID parameter for the first query
+                  pstmt.setLong(1, recipe.getId());
+                  pstmt.setLong(2, user.getId());
+                  try (ResultSet rs = pstmt.executeQuery()) {
+                      while (rs.next()) {
+                          String tagname = rs.getString("TagName");
+                          customTags.add(tagname);
+                      }
+                  }
+              } catch (SQLException e) {
+                  e.printStackTrace();
+              }
 
-
-
-
+              recipe.getCustomTags().addAll(customTags);
+      
+          }
 }

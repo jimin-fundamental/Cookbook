@@ -118,17 +118,11 @@ public class RecipeSceneController implements Initializable {
         initializeServings(numberOfServings);
 
         // Fetch tags and initialize tags view
-        fetchAndInitializeTags();
+        initializeTagsView();
 
         initializeUIFromRecipe();
     }
 
-    private void fetchAndInitializeTags() {
-        // Fetch tags from the repository
-        sqlRepos.getAllTags(recipe, user);
-
-        initializeTagsView();
-    }
 
     private void initializeTagsView() {
         System.out.println("initializeTagsView");
@@ -269,6 +263,7 @@ public class RecipeSceneController implements Initializable {
             // get the controller to call the method to set the data
             ChangeRecipeController controller = fxmlLoader.getController();
             controller.setRecipe(this.recipe);
+            controller.setUser(this.user);
 
             stage.show();
 
