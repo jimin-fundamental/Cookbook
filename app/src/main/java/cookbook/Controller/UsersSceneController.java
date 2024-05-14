@@ -128,6 +128,9 @@ public class UsersSceneController {
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setScene(new Scene(fxmlLoader.load()));
+            stage.setOnHiding(e -> {
+                retrieveUsers();
+            });
             stage.show();
 
         } catch (IOException e) {
