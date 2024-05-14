@@ -374,29 +374,40 @@ public class RecipeSceneController implements Initializable {
             HBox commentBox = loader.load();
             CommentController controller = loader.getController();
             controller.setComment(comment);
-
-            // Optionally set up edit and delete button actions here, or manage in the CommentController
-            commentDisplayArea.getChildren().add(commentBox);
-
-            // Assigning the parent controller to allow access to shared methods
-            controller.setParentController(this);
-
-            // Setting up the action handlers
+    
+            // Setting up the action handlers and visibility based on user permission
             Button editButton = (Button) controller.getEditButton();
-            editButton.setOnAction(e -> {
-                handleEditComment(comment);
-            });
-
             Button deleteButton = (Button) controller.getDeleteButton();
-            deleteButton.setOnAction(e -> {
-                handleDeleteComment(comment);
-            });
-
+    
+            // Check if the current user is the author of the comment
+            if (user.getId().equals(comment.getUserID())) {
+                editButton.setVisible(true);
+                editButton.setDisable(false);
+                editButton.setOnAction(e -> {
+                    handleEditComment(comment);
+                });
+    
+                deleteButton.setVisible(true);
+                deleteButton.setDisable(false);
+                deleteButton.setOnAction(e -> {
+                    handleDeleteComment(comment);
+                });
+            } else {
+                editButton.setVisible(false);
+                editButton.setDisable(true);
+    
+                deleteButton.setVisible(false);
+                deleteButton.setDisable(true);
+            }
+    
+            // Optionally set up delete button actions here, or manage in the CommentController
             commentDisplayArea.getChildren().add(commentBox);
+    
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
 
     private void handleEditComment(Comment comment) {
         System.out.println("handleEditComment");
