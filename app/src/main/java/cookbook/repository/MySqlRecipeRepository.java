@@ -696,7 +696,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                      "JOIN Tags t ON rt.Tags_ID = t.ID "+
                      "WHERE rt.User_ID = ?;";
          
-        Map<Long, String> customTagsMap = new HashMap<>();
+        Map<Long, List<String>> customTagsMap = new HashMap<>();
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql);) {
@@ -707,7 +707,12 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 while (rs.next()) {
                     long recipeId = rs.getLong("Recipe_ID");
                     String tagname = rs.getString("TagName");
-                    customTagsMap.put(recipeId, tagname);
+                    List<String> tagList = customTagsMap.get(recipeId);
+                    if(tagList == null){
+                        tagList = new ArrayList<>();
+                        customTagsMap.put(recipeId, tagList);
+                    }
+                    tagList.add(tagname);
                 }
             }
         } catch (SQLException e) {
@@ -717,7 +722,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         List<String> tags = new ArrayList<>();
         for (Recipe recipe : recipes){
             if(customTagsMap.containsKey(recipe.getId())){
-                recipe.getCustomTags().add(customTagsMap.get(recipe.getId()));
+                recipe.getCustomTags().addAll(customTagsMap.get(recipe.getId()));
             }
         }
     }

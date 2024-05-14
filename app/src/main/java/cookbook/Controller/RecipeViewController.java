@@ -151,7 +151,7 @@ public class RecipeViewController implements Initializable {
         for (Recipe recipe : recipeList) {
             String searchHits = "";
             int numberOfHits = 0;
-            System.out.println(recipe.getTags());
+            System.out.println(recipe.getCustomTags());
             for (String searchWord : searchWords){
                 boolean hit = false;
                 // check if the search word is in the recipe name
