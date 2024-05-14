@@ -31,9 +31,9 @@ public class User {
         this.userName = userName;
     }
 
-    public void setUnit(String password){
+    public void setPassword(String password){
         this.password = password;
-    }
+    }    
 
     public void setIsAdmin(int isAdmin){
         this.isAdmin = isAdmin;
@@ -45,9 +45,10 @@ public class User {
     public String getUserName(){
         return userName;
     }
-    public String getPasword(){
+    public String getPassword(){
         return password;
     }
+    
     public int getIsAdmin(){
         return isAdmin;
     }

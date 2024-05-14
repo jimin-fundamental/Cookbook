@@ -4,6 +4,8 @@ import cookbook.DatabaseManager;
 import cookbook.model.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDao implements UserRepository{
     private DatabaseManager dbManager;
@@ -80,6 +82,66 @@ public class UserDao implements UserRepository{
             return null;
         }
     }
+
+    public List<User> getAllUser(){
+        List<User> allUsers = new ArrayList<>();
+        String sql = "SELECT id, name, username, password, isadmin FROM User";
+        System.out.println("Attempting to fetch all users from the database.");
+    
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement pstmt = connection.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+    
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String name = rs.getString("name");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+                int isAdmin = rs.getInt("isadmin");
+    
+                User user = new User(id, name, username, password, isAdmin);
+                allUsers.add(user);
+                System.out.println("User added: " + user.getId() + " - " + user.getName());
+            }
+            System.out.println("Total users fetched: " + allUsers.size());
+    
+        } catch (SQLException e) {
+            System.out.println("Error fetching users from database.");
+            e.printStackTrace();
+            return null;
+        }
+    
+        return allUsers;
+    }
+
+    public void editUser(User user){
+        String sql = "UPDATE User SET name = ?, username = ?, password = ?, isAdmin = ? WHERE id = ?";
+        System.out.println("Attempting to update user with ID: " + user.getId());
+    
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+    
+            pstmt.setString(1, user.getName());
+            pstmt.setString(2, user.getUserName());
+            pstmt.setString(3, user.getPassword());  // Note: Ensure that getPassword is spelled correctly in your User model.
+            pstmt.setInt(4, user.getIsAdmin());
+            pstmt.setLong(5, user.getId());
+    
+            int affectedRows = pstmt.executeUpdate();
+    
+            if (affectedRows > 0) {
+                System.out.println("User updated successfully: " + user.getId());
+            } else {
+                System.out.println("No rows affected for user: " + user.getId());
+            }
+    
+        } catch (SQLException e) {
+            System.out.println("Error updating user: " + user.getId());
+            e.printStackTrace();
+        }
+    }
+    
+    
 }
 
 
