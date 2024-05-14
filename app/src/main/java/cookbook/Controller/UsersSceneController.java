@@ -46,18 +46,24 @@ public class UsersSceneController {
 
     private User user;
 
-    private ObservableList<UserTable> userTable;
+    private ObservableList<UserTable> userTable = FXCollections.observableArrayList();
+    private List<User> users;
+
+    private void retrieveUsers() {
+        DatabaseManager dbManager = new DatabaseManager();
+        UserDao userDao = new UserDao(dbManager);
+        users = userDao.getAllUser();
+        users.removeIf(u -> u.getUserName().equals(user.getUserName()));
+
+        userTable.clear();
+        userTable.addAll(users.stream()
+                .map(u -> new UserTable(u.getName(), u.getUserName(), u.getIsAdmin())).toArray(UserTable[]::new));
+    }
 
     public void setUserAndInitialize(User user) {
         this.user = user;
 
-        DatabaseManager dbManager = new DatabaseManager();
-        UserDao userDao = new UserDao(dbManager);
-        List<User> users = userDao.getAllUser();
-        users.removeIf(u -> u.getUserName().equals(user.getUserName()));
-
-        userTable = FXCollections.observableArrayList(users.stream()
-                .map(u -> new UserTable(u.getName(), u.getUserName(), u.getIsAdmin())).toArray(UserTable[]::new));
+        retrieveUsers();
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("Username"));
@@ -102,6 +108,9 @@ public class UsersSceneController {
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setScene(new Scene(fxmlLoader.load()));
+            stage.setOnHiding(event -> {
+                retrieveUsers();
+            });
             ModifyUserSceneController controller = fxmlLoader.getController();
             controller.setUser(user);
             stage.show();
