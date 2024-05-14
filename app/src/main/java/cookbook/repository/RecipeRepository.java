@@ -1,5 +1,6 @@
 package cookbook.repository;
 
+import cookbook.model.Comment;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
@@ -9,7 +10,6 @@ import java.util.List;
 
 public interface RecipeRepository {
     void addRecipeRepo(int userId, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags);
-    Recipe getRecipeById(Long id);
     void getAllRecipes(List<Recipe> recipes);
     void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags);
     void deleteRecipe(Long id);
@@ -28,7 +28,7 @@ public interface RecipeRepository {
 
     List<Ingredient> fetchIngredients(Long id);
     List<String> fetchTags(Long id);
-    List<String> fetchComments(Long id);
+    List<Comment> fetchComments(Long recipeId);
     List<String> parseProcessSteps(String json);
 
 }
