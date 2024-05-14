@@ -191,25 +191,9 @@ SELECT
     `r`.`imgUrl` AS `Image_URL`,
     `r`.`servings` AS `Servings`,
     `r`.`author` AS `Author`,
-    CONCAT('[', 
-        IFNULL(
-            CONCAT(
-                GROUP_CONCAT(DISTINCT '{"tagname": "', `t`.`tagname`,'"}' SEPARATOR ','),
-                IF(
-                    GROUP_CONCAT(DISTINCT `t`.`tagname`) IS NOT NULL 
-                    AND GROUP_CONCAT(DISTINCT `tc`.`tagname`) IS NOT NULL, 
-                    ',',
-                    ''
-                )
-            ),
-            ''
-        ), 
-        IFNULL(
-            GROUP_CONCAT(DISTINCT '{"tagname": "', `tc`.`tagname`,'"}' SEPARATOR ','),
-            ''
-        ), 
-    ']') AS `Tags_JSON`,
-    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"name": "', `i`.`name`,'", "amount": "',`ri`.`amount_int`,'", "unit": "',`ri`.`amount_unit`,'"}' SEPARATOR ','),''), ']') AS `Ingredients_JSON`,
+    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', `t`.`tagname`,'"}' SEPARATOR ','), ''), ']') AS `Predefined_Tags_JSON`,
+    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', `tc`.`tagname`,'"}' SEPARATOR ','), ''), ']') AS `Custom_Tags_JSON`,
+    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"name": "', `i`.`name`,'", "amount": "',`ri`.`amount_int`,'", "unit": "',`ri`.`amount_unit`,'"}' SEPARATOR ','), ''), ']') AS `Ingredients_JSON`,
     IFNULL(GROUP_CONCAT(DISTINCT CONCAT('{"comment_id": "',`c`.`Comment_ID`,'", "comment": "',`c`.`Comment`,'"}') SEPARATOR ', '),'') AS `Comments_JSON`
 FROM 
     (((((((`Recipe` `r` 
@@ -222,7 +206,6 @@ FROM
     LEFT JOIN `Comments` `c` ON (`r`.`ID` = `c`.`Recipe_ID`)) 
 GROUP BY `r`.`ID`$$
 DELIMITER ;
-
 
 
 CREATE VIEW ShortRecipeView AS
@@ -258,7 +241,8 @@ JOIN
 -- Procedures
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE `AddNewRecipe`(
+
+CREATE DEFINER=`u689018343_nulla`@`%` PROCEDURE `AddNewRecipe`(
     IN p_userID INT,
     IN p_name VARCHAR(255),
     IN p_shortDescr MEDIUMTEXT,
@@ -277,12 +261,14 @@ BEGIN
     DECLARE currentTagName VARCHAR(255);
     DECLARE tagID INT;
     DECLARE tagIsPredefined TINYINT;
+    DECLARE CONCAT VARCHAR(255);
+    DECLARE MESSAGE_TEXT VARCHAR(255);
 
     -- Convert description to JSON format
     SET p_descr = CONCAT('{"steps": ["', REPLACE(p_descr, ';', '","'), '"]}');
 
     -- Insert into Recipe table
-    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings, author) VALUES (p_name, p_shortDescr, p_descr, p_imgUrl, p_servings, p_author); -- Spalte "author" hinzugefügt
+    INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings, author) VALUES (p_name, p_shortDescr, p_descr, p_imgUrl, p_servings, p_author);
     SET recipeID = LAST_INSERT_ID();
 
     -- Split ingredients string and insert into RecipeIngredient table
@@ -293,6 +279,12 @@ BEGIN
         SET currentAmountInt = CAST(SUBSTRING_INDEX(currentIngredient, ',', 1) AS UNSIGNED);
         SET currentAmountUnit = SUBSTRING_INDEX(SUBSTRING_INDEX(currentIngredient, ',', -1), ',', 1);
         SET currentIngredient = TRIM(SUBSTRING_INDEX(currentIngredient, ',', -1));
+
+        -- Check if ingredient with same name and unit already exists
+        IF EXISTS (SELECT 1 FROM RecipeIngredient ri INNER JOIN Ingredient i ON ri.Ingredient_ID = i.ID WHERE i.name = currentIngredient AND ri.amount_unit = currentAmountUnit LIMIT 1) THEN
+            SET MESSAGE_TEXT = CONCAT('Error: Ingredient "', currentIngredient, '" with unit "', currentAmountUnit, '" already exists in recipe ingredients.');
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = MESSAGE_TEXT;
+        END IF;
 
         -- Insert into Ingredient table if not exists
         INSERT IGNORE INTO Ingredient (name) VALUES (currentIngredient);
@@ -325,7 +317,9 @@ BEGIN
         END IF;
     END WHILE;
 END$$
+
 DELIMITER ;
+
 
 
 DELIMITER $$
