@@ -1,0 +1,158 @@
+[33mc2a3acd[m[33m ([m[1;36mHEAD -> [m[1;32mcomment[m[33m)[m Merge branch 'dev' into comment
+[33m95f2edd[m[33m ([m[1;31morigin/comment[m[33m)[m add comment function but not working yet
+[33m9c3a94e[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m Merge branch 'dev' of gitlab.lnu.se:1dv508/student/the-world-of-null-a/cookbook into dev
+[33m0e6b071[m optimized the method for fetching customTags from the database.
+[33m26417e4[m initial commit for adding comment
+[33m4e64a7e[m Merge branch 'ui/comments' into 'dev'
+[33m54e49c5[m added custom tags searching
+[33m0013c31[m[33m ([m[1;31morigin/ui/comments[m[33m)[m Added comments UI
+[33m2559484[m Updated the Tags gathering
+[33md4fc227[m Changed Add Custom Tags button Style
+[33mcf03db5[m Separated Custom Tags from Normal Tags
+[33mc885823[m adding custom tags automatically and add function to remove tag
+[33mf8b6dd5[m tags showing properly
+[33m4956baf[m fix tag showing
+[33m4becef8[m fixed add tags not working
+[33m98bc66d[m added more performance with multithreading and fixed bug regarding weeklyLists
+[33m124da6f[m added multithreading to some methods to improve performance and implementet shopping lists as well as automatic updating of weekly dinner lists
+[33m57bd7f9[m number of Servings can now be stored in the weekly dinner lists
+[33mbcb064b[m deleted useless fxml pages.
+[33mf72c484[m removed useless UI elements and fixed errors from database change.
+[33mce48165[m Merge branch 'tagShowing' into 'dev'
+[33mafdf4da[m Merge remote-tracking branch 'origin/dev' into tagShowing
+[33m5b009d9[m Fixed tags showing
+[33ma2190ef[m new column w_servings in weekly-table, adjusted procedure and new comments view
+[33mbab6946[m adjusted repos to author, deleted edit.fxml and editController
+[33m0435b19[m addition of author to the recipe table, changes in script
+[33m06de4c2[m Add tags programaticaly. Currently not working because of Null issue
+[33m8455189[m added complete weekly dinner lists functionality
+[33mae31711[m[33m ([m[1;31morigin/tagShowing[m[33m, [m[1;32mtagShowing[m[33m)[m has to show tags properly
+[33m2fff1dc[m updated fullscript
+[33m982be25[m use of favoriterecipe procedure and new table
+[33m4d9b8b0[m  fullscript.sql with latest changes
+[33mb962671[m Merge branch 'feature/weekly_dinner_ui' into 'dev'
+[33m10e4129[m[33m ([m[1;31morigin/customTag[m[33m, [m[1;32mcustomTag[m[33m)[m custom tags done
+[33m08ae99b[m[33m ([m[1;31morigin/feature/weekly_dinner_ui[m[33m)[m Added Weekly List Scene
+[33m5660169[m Added way of viewing the Weekly Dinner List mock
+[33m50f2eed[m Fixed position of button
+[33mf59cb72[m Added Weekly Dinner Lists view and possibility to add Weekly Lists
+[33md0a7c1d[m fix parameter for add
+[33mcba2055[m Added button to enter Weekly Lists
+[33med00856[m Fixed scene not appearing
+[33m1f23de4[m Added Add to Weekly List page on Recipes page
+[33m1040f49[m Added "Add to Weekly List" button to recipe scene
+[33m59c4af2[m Merge branch 'feature/custom_tags_ui' into 'dev'
+[33md439f6d[m Changed Custom Tags scene size and removed Skip button
+[33m783a53b[m Added Custom Tags selector into Recipe page
+[33m6621798[m Changed git ignore
+[33mba59a3c[m Removed bin and build from git
+[33m6825dc9[m Changed gitignore
+[33m8ef7b93[m Merge branch 'feature/servings' into 'dev'
+[33md45d838[m Fixed servings
+[33ma668d96[m Added dropdown values
+[33m2fce8f3[m sql scripts
+[33md9f66eb[m Merge branch 'dev' of gitlab.lnu.se:1dv508/student/the-world-of-null-a/cookbook into tags
+[33m976f4e6[m Ready to merge
+[33m5c3d977[m Merge branch 'feature/ui_favorites' into 'dev'
+[33md43bbac[m Favorites button implemented at View page
+[33mec96bb0[m Implemented tooltip with short description
+[33mba5e8d2[m done with fixing with codes, need to fix procedure in mysql
+[33m0acf7cc[m fixed merge problems of RecipeSceneController and added filtering for favourite recipes
+[33m1376ecc[m RecipeSceneController with changeServings
+[33mc34670b[m Merge branch 'feature/custom_tags_ui' into 'dev'
+[33m127f9de[m[33m ([m[1;31morigin/feature/custom_tags_ui[m[33m)[m Merge remote-tracking branch 'origin/dev' into feature/custom_tags_ui
+[33m1a11691[m Added Favorites UI
+[33m09d30db[m Added servings selector
+[33m34cc492[m Fixed IDs
+[33mc1af322[m adding recipe work properly
+[33m1fd93bf[m can't solve problem
+[33m6c3f92c[m before going to change addRecipe a lot
+[33mea4e585[m fix parameter issue
+[33m92af892[m Merge branch 'feature_favourite' into dev
+[33mca9e0e8[m favourite adding and removing implemented
+[33m5366385[m inserting tags string in db
+[33maafad26[m need to change procedures for tag
+[33mfcbefec[m Added tags display at RecipeScene
+[33mdcd11de[m need to define how tags work exactly
+[33maa48fb6[m Commit message describing the changes
+[33m3614147[m Merge branch 'feature/tags_ui' into 'dev'
+[33mc461c31[m Added class
+[33m46543b9[m Added tags selector
+[33m69cb02e[m Merge branch 'dev' of gitlab.lnu.se:1dv508/student/the-world-of-null-a/cookbook into dev
+[33m679d740[m Remove Gradle files from tracking
+[33mf5f7409[m edit works now
+[33m9a57df4[m Merge branch 'dev' of gitlab.lnu.se:1dv508/student/the-world-of-null-a/cookbook into dev
+[33m17af11f[m searching for multiple ingredients, tags, names possible
+[33m6d210b6[m comment error fixed, edit fxml and edit corntroller
+[33m8a9312b[m edit gitIgonre file for resolving conflicts
+[33m7029e35[m Untrack files now in .gitignore
+[33m96eb659[m Merge branch 'dev' of gitlab.lnu.se:1dv508/student/the-world-of-null-a/cookbook into dev
+[33mdce8175[m user greeting, add recipe refined and change Recipe connection added but method for changing recipe in the database has an error.
+[33m8ee51e4[m Changed RecipeItem image path to handle images better
+[33mca5d25f[m Fixed merge issue
+[33m510f3fe[m Merge branch 'feature/ui_add_recipe' into 'dev'
+[33m2c316c1[m Fixed images and tags
+[33mbc8d78b[m Make new recipe open in new page
+[33m61ea186[m Removed untracked data
+[33m35d3ee7[m Merge remote-tracking branch 'origin/dev' into feature/ui_add_recipe
+[33m826ea58[m Changed icons
+[33m91e0d74[m Merge branch 'add_recipe' into dev
+[33m0c37381[m[33m ([m[1;31morigin/add_recipe[m[33m)[m forgot to add this file in the commit
+[33m0123786[m added functionality ofr adding a new recipe
+[33m09de66a[m Merge remote-tracking branch 'remotes/origin/feature/ui_add_recipe' into dev
+[33ma7f4c91[m Merge branch 'feature_personailzation' into dev
+[33m0088978[m add recipe and non-functioning edit recipe
+[33mf4daca4[m solution for showing username personalized
+[33m4271314[m Fixed merge errors
+[33m39e532e[m Merge branch 'dev' into feature/ui_add_recipe
+[33m35678a9[m removed build from git
+[33mcefacb0[m Add button of add recipe and added greeting at main page
+[33mb467322[m Resolved conflicts by accepting changes from current branch
+[33mc397cab[m update shown in 'recipe' page
+[33m85dcb31[m update RecipeScene.fxml
+[33m4a279e6[m update RecipeItemController
+[33mbf273f2[m update recipe model adding imageUrl
+[33m3d5d2f1[m Updated FXML for recipe view and added default image handling
+[33m23430d7[m Pre-pull commit of local changes
+[33mc261972[m Updated .gitignore to exclude .idea directory
+[33ma544c3b[m fixed splitting problem with process steps.
+[33mf575624[m[33m ([m[1;31morigin/feature/ui_add_recipe[m[33m)[m Added New Recipe and edited Login Scene
+[33m56e2edd[m better performance for database fetching but delay in UI.
+[33m5bd1863[m Merge branch 'dev' into feature_performance
+[33mdf2d434[m improved performance for data fetching.
+[33mbbaae19[m Merge branch 'main' of gitlab.lnu.se:1dv508/student/the-world-of-null-a/cookbook
+[33m4856605[m[33m ([m[1;31morigin/feature_retrieveRecipes[m[33m)[m searchbar implemented to search for one single name, ingredient or tag.
+[33m115e610[m Added Ingredient class to display amounts and unit.
+[33m7d3d846[m connected new frontend and new approach regarding data retrieving.
+[33m71f1019[m Merge branch 'dev' into feature_retrieveRecipes
+[33m9b950e8[m dont know what I did but not much.
+[33m5dbd268[m Merge branch 'feature/ui_recipe' into 'dev'
+[33m8fd8f5a[m Fixed click and added scrollPane as wrapper
+[33m0c180e1[m Added MVP Recipe page
+[33m3d50680[m recipes retrieved from database.
+[33m99864d5[m Added RecipeScene
+[33me278138[m Merge branch 'feature_skipLogin' into 'dev'
+[33m9265ec6[m Profile creation page fixed
+[33m57b2bde[m added all scenes and fixed database.
+[33ma93eb7b[m fixing error
+[33mb02dd5b[m[33m ([m[1;31morigin/feature_skipLogin[m[33m)[m database connection changes.
+[33m6051a60[m you can get back to the login page to switch profiles using the menu.
+[33m66cda82[m sceleton of the recipe view implemented. change the string datatype to "Recipe" for the end version.
+[33m798ad20[m changed naming and made program runnabla again. The rights to read from the database are stil missing
+[33m3d3e34b[m ready to merge
+[33m1bbdad8[m done until making recipe repository
+[33m573c9bd[m Initial commit in databaseConnection branch
+[33md63aa59[m Merge remote-tracking branch 'origin/dev' into project_structure merging process
+[33med56cc8[m project structure done
+[33mff53a8c[m login and profile creation functioning with database access. Errorhandling not the best
+[33md71cc6d[m Merge branch 'feature_login' into dev
+[33m7a7670d[m login sceleton added but the database connection is missing.
+[33m52cc113[m Resolve merge conflict in .gitigonre
+[33m7d57766[m Merge branch 'bug/databaseConfiguration' into 'dev'
+[33m8738505[m Changed server hostname
+[33ma94f2da[m setup of new project structure and example scene with scene Controller.
+[33md138301[m make classes
+[33md6c1594[m Merge branch 'database' into 'dev'
+[33m3662edf[m establish database connection
+[33m222926d[m Added Gradle project
+[33m84dd8eb[m Initial commit

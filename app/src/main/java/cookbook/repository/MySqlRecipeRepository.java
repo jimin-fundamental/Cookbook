@@ -9,9 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
 
 import java.sql.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +25,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.mysql.cj.protocol.Resultset;
-import org.json.JSONTokener;
 
 public class MySqlRecipeRepository implements RecipeRepository{
 
@@ -671,7 +667,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return ingredients;
     }
 
-
     public List<Comment> parseComments(String json) {
         List<Comment> comments = new ArrayList<>();
         if (json == null || json.trim().isEmpty()) {
@@ -679,32 +674,27 @@ public class MySqlRecipeRepository implements RecipeRepository{
             return comments;  // Return an empty list if JSON is null or empty.
         }
 
-        try {
-            Object jsonRaw = new JSONTokener(json).nextValue();  // This correctly identifies the type of JSON (array or object)
-            if (jsonRaw instanceof JSONArray) {
-                JSONArray jsonArray = (JSONArray) jsonRaw;
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    comments.add(createCommentFromJson(jsonObject));
-                }
-            } else if (jsonRaw instanceof JSONObject) {
-                JSONObject jsonObject = (JSONObject) jsonRaw;
-                comments.add(createCommentFromJson(jsonObject));
-            }
-        } catch (JSONException e) {
-            System.err.println("Error parsing JSON for comments: " + e.getMessage() + " | JSON Data: " + json);
+        // Updated regex pattern to match the new JSON structure
+        Pattern pat = Pattern.compile("\\{\"comment_id\": \"(\\d+)\", \"comment\": \"([^\"]+)\", \"user_id\": \"(\\d+)\", \"user_name\": \"([^\"]+)\"\\}");
+        Matcher mat = pat.matcher(json);
+
+        while (mat.find()) {
+            long commentId = Long.parseLong(mat.group(1));
+            String commentText = mat.group(2).replaceAll("\\\\\"", "\"");  // Unescape JSON encoded quotes
+            long userId = Long.parseLong(mat.group(3));
+            String userName = mat.group(4);
+
+            Comment comment = new Comment();
+            comment.setCommentID(commentId);
+            comment.setComment(commentText);
+            comment.setUserID(userId);
+            comment.setUserName(userName);
+            comments.add(comment);
         }
+
         return comments;
     }
 
-    private Comment createCommentFromJson(JSONObject jsonObject) {
-        Comment comment = new Comment();
-        comment.setCommentID(jsonObject.optLong("comment_id"));
-        comment.setComment(jsonObject.optString("comment"));
-        comment.setUserID(jsonObject.optLong("user_id", -1));  // Default to -1 if user_id is not present
-        comment.setUserName(jsonObject.optString("user_name"));
-        return comment;
-    }
 
 
 
