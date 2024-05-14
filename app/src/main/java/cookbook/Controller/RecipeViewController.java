@@ -80,9 +80,9 @@ public class RecipeViewController implements Initializable {
         recipeRepos.getFavorites(recipeList, user);
         // get information about weekly recipes
         recipeRepos.getRecipeWeeklyDates(recipeList, user);
-        
+
         recipeRepos.getAllCustomTags(recipeList, user);
-        
+
     }
 
     @Override
@@ -103,8 +103,18 @@ public class RecipeViewController implements Initializable {
 
     @FXML
     void manageUsersClicked(ActionEvent event) throws IOException {
-        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")),
-                (Stage) vBox.getScene().getWindow());
+        try {
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/UsersScene.fxml"));
+
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(new Scene(fxmlLoader.load()));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -118,10 +128,10 @@ public class RecipeViewController implements Initializable {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
 
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setOnCloseRequest(closeEvent -> {
                 try {
-                    // this.recipeList = recipeRepos.getAllRecipes(); 
+                    // this.recipeList = recipeRepos.getAllRecipes();
                     FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
                     Stage s = new Stage();
                     s.setScene(new Scene(fxmlLoader2.load()));
@@ -158,7 +168,7 @@ public class RecipeViewController implements Initializable {
             String searchHits = "";
             int numberOfHits = 0;
             System.out.println(recipe.getTags());
-            for (String searchWord : searchWords){
+            for (String searchWord : searchWords) {
                 boolean hit = false;
                 // check if the search word is in the recipe name
                 if (recipe.getName().toLowerCase().contains(searchWord.toLowerCase())) {
@@ -192,7 +202,7 @@ public class RecipeViewController implements Initializable {
                         if (hit != true)
                             numberOfHits += 1;
                         hit = true;
-                        if (!searchWord.isEmpty() && !searchHits.contains(ingredient.getName())){
+                        if (!searchWord.isEmpty() && !searchHits.contains(ingredient.getName())) {
                             searchHits += ingredient.getName() + ", ";
                         }
                     }
@@ -208,15 +218,15 @@ public class RecipeViewController implements Initializable {
             }
         }
     }
-    
+
     @FXML
     void favouritesButtonClicked() {
-        if(this.favoritesShowing == true){
+        if (this.favoritesShowing == true) {
             this.favoritesShowing = false;
             star.setFill(Paint.valueOf("#ffbb0000"));
             searchBar.setText("");
             filterRecipes();
-            
+
         } else {
             this.favoritesShowing = true;
             star.setFill(Paint.valueOf("#ffbd00"));
@@ -224,8 +234,8 @@ public class RecipeViewController implements Initializable {
             // clear all displayed elements
             recipeContainer.getChildren().clear();
             // iterate through all recipes
-            for (Recipe recipe : recipeList){
-                if(recipe.getIsFavourite()){
+            for (Recipe recipe : recipeList) {
+                if (recipe.getIsFavourite()) {
                     displayRecipeItem(recipe, number++, "");
                 }
             }
@@ -233,7 +243,7 @@ public class RecipeViewController implements Initializable {
     }
 
     @FXML
-    void openWeeklyLists(ActionEvent event){
+    void openWeeklyLists(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/WeeklyListsScene_new.fxml"));
             Stage stage = new Stage();

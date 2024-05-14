@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.UsersSceneController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -24,7 +24,7 @@
                </font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="+ Add New" />
+            <Button mnemonicParsing="false" text="+ Add New" onAction="#addUserClicked" />
          </children>
       </HBox>
       <TableView VBox.vgrow="ALWAYS">
