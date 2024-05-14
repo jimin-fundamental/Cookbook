@@ -2,13 +2,13 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 
 <VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="424.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.AddUserSceneController">
    <padding>
@@ -43,13 +43,18 @@
                   <TextField maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
                </children>
             </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <CheckBox mnemonicParsing="false" text="Admin" />
+               </children>
+            </HBox>
          </children>
       </VBox>
       <HBox spacing="10.0">
          <children>
             <Region HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" text="Add User" />
-            <Button fx:id="closeButton" mnemonicParsing="false" text="Cancel" onAction="#cancelClicked" />
+            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" />
          </children>
       </HBox>
    </children>
