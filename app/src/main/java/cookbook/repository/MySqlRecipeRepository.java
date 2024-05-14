@@ -147,7 +147,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
             public void run() {
 
                 //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings FROM FullRecipeView";
-                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL FROM FullRecipeView";
+                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL, Comments_JSON FROM FullRecipeView";
 
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
                      PreparedStatement pstmt = connection.prepareStatement(sql);
