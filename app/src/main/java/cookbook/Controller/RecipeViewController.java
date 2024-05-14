@@ -45,7 +45,10 @@ public class RecipeViewController implements Initializable {
     private GridPane recipeContainer;
 
     @FXML
-    private MenuItem changeProfiles;
+    private MenuItem changeProfile;
+
+    @FXML
+    private MenuItem manageUsers;
 
     @FXML
     private VBox vBox;
@@ -82,6 +85,10 @@ public class RecipeViewController implements Initializable {
         recipeRepos.getRecipeWeeklyDates(recipeList, user);
 
         recipeRepos.getAllCustomTags(recipeList, user);
+
+        if(user.getIsAdmin() == 0){
+            manageUsers.setVisible(false);
+        }
 
     }
 
