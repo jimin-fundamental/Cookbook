@@ -32,7 +32,6 @@ public class AddCustomTagsController{
     private Recipe recipe;
     private MySqlRecipeRepository sqlRepos;
     private User user;
-    private RecipeSceneController recipeSceneController;
 
     public AddCustomTagsController() {
         // Empty constructor required by FXML
@@ -59,9 +58,7 @@ public class AddCustomTagsController{
             sqlRepos.addCustomTagsRepo(customTag, user.getId(), recipe);
 
             // Fetch updated tags
-            sqlRepos.getAllTags(recipe, user);
-            System.out.println("Recipe.getCustomTags: " + recipe.getCustomTags());  // Debug log
-            System.out.println("Recipe.getTags: "+ recipe.getTags());
+            sqlRepos.getCustomTags(recipe, user);
 
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
         } catch (Exception e) {
@@ -69,27 +66,5 @@ public class AddCustomTagsController{
             e.printStackTrace();
         }
     }
-
-
-
-/*
-    private void refreshRecipeView() {
-        System.out.println("refreshRecipeView");
-        // Assuming RecipeView.fxml is the FXML file for the RecipeView page
-        try {
-            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), null);
-            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
-            //SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), recipeSceneStage);
-
-            System.out.println("Recipe view refreshed");
-        } catch (IOException e) {
-            System.out.println("Error refreshing RecipeView: " + e.getMessage());
-            e.printStackTrace();
-
-        }
-
-    }
-
- */
 
 }

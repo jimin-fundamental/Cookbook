@@ -43,7 +43,7 @@ public class ChangeRecipeController implements Initializable{
     private MySqlRecipeRepository sqlRepos;
     private User user;
 
-    private void setUser(User user){
+    public void setUser(User user){
         this.user = user;
     }
 
