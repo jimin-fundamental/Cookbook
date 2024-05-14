@@ -4,6 +4,7 @@ package cookbook.Controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
+import cookbook.model.Comment;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
@@ -24,22 +26,24 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.control.ComboBox;
 import javafx.beans.binding.Bindings;
 import javafx.application.Platform;
 
@@ -84,7 +88,13 @@ public class RecipeSceneController implements Initializable {
     @FXML
     private Button removeFromWeeklyListButton;
 
+    @FXML
+    private VBox commentDisplayArea;  // VBox to dynamically load comment views
+    @FXML
+    public TextField commentInputField;  // TextField for entering new comments
 
+//    @FXML
+//    private Button addCommentButton;  // Button to submit new comments
 
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
@@ -117,7 +127,6 @@ public class RecipeSceneController implements Initializable {
         // Fetch tags from the repository
         sqlRepos.getAllTags(recipe, user);
 
-        initializeTagsView();
         initializeTagsView();
     }
 
@@ -340,4 +349,82 @@ public class RecipeSceneController implements Initializable {
                     new Text(ingredient.getName() + " (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
         }
     }
+
+    @FXML
+    private void addComment(ActionEvent event) {
+        String commentText = commentInputField.getText().trim();
+        if (!commentText.isEmpty()) {
+            sqlRepos.addComment(recipe.getId(), user.getId(), commentText);
+            refreshComments();  // Refresh comments after adding a new one
+            commentInputField.clear();
+        }
+    }
+
+    public void refreshComments() {
+        List<Comment> comments = sqlRepos.fetchComments(recipe.getId());
+        commentDisplayArea.getChildren().clear();
+        for (Comment comment : comments) {
+            displayComment(comment);
+        }
+    }
+
+    private void displayComment(Comment comment) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/Comment.fxml"));
+            HBox commentBox = loader.load();
+            CommentController controller = loader.getController();
+            controller.setComment(comment);
+
+            // Optionally set up edit and delete button actions here, or manage in the CommentController
+            commentDisplayArea.getChildren().add(commentBox);
+
+            // Assigning the parent controller to allow access to shared methods
+            controller.setParentController(this);
+
+            // Setting up the action handlers
+            Button editButton = (Button) controller.getEditButton();
+            editButton.setOnAction(e -> {
+                handleEditComment(comment);
+            });
+
+            Button deleteButton = (Button) controller.getDeleteButton();
+            deleteButton.setOnAction(e -> {
+                handleDeleteComment(comment);
+            });
+
+            commentDisplayArea.getChildren().add(commentBox);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleEditComment(Comment comment) {
+        System.out.println("handleEditComment");
+        TextInputDialog dialog = new TextInputDialog(comment.getComment());
+        dialog.setTitle("Edit Comment");
+        dialog.setHeaderText("Edit your comment:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(newComment -> {
+            sqlRepos.editComment(comment.getCommentID(), newComment);
+            refreshComments();
+        });
+    }
+
+    private void handleDeleteComment(Comment comment) {
+        System.out.println("handleDeleteComment");
+        if (showConfirmationDialog("Are you sure you want to delete this comment?")) {
+            sqlRepos.deleteComment(comment.getCommentID());
+            refreshComments();
+        }
+    }
+
+    public boolean showConfirmationDialog(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.YES, ButtonType.NO);
+        alert.showAndWait();
+        return alert.getResult() == ButtonType.YES;
+    }
+
+
+
+
 }

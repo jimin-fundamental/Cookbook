@@ -2,8 +2,8 @@ package cookbook.model;
 
 public class Comment {
     private String comment;
-    private String commentID;
-    private String userID;
+    private Long commentID;
+    private Long userID;
     private String userName;
 
     public String getComment() {
@@ -14,19 +14,19 @@ public class Comment {
         this.comment = comment;
     }
 
-    public String getCommentID() {
+    public Long getCommentID() {
         return commentID;
     }
 
-    public void setCommentID(String commentID) {
+    public void setCommentID(Long commentID) {
         this.commentID = commentID;
     }
 
-    public String getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(Long userID) {
         this.userID = userID;
     }
 

@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.mysql.cj.protocol.Resultset;
+import org.json.JSONTokener;
 
 public class MySqlRecipeRepository implements RecipeRepository{
 
@@ -93,12 +94,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return recipe;
     }
 
-    //String tags = 'starter;fruit; <- this form'
-    //1. split tags spring divided by ';' and make List<String>
-    //2. add each of a tag to Tags table - ID is auto generated, ispredifined = 0, tagname is what is entered
-    //3. get each of tagID from Tags table and start fill out RecipeCustomTag table - fill out Tags_ID with that
-    //4. get ID from User table(which is UserId)
-    //5. get ID from Recipe table(which is recipeId)
+
     public void addCustomTagsRepo(String tags, Long userId, Recipe recipe) {
         if (tags == null || tags.isEmpty()) {
             System.out.println("No tags provided.");
@@ -185,7 +181,9 @@ public class MySqlRecipeRepository implements RecipeRepository{
                         recipe.setTags(FXCollections.observableArrayList(parseTags(rs.getString("Tags_JSON"))));
                         recipe.setNumberOfPersons(rs.getInt("Servings"));
                         recipe.setImagePath(rs.getString("Image_URL"));
+                        System.out.println("start to set comment- getAllRecipes: "+getClass());
                         recipe.setComments(parseComments(rs.getString("Comments_JSON"))); // Parse comments JSON
+
 
                         recipes.add(recipe);
                     }
@@ -476,6 +474,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
     public void addComment(Long recipeId, Long userId, String commentText) {
         String sql = "INSERT INTO Comments (Recipe_ID, User_ID, Comment) VALUES (?, ?, ?)";
+        System.out.println("addCommentsql:"+sql);
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setLong(1, recipeId);
@@ -489,6 +488,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     public void editComment(Long commentId, String newCommentText) {
         String sql = "UPDATE Comments SET Comment = ? WHERE Comment_ID = ?";
+        System.out.println("editCommentsql:"+sql);
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, newCommentText);
@@ -501,6 +501,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     public void deleteComment(Long commentId) {
         String sql = "DELETE FROM Comments WHERE Comment_ID = ?";
+        System.out.println("deleteCommentsql:"+sql);
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setLong(1, commentId);
@@ -511,10 +512,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
 
-
     @Override
     public List<Comment> fetchComments(Long recipeId) {
         List<Comment> comments = new ArrayList<>();
+        System.out.println("comments:"+comments);
         String sql = "SELECT Comment_ID, Comment, User_ID, User_Name FROM CommentsView WHERE Recipe_ID = ?";
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -522,9 +523,9 @@ public class MySqlRecipeRepository implements RecipeRepository{
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Comment comment = new Comment();
-                comment.setCommentID(rs.getString("Comment_ID"));
+                comment.setCommentID(rs.getLong("Comment_ID"));
                 comment.setComment(rs.getString("Comment"));
-                comment.setUserID(rs.getString("User_ID"));
+                comment.setUserID(rs.getLong("User_ID"));
                 comment.setUserName(rs.getString("User_Name"));
                 comments.add(comment);
             }
@@ -670,27 +671,39 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return ingredients;
     }
 
-    private List<Comment> parseComments(String json) {
+
+    public List<Comment> parseComments(String json) {
         List<Comment> comments = new ArrayList<>();
-        if (json == null || json.isEmpty()) {
-            return comments;  // Return an empty list if JSON is null or empty to prevent errors.
+        if (json == null || json.trim().isEmpty()) {
+            System.out.println("Empty or null JSON data for comments. JSON: '" + json + "'");
+            return comments;  // Return an empty list if JSON is null or empty.
         }
 
         try {
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Comment comment = new Comment();
-                comment.setCommentID(jsonObject.getString("comment_id"));
-                comment.setComment(jsonObject.getString("comment"));
-                comment.setUserID(jsonObject.getString("user_id"));
-                comment.setUserName(jsonObject.getString("user_name"));
-                comments.add(comment);
+            Object jsonRaw = new JSONTokener(json).nextValue();  // This correctly identifies the type of JSON (array or object)
+            if (jsonRaw instanceof JSONArray) {
+                JSONArray jsonArray = (JSONArray) jsonRaw;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    comments.add(createCommentFromJson(jsonObject));
+                }
+            } else if (jsonRaw instanceof JSONObject) {
+                JSONObject jsonObject = (JSONObject) jsonRaw;
+                comments.add(createCommentFromJson(jsonObject));
             }
         } catch (JSONException e) {
-            System.out.println("Error parsing JSON for comments: " + e.getMessage());
+            System.err.println("Error parsing JSON for comments: " + e.getMessage() + " | JSON Data: " + json);
         }
         return comments;
+    }
+
+    private Comment createCommentFromJson(JSONObject jsonObject) {
+        Comment comment = new Comment();
+        comment.setCommentID(jsonObject.optLong("comment_id"));
+        comment.setComment(jsonObject.optString("comment"));
+        comment.setUserID(jsonObject.optLong("user_id", -1));  // Default to -1 if user_id is not present
+        comment.setUserName(jsonObject.optString("user_name"));
+        return comment;
     }
 
 
@@ -803,36 +816,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
 
-
-//    private boolean tagExists(String tag) {
-//        // Check in cached predetermined tags first
-//        if (cachedPredeterminedTags.contains(tag)) {
-//            return true;
-//        }
-//
-//        // Check in the database if not found in the cache (for non-predetermined tags)
-//        String sql = "SELECT COUNT(*) FROM Tags WHERE tagname = ?";
-//        try (Connection connection = DriverManager.getConnection(dbManager.url);
-//             PreparedStatement pstmt = connection.prepareStatement(sql)) {
-//            pstmt.setString(1, tag);
-//            try (ResultSet rs = pstmt.executeQuery()) {
-//                if (rs.next()) {
-//                    return rs.getInt(1) > 0;
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-//
-//    public void ensureTagsExist(List<String> tags) {
-//        for (String tag : tags) {
-//            if (!tagExists(tag)) {
-//                addTag(tag);
-//            }
-//        }
-//    }
 
 
 
