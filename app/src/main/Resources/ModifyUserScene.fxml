@@ -49,6 +49,7 @@
          <children>
             <Region HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" text="Modify User" />
+            <Button mnemonicParsing="false" text="Delete User" />
             <Button mnemonicParsing="false" text="Cancel" />
          </children>
       </HBox>
