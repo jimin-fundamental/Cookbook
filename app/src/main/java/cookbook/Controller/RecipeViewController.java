@@ -102,6 +102,12 @@ public class RecipeViewController implements Initializable {
     }
 
     @FXML
+    void manageUsersClicked(ActionEvent event) throws IOException {
+        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")),
+                (Stage) vBox.getScene().getWindow());
+    }
+
+    @FXML
     void searchButtonClicked(ActionEvent event) {
         filterRecipes();
     }

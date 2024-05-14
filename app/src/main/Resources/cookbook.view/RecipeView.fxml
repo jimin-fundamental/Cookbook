@@ -22,9 +22,12 @@
          <children>
             <MenuBar>
               <menus>
-                <Menu mnemonicParsing="false" text="profile">
+                <Menu mnemonicParsing="false" text="Profile">
                   <items>
-                    <MenuItem fx:id="changeProfile" mnemonicParsing="false" onAction="#changeProfileClicked" text="change profile" />
+                    <MenuItem fx:id="manageUsers" mnemonicParsing="false" onAction="#manageUsersClicked" text="Manage Users" />
+                  </items>
+                  <items>
+                    <MenuItem fx:id="changeProfile" mnemonicParsing="false" onAction="#changeProfileClicked" text="Log Off" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
