@@ -48,8 +48,6 @@ public class UsersSceneController {
         UserDao userDao = new UserDao(dbManager);
         List<User> users = userDao.getAllUser();
 
-        System.out.println(users);
-
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("Username"));
         isAdminColumn.setCellValueFactory(new PropertyValueFactory<>("IsAdmin"));

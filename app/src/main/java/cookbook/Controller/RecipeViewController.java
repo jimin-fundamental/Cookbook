@@ -86,7 +86,7 @@ public class RecipeViewController implements Initializable {
 
         recipeRepos.getAllCustomTags(recipeList, user);
 
-        if(user.getIsAdmin() == 0){
+        if (user.getIsAdmin() == 0) {
             manageUsers.setVisible(false);
         }
 
@@ -112,14 +112,13 @@ public class RecipeViewController implements Initializable {
     void manageUsersClicked(ActionEvent event) throws IOException {
         try {
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/UsersScene.fxml"));
-
-            UsersSceneController controller = fxmlLoader.getController();
-            controller.setUserAndInitialize(user);
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/UsersScene.fxml"));
             Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            UsersSceneController usersController = loader.getController(); // Get the controller
+            usersController.setUserAndInitialize(user);
+
             stage.setResizable(false);
-            stage.setScene(new Scene(fxmlLoader.load()));
             stage.show();
 
         } catch (IOException e) {
