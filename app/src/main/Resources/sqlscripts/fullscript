@@ -175,6 +175,20 @@ CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`HelpEntries` (
   PRIMARY KEY (`ID`)
 );
 
+CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`Shoppinglists` (
+  `userid` INT NOT NULL,
+  `week` INT NOT NULL,
+  `shoppinglist` LONGTEXT,
+  PRIMARY KEY (`userid`, `week`),
+  CONSTRAINT `fk_shoppinglists_User`
+    FOREIGN KEY (`userid`)
+    REFERENCES `u689018343_cookbook`.`User` (`ID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  UNIQUE INDEX `unique_user_week` (`userid`, `week`)
+);
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
