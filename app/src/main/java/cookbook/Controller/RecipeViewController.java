@@ -114,6 +114,9 @@ public class RecipeViewController implements Initializable {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/UsersScene.fxml"));
 
+            UsersSceneController controller = fxmlLoader.getController();
+            controller.setUser(user);
+
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.setScene(new Scene(fxmlLoader.load()));

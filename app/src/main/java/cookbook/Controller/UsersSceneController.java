@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import cookbook.DatabaseManager;
+import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,12 @@ public class UsersSceneController implements Initializable {
 
     @FXML
     TableView usersTableView;
+
+    private User user;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @FXML
     public void addUserClicked(ActionEvent event) {
@@ -38,6 +45,6 @@ public class UsersSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
     }
 }
