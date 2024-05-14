@@ -163,7 +163,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         Runnable dbOperationTask = new Runnable() {
             @Override
             public void run() {
-                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings, Image_URL, Comments_JSON FROM FullRecipeView";
+                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL, Comments_JSON FROM FullRecipeView";
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
                      PreparedStatement pstmt = connection.prepareStatement(sql);
                      ResultSet rs = pstmt.executeQuery()) {
@@ -174,10 +174,9 @@ public class MySqlRecipeRepository implements RecipeRepository{
                         recipe.setShortDescription(rs.getString("Short_Description"));
                         recipe.setProcessSteps(parseProcessSteps(rs.getString("Description"))); // Assuming process steps are in Description
                         recipe.setIngredients(parseIngredients(rs.getString("Ingredients_JSON")));
-                        recipe.setTags(FXCollections.observableArrayList(parseTags(rs.getString("Tags_JSON"))));
+                        recipe.setTags(FXCollections.observableArrayList(parseTags(rs.getString("Predefined_Tags_JSON"))));
                         recipe.setNumberOfPersons(rs.getInt("Servings"));
                         recipe.setImagePath(rs.getString("Image_URL"));
-                        System.out.println("start to set comment- getAllRecipes: "+getClass());
                         recipe.setComments(parseComments(rs.getString("Comments_JSON"))); // Parse comments JSON
 
 
@@ -470,7 +469,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
     public void addComment(Long recipeId, Long userId, String commentText) {
         String sql = "INSERT INTO Comments (Recipe_ID, User_ID, Comment) VALUES (?, ?, ?)";
-        System.out.println("addCommentsql:"+sql);
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setLong(1, recipeId);

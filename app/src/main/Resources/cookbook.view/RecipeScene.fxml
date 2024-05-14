@@ -106,8 +106,7 @@
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Text>
-
-                  <VBox fx:id="commentDisplayArea" spacing="10.0" VBox.vgrow="ALWAYS">
+                  <VBox  spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox>
                            <children>
@@ -115,6 +114,11 @@
                               <Button fx:id="addCommentButton" mnemonicParsing="false" text="Comment" onAction="#addComment"/>
                            </children>
                         </HBox>
+                     </children>
+                  </VBox>
+
+                  <VBox fx:id="commentDisplayArea" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <children>
                         <!-- Dynamic comment nodes will be added here at runtime -->
                      </children>
                   </VBox>

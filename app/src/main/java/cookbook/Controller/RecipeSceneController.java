@@ -251,7 +251,10 @@ public class RecipeSceneController implements Initializable {
         vBoxProcessSteps.getChildren().setAll(
                 recipe.getProcessSteps().stream().map(step -> new Text(step)).collect(Collectors.toList()));
         setStar();
+        refreshComments();
     }
+
+    
 
     public void editRecipeScene(ActionEvent event) {
         try {
@@ -353,6 +356,7 @@ public class RecipeSceneController implements Initializable {
     @FXML
     private void addComment(ActionEvent event) {
         String commentText = commentInputField.getText().trim();
+        System.out.println("Adding comment:" + commentText);
         if (!commentText.isEmpty()) {
             sqlRepos.addComment(recipe.getId(), user.getId(), commentText);
             refreshComments();  // Refresh comments after adding a new one
@@ -361,12 +365,18 @@ public class RecipeSceneController implements Initializable {
     }
 
     public void refreshComments() {
-        List<Comment> comments = sqlRepos.fetchComments(recipe.getId());
-        commentDisplayArea.getChildren().clear();
-        for (Comment comment : comments) {
-            displayComment(comment);
+        try {
+            List<Comment> comments = sqlRepos.fetchComments(recipe.getId());
+            commentDisplayArea.getChildren().clear();
+            for (Comment comment : comments) {
+                displayComment(comment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to refresh comments: " + e.getMessage());
         }
     }
+    
 
     private void displayComment(Comment comment) {
         try {
