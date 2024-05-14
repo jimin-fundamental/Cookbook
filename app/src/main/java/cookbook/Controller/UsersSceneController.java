@@ -16,14 +16,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
-public class UsersSceneController implements Initializable {
+public class UsersSceneController {
 
     @FXML
     TableView usersTableView;
 
     private User user;
 
-    public void setUser(User user) {
+    public void setUserAndInitialize(User user) {
         this.user = user;
     }
 
@@ -41,10 +41,5 @@ public class UsersSceneController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
     }
 }
