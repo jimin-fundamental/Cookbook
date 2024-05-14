@@ -3,12 +3,14 @@ package cookbook.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import cookbook.DatabaseManager;
 import cookbook.model.User;
 import cookbook.model.UserTable;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.UserDao;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,6 +43,12 @@ public class UsersSceneController {
 
     public void setUserAndInitialize(User user) {
         this.user = user;
+
+        DatabaseManager dbManager = new DatabaseManager();
+        UserDao userDao = new UserDao(dbManager);
+        List<User> users = userDao.getAllUser();
+
+        System.out.println(users);
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("Username"));
