@@ -205,19 +205,18 @@ SELECT
     `r`.`servings` AS `Servings`,
     `r`.`author` AS `Author`,
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', `t`.`tagname`,'"}' SEPARATOR ','), ''), ']') AS `Predefined_Tags_JSON`,
-    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', `tc`.`tagname`,'"}' SEPARATOR ','), ''), ']') AS `Custom_Tags_JSON`,
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"name": "', `i`.`name`,'", "amount": "',`ri`.`amount_int`,'", "unit": "',`ri`.`amount_unit`,'"}' SEPARATOR ','), ''), ']') AS `Ingredients_JSON`,
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"comment_id": "', `c`.`Comment_ID`,'", "comment": "', `c`.`Comment`,'", "user_id": "', `c`.`User_ID`,'", "user_name": "', `u`.`name`,'" }' SEPARATOR ','), ''), ']') AS `Comments_JSON`
 FROM 
-    (((((((`Recipe` `r` 
+    (((((`Recipe` `r` 
     LEFT JOIN `RecipeIngredient` `ri` ON (`r`.`ID` = `ri`.`Recipe_ID`)) 
     LEFT JOIN `Ingredient` `i` ON (`ri`.`Ingredient_ID` = `i`.`ID`)) 
     LEFT JOIN `RecipeTag` `rt` ON (`r`.`ID` = `rt`.`Recipe_ID`)) 
     LEFT JOIN `Tags` `t` ON (`rt`.`Tags_ID` = `t`.`ID`)) 
-    LEFT JOIN `RecipeCustomTag` `rct` ON (`r`.`ID` = `rct`.`Recipe_ID`)) 
-    LEFT JOIN `Tags` `tc` ON (`rct`.`Tags_ID` = `tc`.`ID`)) 
     LEFT JOIN `Comments` `c` ON (`r`.`ID` = `c`.`Recipe_ID`)) 
     LEFT JOIN `User` `u` ON (`c`.`User_ID` = `u`.`ID`)
+WHERE
+    `t`.`ispredefined` = 1
 GROUP BY `r`.`ID`;
 
 
@@ -250,9 +249,25 @@ JOIN
     User u ON c.User_ID = u.ID;
 
 
+CREATE OR REPLACE VIEW `CustomTagsView` AS 
+SELECT 
+    r.ID AS Recipe_ID,
+    r.name AS Recipe_Name,
+    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', tc.tagname,'"}' SEPARATOR ','), ''), ']') AS Custom_Tags_JSON
+FROM 
+    Recipe r
+LEFT JOIN 
+    RecipeCustomTag rct ON r.ID = rct.Recipe_ID
+LEFT JOIN 
+    Tags tc ON rct.Tags_ID = tc.ID
+GROUP BY 
+    r.ID;
+
+
 
 
 -- Procedures
+
 
 DELIMITER $$
 
