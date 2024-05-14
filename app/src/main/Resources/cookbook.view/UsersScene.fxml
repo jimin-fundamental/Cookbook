@@ -27,7 +27,7 @@
             <Button mnemonicParsing="false" text="+ Add New" onAction="#addUserClicked" />
          </children>
       </HBox>
-      <TableView VBox.vgrow="ALWAYS">
+      <TableView fx:id="usersTableView" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn editable="false" prefWidth="200.0" text="Name" />
           <TableColumn editable="false" prefWidth="250.0" text="Username" />

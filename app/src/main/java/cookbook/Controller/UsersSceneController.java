@@ -1,14 +1,24 @@
 package cookbook.Controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
+import cookbook.DatabaseManager;
+import cookbook.repository.MySqlRecipeRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
-public class UsersSceneController {
+public class UsersSceneController implements Initializable {
+
+    @FXML
+    TableView usersTableView;
 
     @FXML
     public void addUserClicked(ActionEvent event) {
@@ -24,5 +34,10 @@ public class UsersSceneController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        
     }
 }

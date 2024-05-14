@@ -46,7 +46,7 @@ public class UserDao implements UserRepository{
 
     public User checkUser(String username, String password) {
 
-        String sql = "SELECT COUNT(*), name, id FROM User WHERE username = ? AND password = ?";
+        String sql = "SELECT COUNT(*), name, id, isAdmin FROM User WHERE username = ? AND password = ?";
 
         try (Connection connection = DriverManager.getConnection(url);
             PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -63,10 +63,11 @@ public class UserDao implements UserRepository{
                 int count = rs.getInt(1);
                 String name = rs.getString("name");
                 Long id = rs.getLong("id");
+                int isAdmin = rs.getInt("isAdmin");
                 pstmt.close();
                 connection.close();
                 if (count > 0) {
-                    User user = new User(id, name, username, password);
+                    User user = new User(id, name, username, password, isAdmin);
                     return user;
                 }
             }

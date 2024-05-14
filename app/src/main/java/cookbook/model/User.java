@@ -1,18 +1,18 @@
 package cookbook.model;
 
-import javafx.beans.binding.LongBinding;
-
 public class User {
     private Long id;    
     private String name;
     private String userName;
     private String password;
+    private int isAdmin;
     
-    public User(Long id, String name, String userName, String password){
+    public User(Long id, String name, String userName, String password, int isAdmin){
         this.id = id;
         this.name = name;
         this.userName = userName;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     public Long getId() {
@@ -35,6 +35,10 @@ public class User {
         this.password = password;
     }
 
+    public void setIsAdmin(int isAdmin){
+        this.isAdmin = isAdmin;
+    }
+
     public String getName(){
         return name;
     }
@@ -43,5 +47,8 @@ public class User {
     }
     public String getPasword(){
         return password;
+    }
+    public int getIsAdmin(){
+        return isAdmin;
     }
 }
