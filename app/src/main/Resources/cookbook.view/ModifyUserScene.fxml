@@ -54,7 +54,7 @@
          <children>
             <Region HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" text="Save" onAction="#saveClicked"/>
-            <Button mnemonicParsing="false" text="Delete" />
+            <Button mnemonicParsing="false" text="Delete" onAction="#deleteClicked"/>
             <Button fx:id="closeButton" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" />
          </children>
       </HBox>

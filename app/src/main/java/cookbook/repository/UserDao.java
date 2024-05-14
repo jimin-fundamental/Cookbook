@@ -140,6 +140,29 @@ public class UserDao implements UserRepository{
             e.printStackTrace();
         }
     }
+
+    public void deleteUser(User user){
+        String sql = "DELETE FROM User WHERE id = ?";
+        System.out.println("Attempting to update user with ID: " + user.getId());
+    
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+    
+            pstmt.setLong(1, user.getId());
+    
+            int affectedRows = pstmt.executeUpdate();
+    
+            if (affectedRows > 0) {
+                System.out.println("User updated successfully: " + user.getId());
+            } else {
+                System.out.println("No rows affected for user: " + user.getId());
+            }
+    
+        } catch (SQLException e) {
+            System.out.println("Error updating user: " + user.getId());
+            e.printStackTrace();
+        }
+    }
     
     
 }

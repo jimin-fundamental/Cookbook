@@ -56,6 +56,20 @@ public class ModifyUserSceneController {
     }
 
     @FXML
+    public void deleteClicked(ActionEvent event) {
+        DatabaseManager dbManager = new DatabaseManager();
+        UserDao userDao = new UserDao(dbManager);
+
+        // delete user
+        userDao.deleteUser(user);
+
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        // do what you have to do
+        stage.close();
+    
+    }
+
+    @FXML
     public void cancelClicked(ActionEvent event) {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         // do what you have to do
