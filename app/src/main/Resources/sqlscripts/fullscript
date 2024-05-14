@@ -227,7 +227,7 @@ SELECT
     r.ID AS Recipe_ID,
     r.name AS Recipe_Name,
     r.imgUrl AS Image_URL,
-    CONCAT('[', GROUP_CONCAT('{"tagname": "', t.tagname, '"}'), ']') AS Tags_JSON
+    CONCAT('[', GROUP_CONCAT('{"tagname": "', t.tagname, '"}'), ']') AS Predefined_Tags_JSON
 FROM
     Recipe r
 LEFT JOIN

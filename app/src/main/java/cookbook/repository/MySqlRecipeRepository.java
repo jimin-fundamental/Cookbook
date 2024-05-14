@@ -168,8 +168,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
             @Override
             public void run() {
 
-                //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings FROM FullRecipeView";
-                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Tags_JSON, Servings, Image_URL FROM FullRecipeView";
+                //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings FROM FullRecipeView";
+                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL FROM FullRecipeView";
 
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
                     PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -189,7 +189,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                         recipe.setProcessSteps(processSteps);
 
                         // Fetch tags for the recipe
-                        String jsonTags = rs.getString("Tags_JSON");
+                        String jsonTags = rs.getString("Predefined_Tags_JSON");
                         List<String> tags = parseTags(jsonTags);
                         recipe.setTags(tags);
 
