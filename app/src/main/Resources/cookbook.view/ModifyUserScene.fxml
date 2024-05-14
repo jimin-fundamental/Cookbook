@@ -53,8 +53,8 @@
       <HBox spacing="10.0">
          <children>
             <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="Modify User" />
-            <Button mnemonicParsing="false" text="Delete User" />
+            <Button mnemonicParsing="false" text="Save" onAction="#saveClicked"/>
+            <Button mnemonicParsing="false" text="Delete" />
             <Button fx:id="closeButton" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" />
          </children>
       </HBox>
