@@ -71,24 +71,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
         }
     }
 
-    @Override
-    public Recipe getRecipeById(Long id) {
-        Recipe recipe = new Recipe();
-
-        // Fetch ingredients for the recipe
-        List<Ingredient> ingredients = fetchIngredients(id);
-        recipe.setIngredients(ingredients);
-
-        // Fetch tags for the recipe
-        List<String> tags = fetchTags(id);
-        recipe.setTags(tags);
-
-        // Fetch comments for the recipe
-        List<String> comments = fetchComments(id);
-        recipe.setComments(comments);
-        return recipe;
-    }
-
     //String tags = 'starter;fruit; <- this form'
     //1. split tags spring divided by ';' and make List<String>
     //2. add each of a tag to Tags table - ID is auto generated, ispredifined = 0, tagname is what is entered
@@ -651,43 +633,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return ingredients;
     }
 
-    //Get all tags which are match to that recipe
-    public List<String> getAllTags(Recipe recipe, User user) {
-        List<String> tags = new ArrayList<>();
-        List<String> ctags = new ArrayList<>();
-
-        // Get all predetermined tags
-        // List<String> predeterminedTags getAllPredeterminedTags(recipe, user);
-        // if (predeterminedTags != null) {
-        //     tags.addAll(predeterminedTags);
-        // }
-
-        // Ensure currentUser is properly initialized
-        if (user != null) {
-            // List<String> customTags = getAllCustomTags(recipe, user);
-            // if (customTags != null) {
-            //     ctags.addAll(customTags);
-            // }
-        } else {
-            // Handle the case where currentUser is null, possibly by logging or throwing an exception
-            System.out.println("Current user is not initialized.");
-        }
-
-        // Print all tags for the recipe and user
-        System.out.println("All tags for recipe ID " + recipe.getId() + ": " + tags + ctags);
-
-        recipe.setTags(FXCollections.observableArrayList(tags));
-        recipe.setCustomTags(FXCollections.observableArrayList(ctags));
-
-        return tags;
-    }
-
-
-
-    //method for getting whole predeterminedTags for that recipe
-    public void getAllPredeterminedTags(Recipe recipe) {
-    }
-
     //method for getting whole customTags for that recipe and for that user
     public void getAllCustomTags(List<Recipe> recipes, User user) {
   // SQL to get all Tags_ID for a given Recipe_ID
@@ -696,7 +641,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                      "JOIN Tags t ON rt.Tags_ID = t.ID "+
                      "WHERE rt.User_ID = ?;";
          
-        Map<Long, String> customTagsMap = new HashMap<>();
+        Map<Long, List<String>> customTagsMap = new HashMap<>();
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql);) {
@@ -707,53 +652,49 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 while (rs.next()) {
                     long recipeId = rs.getLong("Recipe_ID");
                     String tagname = rs.getString("TagName");
-                    customTagsMap.put(recipeId, tagname);
+                    if (!customTagsMap.containsKey(recipeId)) {
+                        customTagsMap.put(recipeId, new ArrayList<>());
+                    }
+                    customTagsMap.get(recipeId).add(tagname);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        List<String> tags = new ArrayList<>();
         for (Recipe recipe : recipes){
             if(customTagsMap.containsKey(recipe.getId())){
-                recipe.getCustomTags().add(customTagsMap.get(recipe.getId()));
+                recipe.getCustomTags().addAll(customTagsMap.get(recipe.getId()));
             }
         }
     }
 
+    public void getCustomTags(Recipe recipe, User user) {
+        // SQL to get Tags_ID for a given Recipe_ID
+              String sql = "SELECT t.TagName "+
+                           "FROM RecipeCustomTag rt "+
+                           "JOIN Tags t ON rt.Tags_ID = t.ID "+
+                           "WHERE rt.Recipe_ID = ? AND rt.User_ID = ?;";
+               
+              List<String> customTags = new ArrayList<String>();
+      
+              try (Connection connection = DriverManager.getConnection(dbManager.url);
+                   PreparedStatement pstmt = connection.prepareStatement(sql);) {
+      
+                  // Set User_ID parameter for the first query
+                  pstmt.setLong(1, recipe.getId());
+                  pstmt.setLong(2, user.getId());
+                  try (ResultSet rs = pstmt.executeQuery()) {
+                      while (rs.next()) {
+                          String tagname = rs.getString("TagName");
+                          customTags.add(tagname);
+                      }
+                  }
+              } catch (SQLException e) {
+                  e.printStackTrace();
+              }
 
-
-//    private boolean tagExists(String tag) {
-//        // Check in cached predetermined tags first
-//        if (cachedPredeterminedTags.contains(tag)) {
-//            return true;
-//        }
-//
-//        // Check in the database if not found in the cache (for non-predetermined tags)
-//        String sql = "SELECT COUNT(*) FROM Tags WHERE tagname = ?";
-//        try (Connection connection = DriverManager.getConnection(dbManager.url);
-//             PreparedStatement pstmt = connection.prepareStatement(sql)) {
-//            pstmt.setString(1, tag);
-//            try (ResultSet rs = pstmt.executeQuery()) {
-//                if (rs.next()) {
-//                    return rs.getInt(1) > 0;
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-//
-//    public void ensureTagsExist(List<String> tags) {
-//        for (String tag : tags) {
-//            if (!tagExists(tag)) {
-//                addTag(tag);
-//            }
-//        }
-//    }
-
-
-
+              recipe.getCustomTags().addAll(customTags);
+      
+          }
 }
