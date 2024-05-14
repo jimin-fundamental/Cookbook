@@ -54,9 +54,9 @@ public class UsersSceneController {
         DatabaseManager dbManager = new DatabaseManager();
         UserDao userDao = new UserDao(dbManager);
         List<User> users = userDao.getAllUser();
+        users.removeIf(u -> u.getUserName().equals(user.getUserName()));
 
         userTable = FXCollections.observableArrayList(users.stream()
-                .filter(u -> !u.getUserName().equals(user.getUserName()))
                 .map(u -> new UserTable(u.getName(), u.getUserName(), u.getIsAdmin())).toArray(UserTable[]::new));
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("Name"));
