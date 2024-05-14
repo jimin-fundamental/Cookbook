@@ -26,26 +26,26 @@
                <children>
                   <Label text="Name:" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
+                  <TextField fx:id="nameField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
                   <Label text="Username:" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
+                  <TextField fx:id="usernameField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
                   <Label text="Password:" />
                   <Region HBox.hgrow="ALWAYS" />
-                  <TextField maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
+                  <TextField fx:id="passwordField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <CheckBox mnemonicParsing="false" text="Admin" />
+                  <CheckBox fx:id="isAdminCheckBox" mnemonicParsing="false" text="Admin" />
                </children>
             </HBox>
          </children>
@@ -53,7 +53,7 @@
       <HBox spacing="10.0">
          <children>
             <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="Add User" />
+            <Button mnemonicParsing="false" text="Save" onAction="#saveClicked"/>
             <Button fx:id="closeButton" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" />
          </children>
       </HBox>

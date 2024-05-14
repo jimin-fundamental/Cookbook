@@ -46,6 +46,37 @@ public class UserDao implements UserRepository{
 
     }
 
+    public boolean insertUser(String name, String username, String password, int isAdmin){
+
+        String sql = "INSERT INTO User (name, username, password, isadmin) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            // set values
+            pstmt.setString(1, name);
+            pstmt.setString(2, username);
+            pstmt.setString(3, password);
+            pstmt.setInt(4, isAdmin);
+
+            int affectedRows = pstmt.executeUpdate();
+
+            pstmt.close();
+            connection.close();
+
+            if (affectedRows > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
     public User checkUser(String username, String password) {
 
         String sql = "SELECT COUNT(*), name, id, isadmin FROM User WHERE username = ? AND password = ?";
