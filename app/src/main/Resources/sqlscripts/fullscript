@@ -175,8 +175,8 @@ CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`HelpEntries` (
   PRIMARY KEY (`ID`)
 );
 
-CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`Shoppinglists` (
-  `userid` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`ShoppingLists` (
+  `User_ID` INT NOT NULL,
   `week` INT NOT NULL,
   `shoppinglist` LONGTEXT,
   PRIMARY KEY (`userid`, `week`),
@@ -195,7 +195,6 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 -- Views
-DELIMITER $$
 CREATE OR REPLACE VIEW `FullRecipeView` AS 
 SELECT 
     `r`.`ID` AS `Recipe_ID`,
@@ -208,7 +207,7 @@ SELECT
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', `t`.`tagname`,'"}' SEPARATOR ','), ''), ']') AS `Predefined_Tags_JSON`,
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', `tc`.`tagname`,'"}' SEPARATOR ','), ''), ']') AS `Custom_Tags_JSON`,
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"name": "', `i`.`name`,'", "amount": "',`ri`.`amount_int`,'", "unit": "',`ri`.`amount_unit`,'"}' SEPARATOR ','), ''), ']') AS `Ingredients_JSON`,
-    IFNULL(GROUP_CONCAT(DISTINCT CONCAT('{"comment_id": "',`c`.`Comment_ID`,'", "comment": "',`c`.`Comment`,'"}') SEPARATOR ', '),'') AS `Comments_JSON`
+    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"comment_id": "', `c`.`Comment_ID`,'", "comment": "', `c`.`Comment`,'", "user_id": "', `c`.`User_ID`,'", "user_name": "', `u`.`name`,'" }' SEPARATOR ','), ''), ']') AS `Comments_JSON`
 FROM 
     (((((((`Recipe` `r` 
     LEFT JOIN `RecipeIngredient` `ri` ON (`r`.`ID` = `ri`.`Recipe_ID`)) 
@@ -218,8 +217,9 @@ FROM
     LEFT JOIN `RecipeCustomTag` `rct` ON (`r`.`ID` = `rct`.`Recipe_ID`)) 
     LEFT JOIN `Tags` `tc` ON (`rct`.`Tags_ID` = `tc`.`ID`)) 
     LEFT JOIN `Comments` `c` ON (`r`.`ID` = `c`.`Recipe_ID`)) 
-GROUP BY `r`.`ID`$$
-DELIMITER ;
+    LEFT JOIN `User` `u` ON (`c`.`User_ID` = `u`.`ID`)
+GROUP BY `r`.`ID`;
+
 
 
 CREATE VIEW ShortRecipeView AS
