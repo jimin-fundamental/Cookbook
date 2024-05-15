@@ -6,21 +6,22 @@ import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
 public class ShoppingListItemController {
 
     @FXML
-    private Text ingredientAmount;
+    private TextField ingredientAmount;
 
     @FXML
-    private Text ingredientName;
+    private TextField ingredientName;
 
     @FXML
-    private Text ingredientUnit;
+    private TextField ingredientUnit;
 
-    private List<Ingredient> ingredients;
+    private Ingredient ingredient;
     private User user;
 
 
@@ -32,10 +33,15 @@ public class ShoppingListItemController {
         ingredientName.setText(ingredient.getName());
         ingredientAmount.setText(Integer.toString(ingredient.getAmount()));
         ingredientUnit.setText(ingredient.getUnit());
+        this.ingredient = ingredient;
     }
     @FXML
     void ingredientClicked(MouseEvent event) {
-        
     }
 
+    public void updateIngredient(){
+        this.ingredient.setName(ingredientName.getText());
+        this.ingredient.setAmount(Integer.parseInt(ingredientAmount.getText()));
+        this.ingredient.setUnit(ingredientUnit.getText());
+    }
 }

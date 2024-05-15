@@ -45,7 +45,10 @@ public class RecipeViewController implements Initializable {
     private GridPane recipeContainer;
 
     @FXML
-    private MenuItem changeProfiles;
+    private MenuItem changeProfile;
+
+    @FXML
+    private MenuItem manageUsers;
 
     @FXML
     private VBox vBox;
@@ -80,9 +83,13 @@ public class RecipeViewController implements Initializable {
         recipeRepos.getFavorites(recipeList, user);
         // get information about weekly recipes
         recipeRepos.getRecipeWeeklyDates(recipeList, user);
-        
+
         recipeRepos.getAllCustomTags(recipeList, user);
-        
+
+        if (user.getIsAdmin() == 0) {
+            manageUsers.setVisible(false);
+        }
+
     }
 
     @Override
@@ -102,6 +109,24 @@ public class RecipeViewController implements Initializable {
     }
 
     @FXML
+    void manageUsersClicked(ActionEvent event) throws IOException {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/UsersScene.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            UsersSceneController usersController = loader.getController(); // Get the controller
+            usersController.setUserAndInitialize(user);
+
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     void searchButtonClicked(ActionEvent event) {
         filterRecipes();
     }
@@ -112,10 +137,10 @@ public class RecipeViewController implements Initializable {
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/NewRecipe.fxml"));
 
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setOnCloseRequest(closeEvent -> {
                 try {
-                    // this.recipeList = recipeRepos.getAllRecipes(); 
+                    // this.recipeList = recipeRepos.getAllRecipes();
                     FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
                     Stage s = new Stage();
                     s.setScene(new Scene(fxmlLoader2.load()));
@@ -151,7 +176,7 @@ public class RecipeViewController implements Initializable {
         for (Recipe recipe : recipeList) {
             String searchHits = "";
             int numberOfHits = 0;
-            System.out.println(recipe.getTags());
+            System.out.println(recipe.getCustomTags());
             for (String searchWord : searchWords){
                 boolean hit = false;
                 // check if the search word is in the recipe name
@@ -186,7 +211,7 @@ public class RecipeViewController implements Initializable {
                         if (hit != true)
                             numberOfHits += 1;
                         hit = true;
-                        if (!searchWord.isEmpty() && !searchHits.contains(ingredient.getName())){
+                        if (!searchWord.isEmpty() && !searchHits.contains(ingredient.getName())) {
                             searchHits += ingredient.getName() + ", ";
                         }
                     }
@@ -202,15 +227,15 @@ public class RecipeViewController implements Initializable {
             }
         }
     }
-    
+
     @FXML
     void favouritesButtonClicked() {
-        if(this.favoritesShowing == true){
+        if (this.favoritesShowing == true) {
             this.favoritesShowing = false;
             star.setFill(Paint.valueOf("#ffbb0000"));
             searchBar.setText("");
             filterRecipes();
-            
+
         } else {
             this.favoritesShowing = true;
             star.setFill(Paint.valueOf("#ffbd00"));
@@ -218,8 +243,8 @@ public class RecipeViewController implements Initializable {
             // clear all displayed elements
             recipeContainer.getChildren().clear();
             // iterate through all recipes
-            for (Recipe recipe : recipeList){
-                if(recipe.getIsFavourite()){
+            for (Recipe recipe : recipeList) {
+                if (recipe.getIsFavourite()) {
                     displayRecipeItem(recipe, number++, "");
                 }
             }
@@ -227,7 +252,7 @@ public class RecipeViewController implements Initializable {
     }
 
     @FXML
-    void openWeeklyLists(ActionEvent event){
+    void openWeeklyLists(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/WeeklyListsScene_new.fxml"));
             Stage stage = new Stage();

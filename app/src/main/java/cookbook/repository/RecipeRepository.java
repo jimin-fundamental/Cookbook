@@ -1,5 +1,6 @@
 package cookbook.repository;
 
+import cookbook.model.Comment;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
@@ -27,7 +28,7 @@ public interface RecipeRepository {
 
     List<Ingredient> fetchIngredients(Long id);
     List<String> fetchTags(Long id);
-    List<String> fetchComments(Long id);
+    List<Comment> fetchComments(Long recipeId);
     List<String> parseProcessSteps(String json);
 
 }
