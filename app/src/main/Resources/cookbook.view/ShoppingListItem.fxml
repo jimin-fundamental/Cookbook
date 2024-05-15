@@ -2,13 +2,11 @@
 
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#ingredientClicked" prefWidth="400.0" spacing="2.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.ShoppingListItemController">
     <children>
-      <TextField fx:id="ingredientName" text="tomato" />
-      <Region prefWidth="300.0" />
-      <TextField fx:id="ingredientAmount" text="300" />
-      <TextField fx:id="ingredientUnit" text="g" />
+      <TextField fx:id="ingredientName" text="tomato" HBox.hgrow="ALWAYS" />
+      <TextField fx:id="ingredientAmount" prefHeight="25.0" prefWidth="79.0" text="300" HBox.hgrow="ALWAYS" />
+      <TextField fx:id="ingredientUnit" text="g" HBox.hgrow="ALWAYS" />
     </children>
 </HBox>

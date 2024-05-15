@@ -731,15 +731,15 @@ public class MySqlRecipeRepository implements RecipeRepository {
 
     public void getCustomTags(Recipe recipe, User user) {
         // SQL to get Tags_ID for a given Recipe_ID
-        String sql = "SELECT t.TagName " +
-                "FROM RecipeCustomTag rt " +
-                "JOIN Tags t ON rt.Tags_ID = t.ID " +
-                "WHERE rt.Recipe_ID = ? AND rt.User_ID = ?;";
-
+        String sql = "SELECT t.TagName "+
+                    "FROM RecipeCustomTag rt "+
+                    "JOIN Tags t ON rt.Tags_ID = t.ID "+
+                    "WHERE rt.Recipe_ID = ? AND rt.User_ID = ?;";
+        
         List<String> customTags = new ArrayList<String>();
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-                PreparedStatement pstmt = connection.prepareStatement(sql);) {
+            PreparedStatement pstmt = connection.prepareStatement(sql);) {
 
             // Set User_ID parameter for the first query
             pstmt.setLong(1, recipe.getId());
@@ -755,6 +755,142 @@ public class MySqlRecipeRepository implements RecipeRepository {
         }
 
         recipe.getCustomTags().addAll(customTags);
+      
+    }
 
+    public void writeShoppingList(List<Ingredient> ingredients, int week, User user){
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
+                String sql = "INSERT INTO ShoppingLists (User_ID, week, shoppingList) " +
+                            "VALUES (?, ?, ?) " +
+                            "ON DUPLICATE KEY UPDATE shoppingList = ?";
+
+                String jsonIngredients = ingredientsToJson(ingredients);
+
+                try (Connection connection = DriverManager.getConnection(dbManager.url);
+                    PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+                    // set values
+                    pstmt.setLong(1, user.getId());
+                    pstmt.setInt(2, week);
+                    pstmt.setString(3, jsonIngredients);
+                    pstmt.setString(4, jsonIngredients);
+
+                    pstmt.executeUpdate();
+
+                    pstmt.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        };
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start();
+        
+    }
+
+    public List<Ingredient> fetchShoppingList(List<Ingredient> ingredients, int week, User user ){
+        // SQL to get Tags_ID for a given Recipe_ID
+        String sql = "SELECT shoppinglist "+
+                     "FROM ShoppingLists "+
+                     "WHERE User_ID = ? AND week = ?;";
+        
+        String jsonList = "";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+            PreparedStatement pstmt = connection.prepareStatement(sql);) {
+
+            // Set User_ID parameter for the first query
+            pstmt.setLong(1,user.getId() );
+            pstmt.setInt(2, week);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    jsonList = rs.getString("shoppingList");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (jsonList != ""){
+            // parse jsonList to ingredients and 
+            return jsonToIngredients(jsonList);
+        }
+        else{
+            writeShoppingList(ingredients, week, user);
+            return ingredients;
+        }
+
+        
+    }
+
+
+    private String ingredientsToJson(List<Ingredient> ingredients) {
+        StringBuilder json = new StringBuilder("[");
+        
+        for (int i = 0; i < ingredients.size(); i++) {
+            Ingredient ingredient = ingredients.get(i);
+            json.append("{")
+                .append("\"name\":\"").append(ingredient.getName()).append("\",")
+                .append("\"amount\":").append(ingredient.getAmount()).append(",")
+                .append("\"unit\":\"").append(ingredient.getUnit()).append("\"")
+                .append("}");
+            
+            if (i < ingredients.size() - 1) {
+                json.append(",");
+            }
+        }
+        
+        json.append("]");
+        return json.toString();
+    }
+
+
+    private List<Ingredient> jsonToIngredients(String json) {
+        List<Ingredient> ingredients = new ArrayList<>();
+        
+        // Remove the square brackets
+        json = json.substring(1, json.length() - 1);
+        
+        // Split the string into individual ingredient JSON strings
+        String[] ingredientJsons = json.split("(?<=\\}),\\s*(?=\\{)");
+
+        for (String ingredientJson : ingredientJsons) {
+            Ingredient ingredient = new Ingredient();
+            
+            // Remove the curly braces
+            ingredientJson = ingredientJson.substring(1, ingredientJson.length() - 1);
+            
+            // Split the key-value pairs
+            String[] keyValuePairs = ingredientJson.split(",");
+            
+            for (String pair : keyValuePairs) {
+                String[] keyValue = pair.split(":");
+                String key = keyValue[0].replace("\"", "").trim();
+                String value = keyValue[1].replace("\"", "").trim();
+                
+                switch (key) {
+                    case "name":
+                        ingredient.setName(value);
+                        break;
+                    case "amount":
+                        ingredient.setAmount(Integer.parseInt(value));
+                        break;
+                    case "unit":
+                        ingredient.setUnit(value);
+                        break;
+                }
+            }
+            
+            ingredients.add(ingredient);
+        }
+        
+        return ingredients;
     }
 }

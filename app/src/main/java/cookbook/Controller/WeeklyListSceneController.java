@@ -137,8 +137,9 @@ public class WeeklyListSceneController {
             stage.setScene(new Scene(fxmlLoader.load()));
             ShoppingListSceneController controller = fxmlLoader.getController();
             controller.setUser(user);
-            controller.setIngredients(ingredients);
             controller.setTitle(week, this.weeklyListTitle.getText());
+            // setIngredients has to be done last
+            controller.setIngredients(ingredients);
             stage.show();
 
         } catch (IOException e) {

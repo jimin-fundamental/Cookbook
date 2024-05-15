@@ -21,7 +21,7 @@ public class ShoppingListItemController {
     @FXML
     private TextField ingredientUnit;
 
-    private List<Ingredient> ingredients;
+    private Ingredient ingredient;
     private User user;
 
 
@@ -33,10 +33,15 @@ public class ShoppingListItemController {
         ingredientName.setText(ingredient.getName());
         ingredientAmount.setText(Integer.toString(ingredient.getAmount()));
         ingredientUnit.setText(ingredient.getUnit());
+        this.ingredient = ingredient;
     }
     @FXML
     void ingredientClicked(MouseEvent event) {
-        
     }
 
+    public void updateIngredient(){
+        this.ingredient.setName(ingredientName.getText());
+        this.ingredient.setAmount(Integer.parseInt(ingredientAmount.getText()));
+        this.ingredient.setUnit(ingredientUnit.getText());
+    }
 }
