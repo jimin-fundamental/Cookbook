@@ -20,12 +20,12 @@
       </TextFlow>
     </VBox>
     <VBox alignment="CENTER_RIGHT" minWidth="54.0" spacing="5.0">
-      <Text fx:id="editButton" fill="BLUE" onMouseClicked="#handleEditAction" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit">
+      <Text fx:id="editButton" fill="BLUE" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Text>
-      <Text fx:id="deleteButton" fill="RED" onMouseClicked="#handleDeleteAction" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete">
+      <Text fx:id="deleteButton" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>

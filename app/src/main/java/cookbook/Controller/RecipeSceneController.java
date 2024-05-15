@@ -380,20 +380,20 @@ public class RecipeSceneController implements Initializable {
             controller.setComment(comment);
 
             // Setting up the action handlers and visibility based on user permission
-            Button editButton = (Button) controller.getEditButton();
-            Button deleteButton = (Button) controller.getDeleteButton();
+            Text editButton = (Text) controller.getEditButton();
+            Text deleteButton = (Text) controller.getDeleteButton();
 
             // Check if the current user is the author of the comment
             if (user.getId().equals(comment.getUserID())) {
                 editButton.setVisible(true);
                 editButton.setDisable(false);
-                editButton.setOnAction(e -> {
+                editButton.setOnMouseClicked(e -> {
                     handleEditComment(comment);
                 });
 
                 deleteButton.setVisible(true);
                 deleteButton.setDisable(false);
-                deleteButton.setOnAction(e -> {
+                deleteButton.setOnMouseClicked(e -> {
                     handleDeleteComment(comment);
                 });
             } else {

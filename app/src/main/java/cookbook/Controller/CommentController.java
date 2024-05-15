@@ -14,14 +14,11 @@ public class CommentController {
     @FXML
     private Text commentText;
     @FXML
-    private Button editButton;
+    private Text editButton;
     @FXML
-    private Button deleteButton;
+    private Text deleteButton;
 
     private Comment comment;
-    private RecipeSceneController parentController;
-
-    private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
     public void setComment(Comment comment) {
         this.comment = comment;
@@ -29,35 +26,13 @@ public class CommentController {
         commentText.setText(comment.getComment());
     }
 
-    public void setParentController(RecipeSceneController controller) {
-        this.parentController = controller;
-    }
-
-    public Button getEditButton() {
+    public Text getEditButton() {
         return editButton;
     }
 
-    public Button getDeleteButton() {
+    public Text getDeleteButton() {
         return deleteButton;
     }
-
-
-
-//    @FXML
-//    private void handleEditAction() {
-//        // Trigger edit logic possibly using a dialog to get new text
-//        String newCommentText = parentController.commentInputField.getText();
-//        if (newCommentText != null && !newCommentText.equals(comment.getComment())) {
-//            sqlRepos.editComment(comment.getCommentID(), newCommentText);
-//            parentController.refreshComments();  // Notify the parent controller to refresh comments
-//        }
-//    }
-//
-//    @FXML
-//    private void handleDeleteAction() {
-//        sqlRepos.deleteComment(comment.getCommentID());
-//        parentController.refreshComments();  // Notify the parent controller to refresh comments
-//    }
 
 
 }
