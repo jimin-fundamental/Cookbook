@@ -8,9 +8,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<StackPane fx:id="recipeItemPane" alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#recipeClicked" prefHeight="192.0" prefWidth="192.0" style="-fx-background-color: ffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeItemController">
+<StackPane fx:id="recipeItemPane" alignment="BOTTOM_LEFT" maxHeight="300.0" maxWidth="300.0" minHeight="160.0" minWidth="160.0" onMouseClicked="#recipeClicked" style="-fx-background-color: ffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeItemController">
    <children>
-      <Pane fx:id="recipeImagePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-image: url(&quot;https://www.google.com/images/srpr/logo3w.png&quot;); -fx-background-size: cover;" />
+      <Pane fx:id="recipeImagePane" style="-fx-background-image: url(&quot;https://www.google.com/images/srpr/logo3w.png&quot;); -fx-background-size: cover;" />
       <VBox alignment="BOTTOM_LEFT" fillWidth="false" spacing="5.0" StackPane.alignment="BOTTOM_LEFT">
          <children>
       
