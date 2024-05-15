@@ -108,7 +108,7 @@
                      </font>
                   </Text>
 
-                  <VBox fx:id="vBoxProcessSteps" spacing="15.0" />
+                  <VBox fx:id="vBoxProcessSteps" spacing="5.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Comments">
                      <font>
                         <Font name="System Bold" size="20.0" />
