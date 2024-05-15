@@ -40,6 +40,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -89,12 +90,12 @@ public class RecipeSceneController implements Initializable {
     private Button removeFromWeeklyListButton;
 
     @FXML
-    private VBox commentDisplayArea;  // VBox to dynamically load comment views
+    private VBox commentDisplayArea; // VBox to dynamically load comment views
     @FXML
-    public TextField commentInputField;  // TextField for entering new comments
+    public TextField commentInputField; // TextField for entering new comments
 
-//    @FXML
-//    private Button addCommentButton;  // Button to submit new comments
+    // @FXML
+    // private Button addCommentButton; // Button to submit new comments
 
     private MySqlRecipeRepository recipeRepos;
     private Recipe recipe;
@@ -122,7 +123,6 @@ public class RecipeSceneController implements Initializable {
 
         initializeUIFromRecipe();
     }
-
 
     private void initializeTagsView() {
         System.out.println("initializeTagsView");
@@ -243,12 +243,11 @@ public class RecipeSceneController implements Initializable {
                         : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg",
                 true));
         vBoxProcessSteps.getChildren().setAll(
-                recipe.getProcessSteps().stream().map(step -> new Text(step)).collect(Collectors.toList()));
+                recipe.getProcessSteps().stream().map(step -> new TextFlow(new Text(step)))
+                        .collect(Collectors.toList()));
         setStar();
         refreshComments();
     }
-
-    
 
     public void editRecipeScene(ActionEvent event) {
         try {
@@ -344,7 +343,8 @@ public class RecipeSceneController implements Initializable {
         ingredientsFlowPane.getChildren().clear();
         for (Ingredient ingredient : newIngredients) {
             ingredientsFlowPane.getChildren().add(
-                    new Text(ingredient.getName() + " (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")"));
+                    new TextFlow(new Text(
+                            ingredient.getName() + " (" + ingredient.getAmount() + " " + ingredient.getUnit() + ")")));
         }
     }
 
@@ -354,7 +354,7 @@ public class RecipeSceneController implements Initializable {
         System.out.println("Adding comment:" + commentText);
         if (!commentText.isEmpty()) {
             sqlRepos.addComment(recipe.getId(), user.getId(), commentText);
-            refreshComments();  // Refresh comments after adding a new one
+            refreshComments(); // Refresh comments after adding a new one
             commentInputField.clear();
         }
     }
@@ -371,7 +371,6 @@ public class RecipeSceneController implements Initializable {
             System.out.println("Failed to refresh comments: " + e.getMessage());
         }
     }
-    
 
     private void displayComment(Comment comment) {
         try {
@@ -379,11 +378,11 @@ public class RecipeSceneController implements Initializable {
             HBox commentBox = loader.load();
             CommentController controller = loader.getController();
             controller.setComment(comment);
-    
+
             // Setting up the action handlers and visibility based on user permission
             Button editButton = (Button) controller.getEditButton();
             Button deleteButton = (Button) controller.getDeleteButton();
-    
+
             // Check if the current user is the author of the comment
             if (user.getId().equals(comment.getUserID())) {
                 editButton.setVisible(true);
@@ -391,7 +390,7 @@ public class RecipeSceneController implements Initializable {
                 editButton.setOnAction(e -> {
                     handleEditComment(comment);
                 });
-    
+
                 deleteButton.setVisible(true);
                 deleteButton.setDisable(false);
                 deleteButton.setOnAction(e -> {
@@ -400,19 +399,19 @@ public class RecipeSceneController implements Initializable {
             } else {
                 editButton.setVisible(false);
                 editButton.setDisable(true);
-    
+
                 deleteButton.setVisible(false);
                 deleteButton.setDisable(true);
             }
-    
-            // Optionally set up delete button actions here, or manage in the CommentController
+
+            // Optionally set up delete button actions here, or manage in the
+            // CommentController
             commentDisplayArea.getChildren().add(commentBox);
-    
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
 
     private void handleEditComment(Comment comment) {
         System.out.println("handleEditComment");
@@ -439,8 +438,5 @@ public class RecipeSceneController implements Initializable {
         alert.showAndWait();
         return alert.getResult() == ButtonType.YES;
     }
-
-
-
 
 }
