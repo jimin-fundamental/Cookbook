@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import com.mysql.cj.protocol.Resultset;
 
-public class MySqlRecipeRepository implements RecipeRepository{
+public class MySqlRecipeRepository implements RecipeRepository {
 
     private DatabaseManager dbManager;
     private UserDao userDao;
@@ -37,8 +37,9 @@ public class MySqlRecipeRepository implements RecipeRepository{
         this.currentUser = currentUser; // Initialize with current user
         this.userDao = new UserDao(dbManager);
 
-        //loadPredeterminedTags();  // Pre-load tags to optimize later checks
+        // loadPredeterminedTags(); // Pre-load tags to optimize later checks
     }
+
     public MySqlRecipeRepository(DatabaseManager dbManager, User currentUser) {
         this.dbManager = dbManager;
         this.currentUser = currentUser; // Initialize with current user
@@ -47,7 +48,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags) {
+    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl,
+            int servings, Long author, String ingredients, String tags) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
             // Prepare the SQL statement
             String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -94,9 +96,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
         String insertRecipeTagSql = "INSERT INTO RecipeCustomTag (Recipe_ID, User_ID, Tags_ID) VALUES (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement insertTagStmt = connection.prepareStatement(insertTagSql, Statement.RETURN_GENERATED_KEYS);
-             PreparedStatement fetchTagIdStmt = connection.prepareStatement(fetchTagIdSql);
-             PreparedStatement insertRecipeTagStmt = connection.prepareStatement(insertRecipeTagSql)) {
+                PreparedStatement insertTagStmt = connection.prepareStatement(insertTagSql,
+                        Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement fetchTagIdStmt = connection.prepareStatement(fetchTagIdSql);
+                PreparedStatement insertRecipeTagStmt = connection.prepareStatement(insertRecipeTagSql)) {
 
             for (String tag : tagList) {
                 // Insert the tag or update it to get the last insert ID
@@ -106,7 +109,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
                 long tagId;
                 if (tagIds.next()) {
-                    tagId = tagIds.getLong(1);  // Get the generated tag ID
+                    tagId = tagIds.getLong(1); // Get the generated tag ID
                 } else {
                     // Fetch existing tag ID
                     fetchTagIdStmt.setString(1, tag);
@@ -129,10 +132,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         }
     }
 
-
-
     public void fetchRecipeDetails(Recipe rec) {
-
 
         // Fetch comments for the recipe
         // List<String> comments = fetchComments(rec.getId());
@@ -141,7 +141,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     @Override
     public void getAllRecipes(List<Recipe> recipes) {
-        // Define an anonymous Callable to perform database query and return the list of recipes
+        // Define an anonymous Callable to perform database query and return the list of
+        // recipes
         Runnable dbOperationTask = new Runnable() {
             @Override
             public void run() {
@@ -195,17 +196,16 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void getFavorites(List<Recipe> recipes, User user){
+    public void getFavorites(List<Recipe> recipes, User user) {
         Runnable dbOperationTask = new Runnable() {
             @Override
             public void run() {
                 // add Information for favourite recipes
                 List<Long> favourites = fetchFavourites(user);
-                for (Recipe recipe : recipes){
-                    if (favourites.contains(recipe.getId())){
+                for (Recipe recipe : recipes) {
+                    if (favourites.contains(recipe.getId())) {
                         recipe.setIsFavourite(true);
-                    }
-                    else{
+                    } else {
                         recipe.setIsFavourite(false);
                     }
                 }
@@ -218,10 +218,11 @@ public class MySqlRecipeRepository implements RecipeRepository{
     }
 
     @Override
-    public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredientsText, String tagsText) {
+    public void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl,
+            int servings, Long author, String ingredientsText, String tagsText) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
-//            String sql = "SELECT Recipe_ID FROM UserRecipe " +
-//                    "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
+            // String sql = "SELECT Recipe_ID FROM UserRecipe " +
+            // "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
             String sql = "CALL UpdateRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
             try (CallableStatement statement = connection.prepareCall(sql)) {
                 statement.setLong(1, id);
@@ -266,7 +267,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
         String sql = "{CALL UpdateFavoriteRecipe(?, ?)}";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             // set values
             pstmt.setLong(1, user.getId());
@@ -278,7 +279,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
             connection.close();
             recipe.setIsFavourite(true);
 
-
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("problem while adding favourite");
@@ -289,11 +289,11 @@ public class MySqlRecipeRepository implements RecipeRepository{
     @Override
     public void removeFromFavorites(Recipe recipe, User user) {
         String sql = "UPDATE UserRecipeStar " +
-                     "SET isstar = 0 " +
-                     "WHERE User_ID = ? AND Recipe_ID = ?";
+                "SET isstar = 0 " +
+                "WHERE User_ID = ? AND Recipe_ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             // set values
             pstmt.setLong(1, user.getId());
@@ -304,7 +304,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
             pstmt.close();
             connection.close();
             recipe.setIsFavourite(false);
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -317,10 +316,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
             @Override
             public void run() {
                 String sql = "INSERT INTO UserRecipeWeeklyList (User_ID, Recipe_ID, date, w_servings) " +
-                            "VALUES (?, ?, ?, ?)";
+                        "VALUES (?, ?, ?, ?)";
 
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
-                    PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                        PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
                     // set values
                     pstmt.setLong(1, user.getId());
@@ -333,7 +332,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                     pstmt.close();
                     connection.close();
                     Map<Date, Integer> dates = recipe.getWeeklyDates();
-                    if(dates == null){
+                    if (dates == null) {
                         dates = new HashMap<Date, Integer>();
                         recipe.setWeeklyDates(dates);
                     }
@@ -356,10 +355,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
             @Override
             public void run() {
                 String sql = "DELETE FROM UserRecipeWeeklyList " +
-                             "WHERE User_ID = ? AND Recipe_ID = ? AND date = ?";
+                        "WHERE User_ID = ? AND Recipe_ID = ? AND date = ?";
 
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
-                     PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                        PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
                     // set values
                     pstmt.setLong(1, user.getId());
@@ -388,12 +387,11 @@ public class MySqlRecipeRepository implements RecipeRepository{
             @Override
             public void run() {
                 // add Information for favourite recipes
-                Map<Long,Map<Date, Integer>> map = fetchWeeklyRecipes(user);
-                for (Recipe recipe : recipes){
-                    if (map.containsKey(recipe.getId())){
+                Map<Long, Map<Date, Integer>> map = fetchWeeklyRecipes(user);
+                for (Recipe recipe : recipes) {
+                    if (map.containsKey(recipe.getId())) {
                         recipe.setWeeklyDates(map.get(recipe.getId()));
-                    }
-                    else{
+                    } else {
                         recipe.setWeeklyDates(null);
                     }
                 }
@@ -415,7 +413,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 "WHERE ri.Recipe_ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             // Set the recipe ID parameter
             pstmt.setLong(1, id);
@@ -447,7 +445,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                 "WHERE rt.Recipe_ID = ?";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             // Set the recipe ID parameter
             pstmt.setLong(1, id);
@@ -459,7 +457,6 @@ public class MySqlRecipeRepository implements RecipeRepository{
                     tags.add(ingredientName);
                 }
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -534,10 +531,10 @@ public class MySqlRecipeRepository implements RecipeRepository{
         List<Long> favourites = new ArrayList<>();
 
         String sql = "SELECT Recipe_ID FROM UserRecipeStar " +
-                     "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
+                "WHERE User_ID = ? AND Recipe_ID IS NOT NULL AND isstar = true";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             // Set the recipe ID parameter
             pstmt.setLong(1, user.getId());
@@ -557,14 +554,14 @@ public class MySqlRecipeRepository implements RecipeRepository{
         return favourites;
     }
 
-    private  Map<Long,Map<Date, Integer>> fetchWeeklyRecipes(User user){
-        Map<Long,Map<Date, Integer>> weekly = new HashMap<Long, Map<Date, Integer>>();
+    private Map<Long, Map<Date, Integer>> fetchWeeklyRecipes(User user) {
+        Map<Long, Map<Date, Integer>> weekly = new HashMap<Long, Map<Date, Integer>>();
 
         String sql = "SELECT Recipe_ID, date, w_servings FROM UserRecipeWeeklyList " +
-                     "WHERE User_ID = ? AND Recipe_ID IS NOT NULL";
+                "WHERE User_ID = ? AND Recipe_ID IS NOT NULL";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
             // Set the recipe ID parameter
             pstmt.setLong(1, user.getId());
@@ -576,7 +573,7 @@ public class MySqlRecipeRepository implements RecipeRepository{
                     Date date = rs.getDate("date");
                     int servings = rs.getInt("w_servings");
                     Map<Date, Integer> dates = weekly.get(id);
-                    if(dates == null){
+                    if (dates == null) {
                         dates = new HashMap<>();
                         weekly.put(id, dates);
                     }
@@ -643,10 +640,11 @@ public class MySqlRecipeRepository implements RecipeRepository{
             String jsonElement = mat.group();
             jsonElementsList.add(jsonElement);
         }
-        for (String element : jsonElementsList){
+        for (String element : jsonElementsList) {
 
             // Use regex to extract process steps from JSON string
-            Pattern pattern = Pattern.compile("\\{\\s*\"name\"\\s*:\\s*\"([^\"]+)\",\\s*\"amount\"\\s*:\\s*\"([^\"]+)\",\\s*\"unit\"\\s*:\\s*\"([^\"]+)\"\\s*\\}");
+            Pattern pattern = Pattern.compile(
+                    "\\{\\s*\"name\"\\s*:\\s*\"([^\"]+)\",\\s*\"amount\"\\s*:\\s*\"([^\"]+)\",\\s*\"unit\"\\s*:\\s*\"([^\"]+)\"\\s*\\}");
             Matcher matcher = pattern.matcher(element);
 
             if (matcher.find()) {
@@ -695,16 +693,16 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     //method for getting whole customTags for that recipe and for that user
     public void getAllCustomTags(List<Recipe> recipes, User user) {
-  // SQL to get all Tags_ID for a given Recipe_ID
-        String sql = "SELECT rt.Recipe_ID, t.TagName "+
-                     "FROM RecipeCustomTag rt "+
-                     "JOIN Tags t ON rt.Tags_ID = t.ID "+
-                     "WHERE rt.User_ID = ?;";
-         
+        // SQL to get all Tags_ID for a given Recipe_ID
+        String sql = "SELECT rt.Recipe_ID, t.TagName " +
+                "FROM RecipeCustomTag rt " +
+                "JOIN Tags t ON rt.Tags_ID = t.ID " +
+                "WHERE rt.User_ID = ?;";
+
         Map<Long, List<String>> customTagsMap = new HashMap<>();
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
-             PreparedStatement pstmt = connection.prepareStatement(sql);) {
+                PreparedStatement pstmt = connection.prepareStatement(sql);) {
 
             // Set User_ID parameter for the first query
             pstmt.setLong(1, user.getId());
@@ -724,8 +722,8 @@ public class MySqlRecipeRepository implements RecipeRepository{
             e.printStackTrace();
         }
 
-        for (Recipe recipe : recipes){
-            if(customTagsMap.containsKey(recipe.getId())){
+        for (Recipe recipe : recipes) {
+            if (customTagsMap.containsKey(recipe.getId())) {
                 recipe.getCustomTags().addAll(customTagsMap.get(recipe.getId()));
             }
         }
@@ -733,30 +731,30 @@ public class MySqlRecipeRepository implements RecipeRepository{
 
     public void getCustomTags(Recipe recipe, User user) {
         // SQL to get Tags_ID for a given Recipe_ID
-              String sql = "SELECT t.TagName "+
-                           "FROM RecipeCustomTag rt "+
-                           "JOIN Tags t ON rt.Tags_ID = t.ID "+
-                           "WHERE rt.Recipe_ID = ? AND rt.User_ID = ?;";
-               
-              List<String> customTags = new ArrayList<String>();
-      
-              try (Connection connection = DriverManager.getConnection(dbManager.url);
-                   PreparedStatement pstmt = connection.prepareStatement(sql);) {
-      
-                  // Set User_ID parameter for the first query
-                  pstmt.setLong(1, recipe.getId());
-                  pstmt.setLong(2, user.getId());
-                  try (ResultSet rs = pstmt.executeQuery()) {
-                      while (rs.next()) {
-                          String tagname = rs.getString("TagName");
-                          customTags.add(tagname);
-                      }
-                  }
-              } catch (SQLException e) {
-                  e.printStackTrace();
-              }
+        String sql = "SELECT t.TagName " +
+                "FROM RecipeCustomTag rt " +
+                "JOIN Tags t ON rt.Tags_ID = t.ID " +
+                "WHERE rt.Recipe_ID = ? AND rt.User_ID = ?;";
 
-              recipe.getCustomTags().addAll(customTags);
-      
-          }
+        List<String> customTags = new ArrayList<String>();
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+                PreparedStatement pstmt = connection.prepareStatement(sql);) {
+
+            // Set User_ID parameter for the first query
+            pstmt.setLong(1, recipe.getId());
+            pstmt.setLong(2, user.getId());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String tagname = rs.getString("TagName");
+                    customTags.add(tagname);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        recipe.getCustomTags().addAll(customTags);
+
+    }
 }
