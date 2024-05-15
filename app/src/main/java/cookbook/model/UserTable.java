@@ -1,13 +1,12 @@
 package cookbook.model;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class UserTable {
 
     private SimpleStringProperty name;
     private SimpleStringProperty username;
-    private SimpleIntegerProperty isAdmin;
+    private SimpleStringProperty isAdmin;
     private SimpleStringProperty edit;
 
 
@@ -15,7 +14,8 @@ public class UserTable {
     public UserTable(String name, String username, int isAdmin) {
         this.name = new SimpleStringProperty(name);
         this.username = new SimpleStringProperty(username);
-        this.isAdmin = new SimpleIntegerProperty(isAdmin);
+        this.isAdmin = new SimpleStringProperty(isAdmin == 1 ? "Yes" : "No");
+        System.out.println(isAdmin);
         this.edit = new SimpleStringProperty("Edit");
     }
 
@@ -35,12 +35,12 @@ public class UserTable {
         this.username = new SimpleStringProperty(username);
     }
 
-    public int getIsAdmin() {
+    public String getIsAdmin() {
         return isAdmin.get();
     }
 
-    public void setIsAdmin(int isAdmin) {
-        this.isAdmin = new SimpleIntegerProperty(isAdmin);
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = new SimpleStringProperty(isAdmin);
     }
 
     public String getEdit() {

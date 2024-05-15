@@ -33,7 +33,7 @@ public class UsersSceneController {
     TableView<UserTable> usersTableView;
 
     @FXML
-    public TableColumn<UserTable, Integer> nameColumn;
+    public TableColumn<UserTable, String> nameColumn;
 
     @FXML
     public TableColumn<UserTable, String> usernameColumn;
