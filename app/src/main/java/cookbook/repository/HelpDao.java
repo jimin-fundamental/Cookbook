@@ -29,9 +29,10 @@ public class HelpDao implements HelpRepository{
             while (rs.next()) {
                 Long id = rs.getLong("id");
                 String title = rs.getString("title");
-                String description = rs.getString("text");
+                String description = rs.getString("description");
+                String text = rs.getString("text");
     
-                Help helpEntry = new Help(id, title, description);
+                Help helpEntry = new Help(id, title, description, text);
                 allHelpEntries.add(helpEntry);
                 System.out.println("Help entry added: " + helpEntry.getId() + " - " + helpEntry.getTitle());
             }

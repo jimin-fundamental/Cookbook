@@ -22,15 +22,12 @@ public class HelpSceneController {
     @FXML
     private Label helpTitle;
 
-    private Help helpItem;
-
     private Scene previousScene;
 
     public void setHelpItem(Help item) {
-        helpItem = item;
         helpTitle.setText(item.getTitle());;
 
-        MarkdownView markdownView = new MarkdownView(item.getDescription()) {
+        MarkdownView markdownView = new MarkdownView(item.getText()) {
             @Override
             protected List<String> getDefaultStylesheets() {
                 return List.of("/css/mdfx.css");
@@ -45,7 +42,7 @@ public class HelpSceneController {
             }
         };
 
-        TextArea textArea = new TextArea(item.getDescription());
+        TextArea textArea = new TextArea(item.getText());
 
         markdownView.mdStringProperty().bind(textArea.textProperty());
         markdownView.getStylesheets().add("/css/mdfx.css");
