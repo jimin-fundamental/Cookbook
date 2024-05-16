@@ -38,7 +38,6 @@ public class HelpSceneController {
 
             @Override
             public void setLink(Node node, String link, String description) {
-                System.out.println("setLink: " + link);
                 node.setCursor(Cursor.HAND);
                 node.setOnMouseClicked(e -> {
                     System.out.println("link: " + link);

@@ -28,11 +28,7 @@ public class HelpItemController {
     public void setHelpItem(Help item) {
         helpItem = item;
         helpTitle.setText(item.getTitle());
-        helpDescription.setText(item.getDescription().replace("\n", ""));
-    }
-
-    public void setHelpDescription(String description) {
-        helpDescription.setText(description);
+        helpDescription.setText(item.getDescription().replace("\n", "").replace("\r", ""));
     }
 
     @FXML
