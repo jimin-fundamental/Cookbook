@@ -5,61 +5,56 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="scenePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.LoginSceneController">
+<VBox fx:id="scenePane" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.LoginSceneController">
    <children>
-      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0">
+      <Label text="Cookbook">
+         <font>
+            <Font name="System Bold" size="35.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="300.0" spacing="15.0">
          <children>
-            <Label text="Cookbook">
+            <Label minWidth="80.0" text="Username">
                <font>
-                  <Font name="System Bold" size="35.0" />
+                  <Font size="17.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="15.0">
-               <children>
-                  <Label text="Username">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="uNameTextbox" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="15.0">
-               <children>
-                  <Label text="Password">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="pwTextbox" />
-               </children>
-            </HBox>
-            <VBox prefHeight="0.0" prefWidth="100.0" spacing="5.0">
-               <children>
-                  <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="200.0" spacing="10.0">
-                     <children>
-                        <Button fx:id="signInButton" mnemonicParsing="false" onAction="#signInButtonPressed" text="sign in" />
-                        <Button fx:id="createProfileButton" mnemonicParsing="false" onAction="#createProfileButtonPressed" text="create profile" textAlignment="CENTER" />
-                     </children>
-                  </HBox>
-                  <Label fx:id="errorLabel" prefHeight="26.0" prefWidth="182.0" text="Credentials not correct!" textAlignment="CENTER" textFill="#ff1a1a" visible="false">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </VBox>
+            <TextField fx:id="uNameTextbox" HBox.hgrow="ALWAYS" />
          </children>
-         <padding>
-            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-         </padding>
+      </HBox>
+      <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" spacing="15.0">
+         <children>
+            <Label minWidth="80.0" text="Password">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <TextField fx:id="pwTextbox" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <VBox prefHeight="0.0" prefWidth="100.0" spacing="5.0">
+         <children>
+            <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Button fx:id="createProfileButton" mnemonicParsing="false" onAction="#createProfileButtonPressed" text="Sign Up" textAlignment="CENTER" />
+                  <Button fx:id="signInButton" mnemonicParsing="false" onAction="#signInButtonPressed" text="Log In" />
+               </children>
+            </HBox>
+            <Label fx:id="errorLabel" prefHeight="26.0" prefWidth="182.0" text="Credentials not correct!" textAlignment="CENTER" textFill="#ff1a1a" visible="false">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
       </VBox>
    </children>
-</Pane>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
+</VBox>

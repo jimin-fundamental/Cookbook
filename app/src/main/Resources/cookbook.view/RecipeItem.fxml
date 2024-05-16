@@ -7,10 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 
-<StackPane fx:id="recipeItemPane" alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#recipeClicked" prefHeight="192.0" prefWidth="192.0" style="-fx-background-color: ffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeItemController">
+<StackPane fx:id="recipeItemPane" alignment="BOTTOM_LEFT" maxHeight="300.0" maxWidth="300.0" minHeight="160.0" minWidth="160.0" onMouseClicked="#recipeClicked" style="-fx-background-color: ffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeItemController">
    <children>
-      <Pane fx:id="recipeImagePane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-image: url(&quot;https://www.google.com/images/srpr/logo3w.png&quot;); -fx-background-size: cover;" />
+      <Pane fx:id="recipeImagePane" style="-fx-background-image: url(&quot;https://www.google.com/images/srpr/logo3w.png&quot;); -fx-background-size: cover;" />
       <VBox alignment="BOTTOM_LEFT" fillWidth="false" spacing="5.0" StackPane.alignment="BOTTOM_LEFT">
          <children>
       
@@ -34,14 +35,18 @@
                   <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
                </padding>
             </StackPane>
-      
+            <TextFlow>
+               <children>
             
-                  <!-- Text for displaying the recipe name -->
-            <Text fx:id="recipeNameText" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.5" text="Text" wrappingWidth="164.0">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Text>
+                  
+                        <!-- Text for displaying the recipe name -->
+                  <Text fx:id="recipeNameText" fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.5" text="Text">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Text>
+               </children>
+            </TextFlow>
          </children>
          <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

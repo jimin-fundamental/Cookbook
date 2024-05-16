@@ -19,6 +19,9 @@ javafx {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    maven {
+        url "https://sandec.jfrog.io/artifactory/repo"
+    }
 }
 
 
@@ -30,6 +33,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:32.1.1-jre'
+
+    implementation 'com.sandec:mdfx:0.2.12'
 
     implementation 'de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2'
 
