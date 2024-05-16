@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox spacing="5.0" style="-fx-border-color: #aaa; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="5.0" style="-fx-border-color: #aaa; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.HelpItemController">
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="How to add a recipe">
          <font>
