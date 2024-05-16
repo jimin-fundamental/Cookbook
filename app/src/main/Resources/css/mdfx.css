@@ -1,0 +1,64 @@
+* {
+  -mdfx-font-color: black;
+  -mdfx-link-color: blue;
+  -mdfx-border-color-1: #888;
+
+  -mdfx-bg-color-1: #ccc;
+  -mdfx-bg-color-2: #ddd;
+  -mdfx-bg-color-3: #eee;
+
+  -mdfx-bq-color-border: #4488cc; /* the blockquote's border color */
+  -mdfx-bq-color-background: #0000ff0c; /* the blockquote's background color */
+}
+
+.markdown-text {
+ -fx-font-family: SYSTEM;
+ -fx-font-size: 14;
+}
+.markdown-italic {
+ -fx-font-style: italic;
+}
+.markdown-bold {
+ -fx-font-weight: bold;
+}
+.markdown-strikethrough {
+ -fx-strikethrough: true;
+}
+
+.markdown-heading-1 { -fx-padding: 10;}
+.markdown-heading-2 { -fx-padding: 8;}
+.markdown-heading-3 { -fx-padding: 6; }
+.markdown-heading-4 { -fx-padding: 4; }
+.markdown-heading-5 { -fx-padding: 2; }
+
+.markdown-paragraph-list {
+  -fx-spacing: 3;
+}
+.markdown-hbox1 {
+  -fx-spacing: 0;
+  -fx-padding: 5;
+}
+
+.markdown-normal-flow {
+  -fx-line-spacing: 3;
+}
+
+.markdown-heading-1 .markdown-text {
+  -fx-font-size: 38;
+}
+
+.markdown-heading-2 .markdown-text {
+  -fx-font-size: 28;
+}
+
+.markdown-heading-3 .markdown-text {
+  -fx-font-size: 24;
+}
+
+.markdown-heading-4 .markdown-text {
+  -fx-font-size: 20;
+}
+
+.markdown-heading-5 .markdown-text {
+  -fx-font-size: 16;
+}

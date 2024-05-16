@@ -1,16 +1,18 @@
 package cookbook.Controller;
 
-import java.io.IOException;
+import java.util.List;
 
-import cookbook.SceneModifier;
 import cookbook.model.Help;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import com.sandec.mdfx.MarkdownView;
 
 public class HelpSceneController {
 
@@ -26,7 +28,30 @@ public class HelpSceneController {
 
     public void setHelpItem(Help item) {
         helpItem = item;
-        helpTitle.setText(item.getTitle());
+        helpTitle.setText(item.getTitle());;
+
+        MarkdownView markdownView = new MarkdownView(item.getDescription()) {
+            @Override
+            protected List<String> getDefaultStylesheets() {
+                return List.of("/css/mdfx.css");
+            }
+
+            @Override
+            public void setLink(Node node, String link, String description) {
+                System.out.println("setLink: " + link);
+                node.setCursor(Cursor.HAND);
+                node.setOnMouseClicked(e -> {
+                    System.out.println("link: " + link);
+                });
+            }
+        };
+
+        TextArea textArea = new TextArea(item.getDescription());
+
+        markdownView.mdStringProperty().bind(textArea.textProperty());
+        markdownView.getStylesheets().add("/css/mdfx.css");
+
+        helpVBox.getChildren().add(markdownView);
     }
 
     public void setPreviousScene(Scene scene) {
