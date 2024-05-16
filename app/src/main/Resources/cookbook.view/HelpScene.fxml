@@ -18,7 +18,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <FontAwesomeIconView glyphName="ARROW_LEFT" onMouseClicked="#back" size="20">
+                  <FontAwesomeIconView glyphName="ARROW_LEFT" onMouseClicked="#backClicked" size="20">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
