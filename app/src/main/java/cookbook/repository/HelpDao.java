@@ -19,7 +19,7 @@ public class HelpDao implements HelpRepository{
     
     public List<Help> getAllHelp(){
         List<Help> allHelpEntries = new ArrayList<>();
-        String sql = "SELECT id, title, text FROM HelpEntries";
+        String sql = "SELECT id, title, description, text FROM HelpEntries";
         System.out.println("Attempting to fetch all help entries from the database.");
     
         try (Connection connection = DriverManager.getConnection(url);
