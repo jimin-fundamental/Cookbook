@@ -169,9 +169,10 @@ CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`UserMessage` (
 );
 
 CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`HelpEntries` (
-  `ID` INT NOT NULL,
-  `title` MEDIUMTEXT NOT NULL,
-  `text` LONGTEXT NOT NULL,
+  `ID` int(11) NOT NULL,
+  `title` mediumtext NOT NULL,
+  `description` mediumtext NOT NULL,
+  `text` longtext NOT NULL
   PRIMARY KEY (`ID`)
 );
 
