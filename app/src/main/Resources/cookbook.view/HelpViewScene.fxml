@@ -25,7 +25,7 @@
                </font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <TextField prefHeight="26.0" prefWidth="211.0" promptText="Insert your question here..." />
+            <TextField fx:id="searchTextField" prefHeight="26.0" prefWidth="211.0" promptText="Insert your question here..." />
             <Button mnemonicParsing="false" onAction="#searchClicked" text="Search" />
          </children>
       </HBox>

@@ -1,16 +1,25 @@
 package cookbook.Controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+
 
 public class HelpViewSceneController {
 
     @FXML
-    VBox helpListVBox;
+    private VBox helpListVBox;
 
     @FXML
-    public void SearchClicked() {
+    private TextField searchTextField;
 
+    @FXML
+    public void searchClicked() {
+
+    }
+
+    public void initialize(){
+        
     }
 }
 
