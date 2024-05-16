@@ -127,6 +127,23 @@ public class RecipeViewController implements Initializable {
     }
 
     @FXML
+    void helpClicked(ActionEvent event) throws IOException {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/HelpViewScene.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            HelpViewSceneController helpController = loader.getController(); // Get the controller
+            helpController.initialize();
+
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     void searchButtonClicked(ActionEvent event) {
         filterRecipes();
     }
