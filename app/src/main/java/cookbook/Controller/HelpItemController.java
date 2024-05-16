@@ -42,6 +42,7 @@ public class HelpItemController {
             ScrollPane helpViewScene = loader.load();
             HelpSceneController helpController = loader.getController(); // Get the controller
             helpController.setHelpItem(helpItem);
+            helpController.setPreviousScene((Scene) ((Node) event.getSource()).getScene());
             SceneModifier.change_scene(
                     helpViewScene,
                     (Stage) ((Node) event.getSource()).getScene().getWindow());
