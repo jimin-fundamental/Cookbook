@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+
 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="cookbook.Controller.HelpSceneController">
    <content>
       <VBox fx:id="helpVBox" spacing="20.0">
@@ -23,11 +24,11 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </FontAwesomeIconView>
-                  <Text fx:id="helpTitle" alignment="TOP_LEFT" text="How to add a recipe">
+                  <Label fx:id="helpTitle" alignment="TOP_LEFT" text="Help">
                      <font>
                         <Font name="System Bold" size="23.0" />
                      </font>
-                  </Text>
+                  </Label>
                </children>
             </HBox>
          </children>

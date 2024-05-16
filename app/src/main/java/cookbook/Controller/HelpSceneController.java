@@ -2,8 +2,8 @@ package cookbook.Controller;
 
 import cookbook.model.Help;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 public class HelpSceneController {
 
@@ -11,7 +11,7 @@ public class HelpSceneController {
     private VBox helpVBox;
 
     @FXML
-    private Text helpTitle;
+    private Label helpTitle;
 
     private Help helpItem;
 
@@ -21,7 +21,7 @@ public class HelpSceneController {
     }
 
     @FXML
-    public void BackClicked() {
+    public void backClicked() {
 
     }
 }
