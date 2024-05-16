@@ -58,13 +58,14 @@
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <FontAwesomeIconView fx:id="star" fill="#ffbb0000" glyphName="STAR" onMouseClicked="#favouritesButtonClicked" selectionFill="#ffcc0000" size="20" stroke="BLACK" />
-                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="100.0" onAction="#searchBarKeyTyped" prefWidth="435.0" promptText="search..." />
+                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="100.0" onAction="#searchBarKeyTyped" prefHeight="26.0" prefWidth="268.0" promptText="search..." />
                               <Button fx:id="searchButton" alignment="TOP_LEFT" minWidth="60.0" mnemonicParsing="false" onAction="#searchButtonClicked" text="search" />
                            </children>
                         </HBox>
                         <Region HBox.hgrow="ALWAYS" />
                         <Button fx:id="addButton" alignment="TOP_LEFT" minWidth="95.0" mnemonicParsing="false" onAction="#addButtonClicked" text="+ Add Recipe" />
-                        <Button fx:id="weeklyDinnerButton" alignment="TOP_LEFT" minWidth="106.0" mnemonicParsing="false" onAction="#openWeeklyLists" text="Weekly Dinners" />
+                        <Button fx:id="weeklyDinnerButton" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="106.0" mnemonicParsing="false" onAction="#openWeeklyLists" text="Weekly Dinners" />
+                        <Button fx:id="messagesButton" alignment="TOP_LEFT" minWidth="90.0" mnemonicParsing="false" text="Messages" />
                      </children>
                      <VBox.margin>
                         <Insets />
