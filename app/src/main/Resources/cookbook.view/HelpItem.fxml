@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -13,7 +14,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
-      <Text strokeType="OUTSIDE" fx:id="helpDescription" strokeWidth="0.0" text="If you want to add a recipe, first click the Add Recipe + button on the top right." />
+      <Label fx:id="helpDescription" text="Label" />
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

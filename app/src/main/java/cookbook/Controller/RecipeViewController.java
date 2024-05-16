@@ -134,7 +134,7 @@ public class RecipeViewController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(loader.load()));
             HelpViewSceneController helpController = loader.getController(); // Get the controller
-            helpController.initialize();
+            helpController.initializeHelp();
 
             stage.show();
 

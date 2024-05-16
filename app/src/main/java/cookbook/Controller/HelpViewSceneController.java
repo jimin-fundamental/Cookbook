@@ -49,7 +49,7 @@ public class HelpViewSceneController {
         }
     }
 
-    public void initialize(){
+    public void initializeHelp(){
         retrieveHelpEntries();
         for (Help help : helpEntries) {
             displayHelpItem(help);
