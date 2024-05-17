@@ -1,10 +1,13 @@
 package cookbook.model;
 
+import java.util.List;
+
 public class Help {
     private Long id;
     private String title;
     private String description;
     private String text;
+    private List<String> keyWords;
 
     public Help(Long id, String title, String description, String text) {
         this.id = id;
@@ -45,4 +48,11 @@ public class Help {
         return text;
     }
 
+    public List<String> getkeyWords() {
+        return keyWords;
+    }
+
+    public void setkeyWords(List<String> keyWords) {
+        this.keyWords = keyWords;
+    }
 }
