@@ -404,6 +404,18 @@ public class MySqlRecipeRepository implements RecipeRepository {
         dbThread.start();
     }
 
+    public void sendingMessage(Recipe recipe, User receiverUser, String message) {
+        User sender = this.currentUser;
+        String sql = "INSERT message = message, sender_ID = sender.getID(), receiver_ID = receiverUser.getID(), recipe_id = ";
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     public List<Ingredient> fetchIngredients(Long id) {
         List<Ingredient> ingredients = new ArrayList<>();
@@ -893,4 +905,5 @@ public class MySqlRecipeRepository implements RecipeRepository {
         
         return ingredients;
     }
+
 }

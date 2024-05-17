@@ -55,7 +55,7 @@
                            <children>
                               <Button onAction="#editRecipeScene" text="Edit Recipe" />
                               <Button mnemonicParsing="false" onAction="#addToWeeklyList" text="+ Weekly Dinner" />
-                              <Button mnemonicParsing="false" text="Share Recipe" />
+                              <Button mnemonicParsing="false" text="Share Recipe" onAction="#shareRecipeClicked" />
                            </children>
                         </HBox>
                         <TextFlow VBox.vgrow="ALWAYS">

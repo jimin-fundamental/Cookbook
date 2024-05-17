@@ -439,4 +439,17 @@ public class RecipeSceneController implements Initializable {
         return alert.getResult() == ButtonType.YES;
     }
 
+    @FXML
+    public void shareRecipeClicked(ActionEvent actionEvent) {
+        System.out.println("share Recipe btn is clicked");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/ShareRecipeScene.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

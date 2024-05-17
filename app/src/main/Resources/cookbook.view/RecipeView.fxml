@@ -65,7 +65,7 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <Button fx:id="addButton" alignment="TOP_LEFT" minWidth="95.0" mnemonicParsing="false" onAction="#addButtonClicked" text="+ Add Recipe" />
                         <Button fx:id="weeklyDinnerButton" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="106.0" mnemonicParsing="false" onAction="#openWeeklyLists" text="Weekly Dinners" />
-                        <Button fx:id="messagesButton" alignment="TOP_LEFT" minWidth="90.0" mnemonicParsing="false" text="Messages" />
+                        <Button fx:id="messagesButton" alignment="TOP_LEFT" minWidth="90.0" mnemonicParsing="false" onAction="#messageClicked" text="Messages" />
                      </children>
                      <VBox.margin>
                         <Insets />

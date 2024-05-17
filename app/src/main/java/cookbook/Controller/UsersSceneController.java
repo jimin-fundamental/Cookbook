@@ -49,7 +49,7 @@ public class UsersSceneController {
     private ObservableList<UserTable> userTable = FXCollections.observableArrayList();
     private List<User> users;
 
-    private void retrieveUsers() {
+    public void retrieveUsers() {
         DatabaseManager dbManager = new DatabaseManager();
         UserDao userDao = new UserDao(dbManager);
         users = userDao.getAllUser();

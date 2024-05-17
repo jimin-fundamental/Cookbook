@@ -31,6 +31,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import cookbook.DatabaseManager;
+import cookbook.Controller.HelpViewSceneController;
 import cookbook.SceneModifier;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
@@ -125,6 +126,20 @@ public class RecipeViewController implements Initializable {
             e.printStackTrace();
         }
     }
+    @FXML
+    void messageClicked(ActionEvent event) throws IOException{
+        System.out.println("message btn is clicked");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(loader.load()));
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     void helpClicked(ActionEvent event) throws IOException {
