@@ -69,6 +69,7 @@ public class RecipeViewController implements Initializable {
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
     private User user;
+    private Recipe recipe;
     private boolean favoritesShowing = false;
 
     public void setUserName(User user) {
@@ -126,19 +127,45 @@ public class RecipeViewController implements Initializable {
             e.printStackTrace();
         }
     }
+//    @FXML
+//    void messageClicked(ActionEvent event) throws IOException{
+//        System.out.println("message btn is clicked");
+//        try {
+//            // Correct the path if necessary and ensure it's accurate
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
+//            // Create new stage for new window of the recipe
+//            Stage stage = new Stage();
+//            stage.setResizable(false);
+//            stage.setScene(new Scene(fxmlLoader.load()));
+//
+//            // Get the controller to call the method to set the data
+//            MessageSceneController controller = fxmlLoader.getController();
+//            controller.setRecipe(this.recipe);
+//            controller.setUser(this.user);
+//
+//            stage.show();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     @FXML
-    void messageClicked(ActionEvent event) throws IOException{
-        System.out.println("message btn is clicked");
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(loader.load()));
-            stage.setResizable(false);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void messageClicked(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
+        Parent root = fxmlLoader.load();
+
+        MessageSceneController controller = fxmlLoader.getController();
+        controller.setUser(this.user);  // Ensure user is set before the scene is displayed
+        controller.setRecipe(this.recipe);
+        controller.initializeManually();  // If needed, a method to manually start any processes that depend on user
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
+
+
 
 
     @FXML

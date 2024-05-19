@@ -1,12 +1,8 @@
 package cookbook.repository;
 
 import cookbook.DatabaseManager;
-import cookbook.model.Comment;
-import cookbook.model.Ingredient;
-import cookbook.model.Recipe;
-import cookbook.model.User;
+import cookbook.model.*;
 import javafx.collections.FXCollections;
-import javafx.geometry.Point2D;
 
 import java.sql.*;
 
@@ -14,17 +10,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.mysql.cj.protocol.Resultset;
 
 public class MySqlRecipeRepository implements RecipeRepository {
 
@@ -404,17 +393,75 @@ public class MySqlRecipeRepository implements RecipeRepository {
         dbThread.start();
     }
 
-    public void sendingMessage(Recipe recipe, User receiverUser, String message) {
-        User sender = this.currentUser;
-        String sql = "INSERT message = message, sender_ID = sender.getID(), receiver_ID = receiverUser.getID(), recipe_id = ";
+    public void sharingRecipe(User sender, Recipe recipe, User receiverUser, String message) {
+        String sql = "INSERT INTO UserMessage (message, recipe_ID, sender_ID, receiver_ID) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Set the parameters for the PreparedStatement
+            pstmt.setString(1, message);
+            pstmt.setInt(2, recipe.getId().intValue()); // Recipe ID that is being shared, ensure the type matches (int vs long)
+            pstmt.setInt(3, sender.getId().intValue());
+            pstmt.setInt(4, receiverUser.getId().intValue());
+
+            // Execute the update and retrieve the generated primary key
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user message failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    long messageId = generatedKeys.getLong(1);
+                    System.out.println("Shared message was created with ID: " + messageId);
+                } else {
+                    throw new SQLException("Creating user message failed, no ID obtained.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("SQL Error during sharing a recipe: " + e.getMessage());
+        }
+    }
+
+    public List<Message> showAllMessage(User user) {
+        // SQL query with JOINs to fetch sender names and recipe titles along with message details
+        String sql = "SELECT um.ID, um.message, um.sender_ID, um.receiver_ID, um.recipe_ID, " +
+                "u.name AS senderName, r.name AS recipeTitle " +
+                "FROM UserMessage um " +
+                "JOIN User u ON um.sender_ID = u.ID " +
+                "JOIN Recipe r ON um.recipe_ID = r.ID " +
+                "WHERE um.receiver_ID = ?";
+
+        List<Message> allMessages = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(dbManager.url);
              PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
+            pstmt.setLong(1, user.getId()); // Set the receiver ID to the current user's ID
 
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Message message = new Message();
+                    message.setId(rs.getLong("ID"));
+                    message.setMessage(rs.getString("message"));
+                    message.setSenderId(rs.getLong("sender_ID"));
+                    message.setReceiverId(rs.getLong("receiver_ID"));
+                    message.setRecipeId(rs.getLong("recipe_ID"));
+                    message.setSenderName(rs.getString("senderName"));
+                    message.setRecipeTitle(rs.getString("recipeTitle"));
+                    allMessages.add(message);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+        return allMessages;
     }
+
+
+
 
     @Override
     public List<Ingredient> fetchIngredients(Long id) {
@@ -430,7 +477,6 @@ public class MySqlRecipeRepository implements RecipeRepository {
             // Set the recipe ID parameter
             pstmt.setLong(1, id);
 
-            // Execute the query
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Ingredient ingredient = new Ingredient();
@@ -905,5 +951,6 @@ public class MySqlRecipeRepository implements RecipeRepository {
         
         return ingredients;
     }
+
 
 }

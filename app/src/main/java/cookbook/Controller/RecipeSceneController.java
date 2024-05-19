@@ -441,15 +441,25 @@ public class RecipeSceneController implements Initializable {
 
     @FXML
     public void shareRecipeClicked(ActionEvent actionEvent) {
-        System.out.println("share Recipe btn is clicked");
+        System.out.println("Share Recipe button is clicked");
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/ShareRecipeScene.fxml"));
+            // Correct the path if necessary and ensure it's accurate
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/ShareRecipeScene.fxml"));
+            // Create new stage for new window of the recipe
             Stage stage = new Stage();
-            stage.setScene(new Scene(loader.load()));
             stage.setResizable(false);
+            stage.setScene(new Scene(fxmlLoader.load()));
+
+            // Get the controller to call the method to set the data
+            ShareRecipeSceneController controller = fxmlLoader.getController();
+            controller.setRecipe(this.recipe);
+            controller.setUser(this.user);
+
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 }
