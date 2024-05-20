@@ -76,6 +76,9 @@ public class WeeklyViewItemController {
     }
 
     public void removeWeekly(){
+        // remove the element from the list
+        this.recipe.getWeeklyDates().remove(Date.valueOf(this.date));
+        
         this.recipeRepos.removeFromWeekPlan(recipe, user, Date.valueOf(date));
 
         Parent parent = hBox.getParent();

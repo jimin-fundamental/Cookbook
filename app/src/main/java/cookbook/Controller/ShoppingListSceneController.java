@@ -58,6 +58,11 @@ public class ShoppingListSceneController {
         }
         recipeRepos.writeShoppingList(ingredients, week, user);
     }
+    
+    @FXML
+    void DeleteChangesPressed(ActionEvent event) {
+        recipeRepos.deleteShoppingList(week, user);
+    }
 
     private void displayShoppingItem(Ingredient ingredient) {
         try {

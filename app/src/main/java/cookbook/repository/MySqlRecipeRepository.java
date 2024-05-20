@@ -823,11 +823,40 @@ public class MySqlRecipeRepository implements RecipeRepository {
             return jsonToIngredients(jsonList);
         }
         else{
-            writeShoppingList(ingredients, week, user);
             return ingredients;
         }
 
         
+    }
+
+    public void deleteShoppingList(int week, User user){
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
+                String sql = "DELETE FROM ShoppingLists " +
+                            "WHERE User_ID = ? AND week = ?";
+
+                try (Connection connection = DriverManager.getConnection(dbManager.url);
+                    PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+                    // set values
+                    pstmt.setLong(1, user.getId());
+                    pstmt.setInt(2, week);
+
+                    pstmt.executeUpdate();
+
+                    pstmt.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        };
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start();
     }
 
 
