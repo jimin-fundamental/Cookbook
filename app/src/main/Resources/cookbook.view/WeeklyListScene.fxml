@@ -184,17 +184,20 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <Button onAction="#shoppingListClicked" graphicTextGap="7.0" mnemonicParsing="false" text="Shopping List">
-               <graphic>
-                  <FontAwesomeIconView fill="YELLOW" glyphName="USER" />
-               </graphic>
-            </Button>
-            <Button onAction="#deleteListClicked" graphicTextGap="7.0" mnemonicParsing="false" text="Delete List">
-               <graphic>
-                  <FontAwesomeIconView fill="RED" glyphName="TRASH" />
-               </graphic>
-            </Button>
+            <VBox spacing="10.0" alignment="CENTER">
+               <Region prefHeight="0.0" prefWidth="0.0" VBox.vgrow="ALWAYS" />
+               <Button onAction="#shoppingListClicked" graphicTextGap="7.0" mnemonicParsing="false" text="Shopping List" maxWidth="Infinity">
+                  <graphic>
+                        <FontAwesomeIconView fill="YELLOW" glyphName="USER" />
+                  </graphic>
+               </Button>
+               <Button onAction="#deleteListClicked" graphicTextGap="7.0" mnemonicParsing="false" text="Delete List" maxWidth="Infinity">
+                  <graphic>
+                        <FontAwesomeIconView fill="RED" glyphName="TRASH" />
+                  </graphic>
+               </Button>
+            </VBox>
+
          </children>
       </HBox>
    </children>
