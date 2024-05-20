@@ -190,6 +190,21 @@ CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`ShoppingLists` (
 );
 
 
+CREATE TABLE IF NOT EXISTS `u689018343_cookbook`.`Ratings` (
+  `User_ID` int(11) NOT NULL,
+  `Recipe_ID` int(11) NOT NULL,
+  `rating` tinyint(4) DEFAULT 0
+  PRIMARY KEY (`User_ID`, `Recipe_ID`),
+  CONSTRAINT `fk_ratings_user`
+    FOREIGN KEY (`User_ID`) REFERENCES `u689018343_cookbook`.`User` (`ID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_ratings_recipe`
+    FOREIGN KEY (`Recipe_ID`) REFERENCES `u689018343_cookbook`.`Recipe` (`ID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -207,15 +222,17 @@ SELECT
     `r`.`author` AS `Author`,
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"tagname": "', `t`.`tagname`,'"}' SEPARATOR ','), ''), ']') AS `Predefined_Tags_JSON`,
     CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"name": "', `i`.`name`,'", "amount": "',`ri`.`amount_int`,'", "unit": "',`ri`.`amount_unit`,'"}' SEPARATOR ','), ''), ']') AS `Ingredients_JSON`,
-    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"comment_id": "', `c`.`Comment_ID`,'", "comment": "', `c`.`Comment`,'", "user_id": "', `c`.`User_ID`,'", "user_name": "', `u`.`name`,'" }' SEPARATOR ','), ''), ']') AS `Comments_JSON`
+    CONCAT('[', IFNULL(GROUP_CONCAT(DISTINCT '{"comment_id": "', `c`.`Comment_ID`,'", "comment": "', `c`.`Comment`,'", "user_id": "', `c`.`User_ID`,'", "user_name": "', `u`.`name`,'" }' SEPARATOR ','), ''), ']') AS `Comments_JSON`,
+    IFNULL(ROUND(AVG(`rat`.`rating`), 2), 0) AS `Average_Rating`
 FROM 
-    (((((`Recipe` `r` 
+    ((((((`Recipe` `r` 
     LEFT JOIN `RecipeIngredient` `ri` ON (`r`.`ID` = `ri`.`Recipe_ID`)) 
     LEFT JOIN `Ingredient` `i` ON (`ri`.`Ingredient_ID` = `i`.`ID`)) 
-    LEFT JOIN `RecipeTag` `rt` ON (`r`.`ID` = `rt`.`Recipe_ID`)) 
-    LEFT JOIN `Tags` `t` ON (`rt`.`Tags_ID` = `t`.`ID`)) 
+    LEFT JOIN `RecipeTag` `rti` ON (`r`.`ID` = `rti`.`Recipe_ID`)) 
+    LEFT JOIN `Tags` `t` ON (`rti`.`Tags_ID` = `t`.`ID`)) 
     LEFT JOIN `Comments` `c` ON (`r`.`ID` = `c`.`Recipe_ID`)) 
-    LEFT JOIN `User` `u` ON (`c`.`User_ID` = `u`.`ID`)
+    LEFT JOIN `User` `u` ON (`c`.`User_ID` = `u`.`ID`))
+    LEFT JOIN `Ratings` `rat` ON (`r`.`ID` = `rat`.`Recipe_ID`)
 WHERE
     `t`.`ispredefined` = 1
 GROUP BY `r`.`ID`;
