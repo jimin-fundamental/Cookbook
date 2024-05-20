@@ -89,26 +89,21 @@ public class MessageSceneController implements Initializable {
         messageListView.getItems().setAll(messages);
     }
 
-
     private void openMessageItem(Message message) {
-//        // Find the recipe from the loaded list
-//        Recipe recipeToShow = message.getRecipeId();
-//
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeScene.fxml"));
-//            Parent root = loader.load();
-//
-//            RecipeSceneController controller = loader.getController();
-//            controller.setUser(user); // Assuming user is defined in your class
-//            controller.setRecipeData(recipeToShow, recipeToShow.getNumberOfPersons());
-//
-//            Stage stage = new Stage();
-//            stage.setTitle(recipeToShow.getName());
-//            stage.setScene(new Scene(root));
-//            stage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageItem.fxml"));
+            Parent root = loader. load();
+
+            MessageItemController controller = loader.getController();
+            controller.setMessageDetails(message);
+
+            Stage stage = new Stage();
+            stage.setTitle("Message Details");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
