@@ -14,6 +14,8 @@ import org.controlsfx.glyphfont.INamedCharacter;
 
 import com.mysql.cj.protocol.x.SyncFlushDeflaterOutputStream;
 
+import cookbook.repository.MySqlRecipeRepository;
+import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
@@ -62,9 +64,11 @@ public class WeeklyListSceneController {
     private int week;
     private WeeklyListsSceneController weeklyListsSceneController;
     private int numberOfEntries;
+    private MySqlRecipeRepository recipeRepos;
 
     public void setUser(User user){
         this.user = user;
+        recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
     }
 
     public void setListsController(WeeklyListsSceneController controller){
@@ -204,6 +208,7 @@ public class WeeklyListSceneController {
         setRecipes(this.weeklyListTitle.getText(), week, recipeList);
         if (numberOfEntries == 0){
             System.out.println("updated and empty");
+            recipeRepos.deleteShoppingList(week, user);
             this.weeklyListsSceneController.updateWeeklyLists();
         }
     }
