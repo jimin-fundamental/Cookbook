@@ -2,6 +2,7 @@ package cookbook.Controller;
 
 import cookbook.DatabaseManager;
 import cookbook.model.Message;
+import cookbook.model.Recipe;
 import cookbook.repository.MySqlRecipeRepository;
 import cookbook.repository.UserDao;
 import javafx.fxml.FXML;
@@ -37,13 +38,20 @@ public class MessageItemController implements Initializable {
         recipeTitleLabel.setText(message.getRecipeTitle()); // Assuming getter method exists
     }
 
-    @FXML
-    void messageItemClicked(MouseEvent event) {
-        // Logic to open the recipe page
-        String recipeName = recipeTitleLabel.getText();
-        System.out.println("Recipe " +  recipeName + " clicked by " + userNameLabel.getText());
-        // Implement navigation or event handling here
+    public void openRecipeFromMessage(Message message){
+        Recipe recipeFromMessage = new Recipe();
+        recipeFromMessage.setName(message.getRecipeTitle());
 
 
     }
+
+//    @FXML
+//    void messageItemClicked(MouseEvent event) {
+//        // Logic to open the recipe page
+//        String recipeName = recipeTitleLabel.getText();
+//        System.out.println("Recipe " +  recipeName + " clicked by " + userNameLabel.getText());
+//        // Implement navigation or event handling here
+//
+//
+//    }
 }

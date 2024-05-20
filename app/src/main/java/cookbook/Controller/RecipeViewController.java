@@ -127,28 +127,7 @@ public class RecipeViewController implements Initializable {
             e.printStackTrace();
         }
     }
-//    @FXML
-//    void messageClicked(ActionEvent event) throws IOException{
-//        System.out.println("message btn is clicked");
-//        try {
-//            // Correct the path if necessary and ensure it's accurate
-//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
-//            // Create new stage for new window of the recipe
-//            Stage stage = new Stage();
-//            stage.setResizable(false);
-//            stage.setScene(new Scene(fxmlLoader.load()));
-//
-//            // Get the controller to call the method to set the data
-//            MessageSceneController controller = fxmlLoader.getController();
-//            controller.setRecipe(this.recipe);
-//            controller.setUser(this.user);
-//
-//            stage.show();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
 
     @FXML
     void messageClicked(ActionEvent event) throws IOException {

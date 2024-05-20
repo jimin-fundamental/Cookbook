@@ -4,6 +4,7 @@ import cookbook.DatabaseManager;
 import cookbook.model.Message;
 import cookbook.model.Recipe;
 import cookbook.model.User;
+import cookbook.repository.MessageService;
 import cookbook.repository.MySqlRecipeRepository;
 import cookbook.repository.UserDao;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -30,6 +32,7 @@ public class MessageSceneController implements Initializable {
     private ListView<Message> messageListView;
 
     private MySqlRecipeRepository sqlRepos;
+    private MessageService messageService;
     private UserDao userDao;
     private User user;
     private Recipe recipe;
@@ -44,17 +47,13 @@ public class MessageSceneController implements Initializable {
         this.user = user;
     }
 
-//    public void setUser(User user) {
-//        this.user = user;
-//        // Re-load messages when user is set
-//        loadMessages();
-//    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         DatabaseManager dbManager = new DatabaseManager();  // Assuming DatabaseManager has a default constructor or is suitably instantiated
         this.sqlRepos = new MySqlRecipeRepository(dbManager);
         userDao = new UserDao(dbManager);
+        this.messageService = new MessageService(sqlRepos);
     }
 
     // Manually called initialization
@@ -73,7 +72,7 @@ public class MessageSceneController implements Initializable {
         });
         messageListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                openMessageItem(newVal);
+                openRecipeFromMessage(newVal);
             }
         });
         loadMessages();
@@ -89,16 +88,20 @@ public class MessageSceneController implements Initializable {
         messageListView.getItems().setAll(messages);
     }
 
-    private void openMessageItem(Message message) {
+    private void openRecipeFromMessage(Message message) {
+        System.out.println("openRecipeFromMessage"+message.getRecipeTitle());
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageItem.fxml"));
-            Parent root = loader. load();
+            Recipe recipe = messageService.fetchRecipeForMessage(message);
 
-            MessageItemController controller = loader.getController();
-            controller.setMessageDetails(message);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeItem.fxml"));
+            Parent root = loader.load();
+
+            RecipeItemController controller = loader.getController();
+            controller.setRecipeData(recipe, ""); // Make sure Message has a method getRecipe()
+            controller.setUser(user); // Assuming you have a User field in this controller
 
             Stage stage = new Stage();
-            stage.setTitle("Message Details");
+            stage.setTitle("Recipe Details: " + message.getRecipeTitle());
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -107,6 +110,23 @@ public class MessageSceneController implements Initializable {
     }
 
 
+//    private void openMessageItem(Message message) {
+//        try {
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageItem.fxml"));
+//            Parent root = loader.load();
+//
+//            MessageItemController controller = loader.getController();
+//            controller.setMessageDetails(message);
+//            controller.openRecipeFromMessage(message);
+//
+//            Stage stage = new Stage();
+//            stage.setTitle("Message Details");
+//            stage.setScene(new Scene(root));
+//            stage.show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 }

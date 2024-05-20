@@ -8,6 +8,16 @@ public class Message {
     private Long recipeId;
     private String senderName;
 
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    private Recipe recipe;
+
     public String getRecipeTitle() {
         return recipeTitle;
     }
