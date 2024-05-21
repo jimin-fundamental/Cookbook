@@ -36,6 +36,14 @@
       <HBox spacing="10.0">
          <children>
             <Button onAction="#addToWeeklyList" text="Add to list" />
+            <Text fx:id="recipeAddedText" fill="#3bc928" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipe added" textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <HBox.margin>
+                  <Insets top="3.0" />
+               </HBox.margin>
+            </Text>
          </children>
       </HBox>
    </children>

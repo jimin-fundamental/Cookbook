@@ -7,6 +7,7 @@ import cookbook.model.Recipe;
 import cookbook.model.User;
 import javafx.collections.FXCollections;
 import javafx.geometry.Point2D;
+import javafx.scene.text.Text;
 
 import java.sql.*;
 
@@ -311,7 +312,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public void addToWeekPlan(Recipe recipe, User user, Date date, int servings) {
+    public void addToWeekPlan(Recipe recipe, User user, Date date, int servings, Text text) {
         Runnable dbOperationTask = new Runnable() {
             @Override
             public void run() {
@@ -340,6 +341,9 @@ public class MySqlRecipeRepository implements RecipeRepository {
 
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    text.setFill(javafx.scene.paint.Color.RED);
+                    text.setText("you can not assign a Recipe for a day twice");
+                    text.setVisible(true);
 
                 }
             }

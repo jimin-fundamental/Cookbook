@@ -304,11 +304,14 @@ public class RecipeSceneController implements Initializable {
     @FXML
     void addToFavouritesClicked(MouseEvent event) {
         if (!recipe.getIsFavourite()) {
+            recipe.setIsFavourite(true);
+            setStar();
             recipeRepos.saveToFavorites(recipe, user);
         } else {
+            recipe.setIsFavourite(false);
+            setStar();
             recipeRepos.removeFromFavorites(recipe, user);
         }
-        setStar();
     }
 
     private void setStar() {

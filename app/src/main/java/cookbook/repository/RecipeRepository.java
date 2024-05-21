@@ -4,8 +4,10 @@ import cookbook.model.Comment;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
+import javafx.scene.text.Text;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface RecipeRepository {
@@ -22,7 +24,7 @@ public interface RecipeRepository {
     void removeFromFavorites(Recipe recipe, User user);
     void getFavorites(List<Recipe> recipes, User user);
 
-    void addToWeekPlan(Recipe recipe, User user, Date date, int servings);
+    void addToWeekPlan(Recipe recipe, User user, Date date, int servings, Text text);
     void removeFromWeekPlan(Recipe recipe, User user, Date date);
     void getRecipeWeeklyDates(List<Recipe> recipes, User user);
 
