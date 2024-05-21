@@ -3,8 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -17,10 +15,18 @@
             <Font name="System Bold" size="23.0" />
          </font>
       </Text>
-      <DatePicker fx:id="weekDatePicker" promptText="Week" showWeekNumbers="true" />
+      <DatePicker fx:id="weekDatePicker" onMouseClicked="#datePickerClicked" promptText="Week" showWeekNumbers="true" />
       <HBox spacing="10.0">
          <children>
             <Button onAction="#addToWeeklyList" text="Add to list" />
+            <Text fx:id="recipeAddedText" fill="#3bc928" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipe added" textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <HBox.margin>
+                  <Insets top="3.0" />
+               </HBox.margin>
+            </Text>
          </children>
       </HBox>
    </children>

@@ -33,10 +33,11 @@ public class WeeklyListsSceneController {
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
     private User user;
+    private int numberOfElements;
 
     public void setRecipeList(List<Recipe> recipeList) {
         this.recipeList = recipeList;
-
+        numberOfElements = 0;
         Map<Integer, List<Recipe>> weeksMap = new HashMap<Integer, List<Recipe>>();
         for(Recipe recipe : recipeList){
             if(recipe.getWeeklyDates() != null){
@@ -47,13 +48,14 @@ public class WeeklyListsSceneController {
                     WeekFields weekFields = WeekFields.of(Locale.getDefault());
                     int weekOfYear = localDate.get(weekFields.weekOfWeekBasedYear());
                     List<Recipe> thatWeeksList = weeksMap.get(weekOfYear);
-                        if(thatWeeksList == null){
-                            thatWeeksList = new ArrayList<>();
-                            weeksMap.put(weekOfYear, thatWeeksList);
-                        }
-                        if(!thatWeeksList.contains(recipe)){
-                            thatWeeksList.add(recipe);
-                        }
+                    if(thatWeeksList == null){
+                        numberOfElements++;
+                        thatWeeksList = new ArrayList<>();
+                        weeksMap.put(weekOfYear, thatWeeksList);
+                    }
+                    if(!thatWeeksList.contains(recipe)){
+                        thatWeeksList.add(recipe);
+                    }
                         
     
                 }
@@ -79,6 +81,9 @@ public class WeeklyListsSceneController {
     public void updateWeeklyLists(){
         System.out.println("updating...");
         setRecipeList(this.recipeList);
+        if(this.numberOfElements == 0){
+            ((Stage)listsVBox.getScene().getWindow()).close();
+        }
     }
 
     public void setUser(User user) {

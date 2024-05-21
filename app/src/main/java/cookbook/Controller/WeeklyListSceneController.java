@@ -210,6 +210,7 @@ public class WeeklyListSceneController {
             System.out.println("updated and empty");
             recipeRepos.deleteShoppingList(week, user);
             this.weeklyListsSceneController.updateWeeklyLists();
+            ((Stage)vBox.getScene().getWindow()).close();
         }
     }
 
