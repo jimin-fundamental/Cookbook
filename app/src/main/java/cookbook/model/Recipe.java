@@ -16,6 +16,7 @@
         private List<String> processSteps; // A detailed description of the process
         private int numberOfPersons; // The number of persons the recipe serves
         private int author;
+        private int averageRating;
     //    private List<String> tags; // Tags for the recipe
         //only for predefined
         private ObservableList<String> tags = FXCollections.observableArrayList();
@@ -180,6 +181,14 @@
         }
         public Map<Date, Integer> getWeeklyDates(){
             return weeklyDates;
+        }
+
+        public int getAverageRating() {
+            return averageRating;
+        }
+
+        public void setAverageRating(int averageRating) {
+            this.averageRating = averageRating;
         }
     }
 

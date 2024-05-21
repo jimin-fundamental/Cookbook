@@ -110,11 +110,27 @@
                   </Text>
 
                   <VBox fx:id="vBoxProcessSteps" spacing="5.0" />
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Comments">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Text>
+                  <VBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Comments">
+                        <font>
+                           <Font name="System Bold" size="20.0" />
+                        </font>
+                     </Text>
+                     <HBox fx:id="ratingHbox" spacing="10.0">
+                           <children>
+                              <FontAwesomeIconView fx:id="star1" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingOneStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star2" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingTwoStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star3" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingThreeStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star4" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingFourStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star5" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingFiveStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <Text fx:id="averageRatingText" strokeType="OUTSIDE" strokeWidth="0.0" text="">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </HBox>
+                  </VBox>
                   <VBox alignment="CENTER_LEFT" spacing="10.0" VBox.vgrow="ALWAYS">
                      <children>
                         <HBox spacing="10.0">

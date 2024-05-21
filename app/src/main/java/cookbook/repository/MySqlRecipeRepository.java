@@ -17,6 +17,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping;
+import com.mysql.cj.xdevapi.SqlResultBuilder;
+
 public class MySqlRecipeRepository implements RecipeRepository {
 
     private DatabaseManager dbManager;
@@ -151,7 +154,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
                 long startTime = System.currentTimeMillis(); // Start timing
 
                 //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings FROM FullRecipeView";
-                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL, Comments_JSON FROM FullRecipeView";
+                String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL, Comments_JSON, Average_Rating FROM FullRecipeView";
 
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
                      PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -168,7 +171,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
                         recipe.setNumberOfPersons(rs.getInt("Servings"));
                         recipe.setImagePath(rs.getString("Image_URL"));
                         recipe.setComments(parseComments(rs.getString("Comments_JSON"))); // Parse comments JSON
-
+                        recipe.setAverageRating(rs.getInt("Average_Rating"));
 
                         // Extract and parse process steps from JSON
                         String jsonProcessSteps = rs.getString("Description");
@@ -485,7 +488,101 @@ public class MySqlRecipeRepository implements RecipeRepository {
     }
 
 
+    public void setUserRating(User user, Recipe recipe, int rating){
+        Runnable dbOperationTask = new Runnable() {
+            @Override
+            public void run() {
+                String sql = "INSERT INTO Ratings (User_ID, Recipe_ID, rating) " +
+                             "VALUES (?, ?, ?)";
 
+                try (Connection connection = DriverManager.getConnection(dbManager.url);
+                        PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+                    // set values
+                    pstmt.setLong(1, user.getId());
+                    pstmt.setLong(2, recipe.getId());
+                    pstmt.setInt(3, rating);
+
+                    pstmt.executeUpdate();
+
+                    pstmt.close();
+                    connection.close();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        };
+        // Start a new thread to execute the database operation
+        Thread dbThread = new Thread(dbOperationTask);
+        dbThread.start();
+        try{
+            dbThread.join();
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        dbOperationTask = new Runnable() {
+        @Override
+        public void run() {
+
+            //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings FROM FullRecipeView";
+            String sql = " SELECT Average_Rating FROM FullRecipeView "+
+                         " WHERE Recipe_ID = ?";
+
+            try (Connection connection = DriverManager.getConnection(dbManager.url);
+                    PreparedStatement pstmt = connection.prepareStatement(sql)){
+                
+                // set values
+                pstmt.setLong(1, recipe.getId());
+
+
+                // Execute the query
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        recipe.setAverageRating(rs.getInt("Average_Rating"));
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            }
+        };
+        // Start a new thread to execute the database operation
+        dbThread = new Thread(dbOperationTask);
+        dbThread.start();
+        try{
+            dbThread.join();
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public int getUserRating(User user, Recipe recipe){
+        int rating = -1;
+        String sql = "SELECT rating " +
+                     "FROM Ratings " +
+                     "WHERE User_ID = ? AND Recipe_ID = ?";
+
+        List<Message> allMessages = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setLong(1, user.getId()); 
+            pstmt.setLong(2, recipe.getId());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    rating = rs.getInt("rating");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+        return rating;
+    }
 
     @Override
     public List<Ingredient> fetchIngredients(Long id) {

@@ -14,6 +14,7 @@ import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 import javafx.collections.FXCollections;
@@ -44,6 +45,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.beans.binding.Bindings;
 import javafx.application.Platform;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 public class RecipeSceneController implements Initializable {
 
@@ -54,10 +56,16 @@ public class RecipeSceneController implements Initializable {
     private Text recipeDescriptionText;
 
     @FXML
+    private Text averageRatingText;
+    
+    @FXML
     private VBox recipeDetailsVBox;
 
     @FXML
     private VBox vBoxProcessSteps;
+
+    @FXML
+    private HBox ratingHbox;
 
     @FXML
     private FlowPane ingredientsFlowPane;
@@ -99,6 +107,7 @@ public class RecipeSceneController implements Initializable {
     private User user;
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
     private boolean tagsListenerAdded = false;
+    private boolean canSetRating;
 
     public void setUser(User user) {
         this.user = user;
@@ -233,6 +242,17 @@ public class RecipeSceneController implements Initializable {
     }
 
     private void initializeUIFromRecipe() {
+        averageRatingText.setText("( " + Integer.toString(this.recipe.getAverageRating()) + " )");
+        int rating = recipeRepos.getUserRating(user, recipe);
+        if(rating == -1){
+            canSetRating = true;
+        }
+        else{
+            setRatingStars(rating);
+            canSetRating = false;
+
+        }
+
         recipeNameText.setText(recipe.getName());
         recipeDescriptionText.setText(recipe.getShortDescription());
         recipeImageView.setImage(new Image(
@@ -242,7 +262,7 @@ public class RecipeSceneController implements Initializable {
         vBoxProcessSteps.getChildren().setAll(
                 recipe.getProcessSteps().stream().map(step -> new TextFlow(new Text(step)))
                         .collect(Collectors.toList()));
-        setStar();
+        setFavouriteStar();
         refreshComments();
     }
 
@@ -302,16 +322,37 @@ public class RecipeSceneController implements Initializable {
     void addToFavouritesClicked(MouseEvent event) {
         if (!recipe.getIsFavourite()) {
             recipe.setIsFavourite(true);
-            setStar();
+            setFavouriteStar();
             recipeRepos.saveToFavorites(recipe, user);
         } else {
             recipe.setIsFavourite(false);
-            setStar();
+            setFavouriteStar();
             recipeRepos.removeFromFavorites(recipe, user);
         }
     }
 
-    private void setStar() {
+    @FXML
+    void ratingOneStar(MouseEvent event) {
+        setRating(1);
+    }
+    @FXML
+    void ratingTwoStar(MouseEvent event) {
+        setRating(2);
+    }
+    @FXML
+    void ratingThreeStar(MouseEvent event) {
+        setRating(3);
+    }
+    @FXML
+    void ratingFourStar(MouseEvent event) {
+        setRating(4);
+    }
+    @FXML
+    void ratingFiveStar(MouseEvent event) {
+        setRating(5);
+    }
+
+    private void setFavouriteStar() {
         if (recipe.getIsFavourite()) {
             star.setFill(Color.YELLOW);
         } else {
@@ -319,6 +360,25 @@ public class RecipeSceneController implements Initializable {
 
         }
     }
+
+    private void setRatingStars(int rating){
+        ObservableList<Node> stars = ratingHbox.getChildren();
+        for(int i = 0; i < rating; i++){
+            ((FontAwesomeIconView)stars.get(i)).setFill(Color.YELLOW);
+        }
+        
+    }
+
+    private void setRating(int rating){
+        if(canSetRating){
+            setRatingStars(rating);
+            System.out.println("set");
+            canSetRating = false;
+            recipeRepos.setUserRating(user, recipe, rating);
+            averageRatingText.setText("( " + Integer.toString(this.recipe.getAverageRating()) + " )");
+        }
+    }
+
 
     private void changeNumberOfServings() {
         Integer ogServings = this.recipe.getNumberOfPersons();
