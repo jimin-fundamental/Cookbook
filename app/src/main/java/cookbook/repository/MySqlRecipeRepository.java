@@ -38,6 +38,14 @@ public class MySqlRecipeRepository implements RecipeRepository {
 
     }
 
+    public MySqlRecipeRepository(DatabaseManager dbManager, User user, List<Recipe> recipeList) {
+        this.dbManager = dbManager;
+        this.currentUser = currentUser; // Initialize with current user
+        this.userDao = new UserDao(dbManager);
+        this.allrecipes = recipeList;
+
+    }
+
     @Override
     public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl,
             int servings, Long author, String ingredients, String tags) {

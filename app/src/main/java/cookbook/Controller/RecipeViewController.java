@@ -92,6 +92,8 @@ public class RecipeViewController implements Initializable {
             manageUsers.setVisible(false);
         }
 
+        recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user, recipeList);
+
     }
 
     @Override
@@ -136,7 +138,7 @@ public class RecipeViewController implements Initializable {
 
         MessageSceneController controller = fxmlLoader.getController();
         controller.setUser(this.user);  // Ensure user is set before the scene is displayed
-        controller.setRecipe(this.recipe);
+        controller.setRecipeRepos(this.recipeRepos);
         controller.initializeManually();  // If needed, a method to manually start any processes that depend on user
 
         Stage stage = new Stage();

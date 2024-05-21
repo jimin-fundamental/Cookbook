@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.checkerframework.checker.units.qual.s;
+
 public class MessageSceneController implements Initializable {
 //    @FXML
 //    private VBox messageListVBox;
@@ -35,12 +37,15 @@ public class MessageSceneController implements Initializable {
     private MessageService messageService;
     private UserDao userDao;
     private User user;
-    private Recipe recipe;
     private List<Recipe> recipeList;
 
 
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
+    public void setRecipeRepos(MySqlRecipeRepository sqlRepos) {
+        this.sqlRepos = sqlRepos;
+        DatabaseManager dbManager = new DatabaseManager();  // Assuming DatabaseManager has a default constructor or is suitably instantiated
+        // this.sqlRepos = new MySqlRecipeRepository(dbManager);
+        userDao = new UserDao(dbManager);
+        this.messageService = new MessageService(sqlRepos);
     }
 
     public void setUser(User user) {
@@ -50,10 +55,8 @@ public class MessageSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        DatabaseManager dbManager = new DatabaseManager();  // Assuming DatabaseManager has a default constructor or is suitably instantiated
-        this.sqlRepos = new MySqlRecipeRepository(dbManager);
-        userDao = new UserDao(dbManager);
-        this.messageService = new MessageService(sqlRepos);
+       
+        
     }
 
     // Manually called initialization
@@ -93,17 +96,30 @@ public class MessageSceneController implements Initializable {
         try {
             Recipe recipe = messageService.fetchRecipeForMessage(message);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeItem.fxml"));
-            Parent root = loader.load();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeScene.fxml"));
 
-            RecipeItemController controller = loader.getController();
-            controller.setRecipeData(recipe, ""); // Make sure Message has a method getRecipe()
-            controller.setUser(user); // Assuming you have a User field in this controller
-
+            // create new stage for new window of the recipe
             Stage stage = new Stage();
-            stage.setTitle("Recipe Details: " + message.getRecipeTitle());
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(fxmlLoader.load()));
+    
+            // get the controller to call the method to set the data
+            RecipeSceneController controller = fxmlLoader.getController();
+            controller.setUser(user);
+            controller.setRecipeData(recipe, recipe.getNumberOfPersons());
+    
             stage.show();
+
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipScene.fxml"));
+            // Parent root = loader.load();
+
+            // RecipeSceneController controller = loader.getController();
+            // controller.setRecipeData(recipe, ""); // Make sure Message has a method getRecipe()
+            // controller.setUser(user); // Assuming you have a User field in this controller
+
+            // Stage stage = new Stage();
+            // stage.setTitle("Recipe Details: " + message.getRecipeTitle());
+            // stage.setScene(new Scene(root));
+            // stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
