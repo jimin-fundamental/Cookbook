@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.SearchableComboBox?>
 
-<VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.ShareRecipeSceneController">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -25,11 +25,11 @@
             <Region HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <SearchableComboBox promptText="Select an user..." />
+      <SearchableComboBox fx:id="comboBoxSelectUser" promptText="Select an user..." />
       <HBox spacing="10.0">
          <children>
-            <TextField promptText="Write a message to the sender..." HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="Send" />
+            <TextField promptText="Write a message to the sender..." HBox.hgrow="ALWAYS" fx:id="sendText"/>
+            <Button mnemonicParsing="false" text="Send" fx:id="sendBtn" onAction="#sendingBtnPressed"/>
          </children>
       </HBox>
    </children>

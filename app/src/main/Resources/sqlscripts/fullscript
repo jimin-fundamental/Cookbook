@@ -281,6 +281,21 @@ LEFT JOIN
 GROUP BY 
     r.ID;
 
+CREATE VIEW MessageView AS
+SELECT
+    um.ID AS MessageID,
+    um.message AS MessageText,
+    um.sender_ID AS SenderID,
+    u.userName AS SenderName,
+    um.receiver_ID AS ReceiverID,
+    ur.userName AS ReceiverName,
+    um.recipe_ID AS RecipeID,
+    r.name AS RecipeTitle
+FROM
+    UserMessage um
+JOIN User u ON um.sender_ID = u.ID
+JOIN User ur ON um.receiver_ID = ur.ID
+JOIN Recipe r ON um.recipe_ID = r.ID;
 
 
 

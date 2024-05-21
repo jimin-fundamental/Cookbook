@@ -31,6 +31,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import cookbook.DatabaseManager;
+import cookbook.Controller.HelpViewSceneController;
 import cookbook.SceneModifier;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
@@ -68,6 +69,7 @@ public class RecipeViewController implements Initializable {
     private List<Recipe> recipeList;
     private MySqlRecipeRepository recipeRepos;
     private User user;
+    private Recipe recipe;
     private boolean favoritesShowing = false;
 
     public void setUserName(User user) {
@@ -89,6 +91,8 @@ public class RecipeViewController implements Initializable {
         if (user.getIsAdmin() == 0) {
             manageUsers.setVisible(false);
         }
+
+        recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user, recipeList);
 
     }
 
@@ -125,6 +129,25 @@ public class RecipeViewController implements Initializable {
             e.printStackTrace();
         }
     }
+
+
+    @FXML
+    void messageClicked(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
+        Parent root = fxmlLoader.load();
+
+        MessageSceneController controller = fxmlLoader.getController();
+        controller.setUser(this.user);  // Ensure user is set before the scene is displayed
+        controller.setRecipeRepos(this.recipeRepos);
+        controller.initializeManually();  // If needed, a method to manually start any processes that depend on user
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+
+
 
     @FXML
     void helpClicked(ActionEvent event) throws IOException {

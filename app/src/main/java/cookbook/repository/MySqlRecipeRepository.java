@@ -1,12 +1,8 @@
 package cookbook.repository;
 
 import cookbook.DatabaseManager;
-import cookbook.model.Comment;
-import cookbook.model.Ingredient;
-import cookbook.model.Recipe;
-import cookbook.model.User;
+import cookbook.model.*;
 import javafx.collections.FXCollections;
-import javafx.geometry.Point2D;
 
 import java.sql.*;
 
@@ -14,23 +10,18 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.mysql.cj.protocol.Resultset;
 
 public class MySqlRecipeRepository implements RecipeRepository {
 
     private DatabaseManager dbManager;
     private UserDao userDao;
     private User currentUser; // Current user object
+    private List<Recipe> allrecipes = new ArrayList<>();
+
 
     public MySqlRecipeRepository(DatabaseManager dbManager) {
         this.dbManager = dbManager;
@@ -44,6 +35,14 @@ public class MySqlRecipeRepository implements RecipeRepository {
         this.dbManager = dbManager;
         this.currentUser = currentUser; // Initialize with current user
         this.userDao = new UserDao(dbManager);
+
+    }
+
+    public MySqlRecipeRepository(DatabaseManager dbManager, User user, List<Recipe> recipeList) {
+        this.dbManager = dbManager;
+        this.currentUser = currentUser; // Initialize with current user
+        this.userDao = new UserDao(dbManager);
+        this.allrecipes = recipeList;
 
     }
 
@@ -144,8 +143,10 @@ public class MySqlRecipeRepository implements RecipeRepository {
         // Define an anonymous Callable to perform database query and return the list of
         // recipes
         Runnable dbOperationTask = new Runnable() {
+
             @Override
             public void run() {
+                long startTime = System.currentTimeMillis(); // Start timing
 
                 //String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings FROM FullRecipeView";
                 String sql = "SELECT Recipe_ID, Recipe_Name, Short_Description, Description, Ingredients_JSON, Predefined_Tags_JSON, Servings, Image_URL, Comments_JSON FROM FullRecipeView";
@@ -153,6 +154,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
                 try (Connection connection = DriverManager.getConnection(dbManager.url);
                      PreparedStatement pstmt = connection.prepareStatement(sql);
                      ResultSet rs = pstmt.executeQuery()) {
+                    List<Recipe> fetchedRecipes = new ArrayList<>();
                     while (rs.next()) {
                         Recipe recipe = new Recipe();
                         recipe.setId(rs.getLong("Recipe_ID"));
@@ -182,7 +184,13 @@ public class MySqlRecipeRepository implements RecipeRepository {
                         recipe.setIngredients(ingredients);
 
                         recipes.add(recipe);
+                        System.out.println("recipes"+recipes);
+                        allrecipes.add(recipe);
+                        System.out.println("allrecipes"+allrecipes);
                     }
+                    long endTime = System.currentTimeMillis(); // End timing
+                    long duration = endTime - startTime;
+                    System.out.println("Data loading completed in " + duration + " milliseconds.");
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -192,7 +200,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
         // Start a new thread to execute the database operation
         Thread dbThread = new Thread(dbOperationTask);
         dbThread.start();
-        System.out.println("thread is executing");
+        System.out.println("Thread is executing for data loading.");
     }
 
     @Override
@@ -404,6 +412,76 @@ public class MySqlRecipeRepository implements RecipeRepository {
         dbThread.start();
     }
 
+    public void sharingRecipe(User sender, Recipe recipe, User receiverUser, String message) {
+        String sql = "INSERT INTO UserMessage (message, recipe_ID, sender_ID, receiver_ID) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Set the parameters for the PreparedStatement
+            pstmt.setString(1, message);
+            pstmt.setInt(2, recipe.getId().intValue()); // Recipe ID that is being shared, ensure the type matches (int vs long)
+            pstmt.setInt(3, sender.getId().intValue());
+            pstmt.setInt(4, receiverUser.getId().intValue());
+
+            // Execute the update and retrieve the generated primary key
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user message failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    long messageId = generatedKeys.getLong(1);
+                    System.out.println("Shared message was created with ID: " + messageId);
+                } else {
+                    throw new SQLException("Creating user message failed, no ID obtained.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("SQL Error during sharing a recipe: " + e.getMessage());
+        }
+    }
+
+    public List<Message> showAllMessage(User user) {
+        // SQL query with JOINs to fetch sender names and recipe titles along with message details
+        String sql = "SELECT um.ID, um.message, um.sender_ID, um.receiver_ID, um.recipe_ID, " +
+                "u.name AS senderName, r.name AS recipeTitle " +
+                "FROM UserMessage um " +
+                "JOIN User u ON um.sender_ID = u.ID " +
+                "JOIN Recipe r ON um.recipe_ID = r.ID " +
+                "WHERE um.receiver_ID = ?";
+
+        List<Message> allMessages = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             PreparedStatement pstmt = connection.prepareStatement(sql)) {
+
+            pstmt.setLong(1, user.getId()); // Set the receiver ID to the current user's ID
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Message message = new Message();
+                    message.setId(rs.getLong("ID"));
+                    message.setMessage(rs.getString("message"));
+                    message.setSenderId(rs.getLong("sender_ID"));
+                    message.setReceiverId(rs.getLong("receiver_ID"));
+                    message.setRecipeId(rs.getLong("recipe_ID"));
+                    message.setSenderName(rs.getString("senderName"));
+                    message.setRecipeTitle(rs.getString("recipeTitle"));
+                    allMessages.add(message);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+        return allMessages;
+    }
+
+
+
+
     @Override
     public List<Ingredient> fetchIngredients(Long id) {
         List<Ingredient> ingredients = new ArrayList<>();
@@ -418,7 +496,6 @@ public class MySqlRecipeRepository implements RecipeRepository {
             // Set the recipe ID parameter
             pstmt.setLong(1, id);
 
-            // Execute the query
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Ingredient ingredient = new Ingredient();
@@ -735,7 +812,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
                     "FROM RecipeCustomTag rt "+
                     "JOIN Tags t ON rt.Tags_ID = t.ID "+
                     "WHERE rt.Recipe_ID = ? AND rt.User_ID = ?;";
-        
+
         List<String> customTags = new ArrayList<String>();
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
@@ -755,7 +832,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
         }
 
         recipe.getCustomTags().addAll(customTags);
-      
+
     }
 
     public void writeShoppingList(List<Ingredient> ingredients, int week, User user){
@@ -791,7 +868,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
         // Start a new thread to execute the database operation
         Thread dbThread = new Thread(dbOperationTask);
         dbThread.start();
-        
+
     }
 
     public List<Ingredient> fetchShoppingList(List<Ingredient> ingredients, int week, User user ){
@@ -799,7 +876,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
         String sql = "SELECT shoppinglist "+
                      "FROM ShoppingLists "+
                      "WHERE User_ID = ? AND week = ?;";
-        
+
         String jsonList = "";
 
         try (Connection connection = DriverManager.getConnection(dbManager.url);
@@ -819,14 +896,14 @@ public class MySqlRecipeRepository implements RecipeRepository {
         }
 
         if (jsonList != ""){
-            // parse jsonList to ingredients and 
+            // parse jsonList to ingredients and
             return jsonToIngredients(jsonList);
         }
         else{
             return ingredients;
         }
 
-        
+
     }
 
     public void deleteShoppingList(int week, User user){
@@ -862,7 +939,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
 
     private String ingredientsToJson(List<Ingredient> ingredients) {
         StringBuilder json = new StringBuilder("[");
-        
+
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);
             json.append("{")
@@ -870,12 +947,12 @@ public class MySqlRecipeRepository implements RecipeRepository {
                 .append("\"amount\":").append(ingredient.getAmount()).append(",")
                 .append("\"unit\":\"").append(ingredient.getUnit()).append("\"")
                 .append("}");
-            
+
             if (i < ingredients.size() - 1) {
                 json.append(",");
             }
         }
-        
+
         json.append("]");
         return json.toString();
     }
@@ -883,27 +960,27 @@ public class MySqlRecipeRepository implements RecipeRepository {
 
     private List<Ingredient> jsonToIngredients(String json) {
         List<Ingredient> ingredients = new ArrayList<>();
-        
+
         // Remove the square brackets
         json = json.substring(1, json.length() - 1);
-        
+
         // Split the string into individual ingredient JSON strings
         String[] ingredientJsons = json.split("(?<=\\}),\\s*(?=\\{)");
 
         for (String ingredientJson : ingredientJsons) {
             Ingredient ingredient = new Ingredient();
-            
+
             // Remove the curly braces
             ingredientJson = ingredientJson.substring(1, ingredientJson.length() - 1);
-            
+
             // Split the key-value pairs
             String[] keyValuePairs = ingredientJson.split(",");
-            
+
             for (String pair : keyValuePairs) {
                 String[] keyValue = pair.split(":");
                 String key = keyValue[0].replace("\"", "").trim();
                 String value = keyValue[1].replace("\"", "").trim();
-                
+
                 switch (key) {
                     case "name":
                         ingredient.setName(value);
@@ -916,10 +993,59 @@ public class MySqlRecipeRepository implements RecipeRepository {
                         break;
                 }
             }
-            
+
             ingredients.add(ingredient);
         }
-        
+
         return ingredients;
     }
+
+    public Recipe fetchRecipeById(Long recipeId) {
+        System.out.println("start fetchingRecipeById");
+        final int maxAttempts = 100;  // Maximum number of attempts
+        int attempts = 0;
+
+        // Poll every half second until recipes are loaded or max attempts reached
+        while (allrecipes.isEmpty() && attempts < maxAttempts) {
+            try {
+                Thread.sleep(1000);  // Wait for 1000 milliseconds
+                attempts++;
+                System.out.print("attempt " + attempts+"\t");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return null;  // If interrupted, exit
+            }
+        }
+
+        // After waiting, try to find the recipe
+        if (!allrecipes.isEmpty()) {
+            return allrecipes.stream()
+                    .filter(recipe -> recipe.getId().equals(recipeId))
+                    .findFirst()
+                    .orElse(null);
+        } else {
+            return null;  // Return null if recipes are still not loaded or not found
+        }
+    }
+
+
+//    public Recipe fetchRecipeById(Long recipeId) {
+//        // Ensure that the recipes list is updated or initialized
+//        if (allrecipes == null || allrecipes.isEmpty()) {
+//            System.out.println("recipes is null, so I am filling up with getAllRecipes");
+//            getAllRecipes(allrecipes); // Load recipes if not already loaded
+//        }
+//
+//        // Search for the recipe with the given ID
+//        for (Recipe recipe : allrecipes) {
+//            System.out.println("recipe id: " + recipe.getId());
+//            if (recipe.getId().equals(recipeId)) {
+//                return recipe;
+//            }
+//        }
+//
+//        System.out.println("I can't find any matching recipe with id " + recipeId);
+//        return null; // Return null if no recipe matches
+//    }
+
 }

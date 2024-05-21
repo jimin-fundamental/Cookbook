@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -7,11 +6,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox onMouseClicked="#helpItemClicked" spacing="5.0" style="-fx-border-color: #aaa; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.HelpItemController">
+<VBox fx:id="messageVBox" onMouseClicked="#messageItemClicked" spacing="5.0" style="-fx-border-color: #aaa; -fx-border-radius: 8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.MessageItemController">
    <children>
       <HBox spacing="5.0">
          <children>
-            <Label text="User Name">
+            <Label fx:id="userNameLabel" text="User Name">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -21,10 +20,10 @@
                   <Font name="System Bold" size="13.0" />
                </font>
             </Label>
-            <Label text="Recipe Title" />
+            <Label fx:id="recipeTitleLabel" text="Recipe Title" />
          </children>
       </HBox>
-      <Label text="This is the message that the user send. When clicking this, the recipe page should open." />
+      <Label fx:id="messageContentLabel" text="This is the message that the user sent. When clicking this, the recipe page should open." />
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -2,10 +2,7 @@ package cookbook.Controller;
 //handles the detailed view of a recipe
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -356,6 +353,10 @@ public class RecipeSceneController implements Initializable {
             sqlRepos.addComment(recipe.getId(), user.getId(), commentText);
             refreshComments(); // Refresh comments after adding a new one
             commentInputField.clear();
+//            Comment newComment = new Comment(); // Assuming you have a way to create a comment object here
+//            // Populate your newComment object appropriately
+//            displayComment(newComment); // This will add the new comment at the beginning
+//            commentInputField.clear();
         }
     }
 
@@ -363,6 +364,7 @@ public class RecipeSceneController implements Initializable {
         try {
             List<Comment> comments = sqlRepos.fetchComments(recipe.getId());
             commentDisplayArea.getChildren().clear();
+            Collections.reverse(comments); // Reverse the list to add the newest first
             for (Comment comment : comments) {
                 displayComment(comment);
             }
@@ -438,5 +440,28 @@ public class RecipeSceneController implements Initializable {
         alert.showAndWait();
         return alert.getResult() == ButtonType.YES;
     }
+
+    @FXML
+    public void shareRecipeClicked(ActionEvent actionEvent) {
+        System.out.println("Share Recipe button is clicked");
+        try {
+            // Correct the path if necessary and ensure it's accurate
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/ShareRecipeScene.fxml"));
+            // Create new stage for new window of the recipe
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.setScene(new Scene(fxmlLoader.load()));
+
+            // Get the controller to call the method to set the data
+            ShareRecipeSceneController controller = fxmlLoader.getController();
+            controller.setRecipe(this.recipe);
+            controller.setUser(this.user);
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
