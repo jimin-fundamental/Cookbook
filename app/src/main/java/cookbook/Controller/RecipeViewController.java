@@ -1,5 +1,7 @@
 package cookbook.Controller;
 
+import java.io.File;
+
 //searching
 
 import java.io.IOException;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,15 +25,19 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import cookbook.DatabaseManager;
 import cookbook.Controller.HelpViewSceneController;
 import cookbook.SceneModifier;
@@ -73,6 +81,20 @@ public class RecipeViewController implements Initializable {
     private boolean favoritesShowing = false;
 
     public void setUserName(User user) {
+        Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+        ImageView imageview = new ImageView(image);
+        Group root = new Group(imageview);
+        Scene oldScene = vBox.getScene();
+        Stage ol = (Stage) vBox.getScene().getWindow();
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> {
+                    SceneModifier.change_scene(root,
+                            ol);
+                }),
+                new KeyFrame(Duration.seconds(5), e -> {
+                    ol.setScene(oldScene);
+                }));
+        timeline.play();
         this.user = user;
         greetingText.setText("Hi, " + user.getUserName() + "!");
 
@@ -99,10 +121,16 @@ public class RecipeViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // has to be the first to initialize the repository
-        recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
+        try {
+            // get the recipes from the database
 
-        recipeList = new ArrayList<>();
-        recipeRepos.getAllRecipes(recipeList);
+            recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
+
+            recipeList = new ArrayList<>();
+            recipeRepos.getAllRecipes(recipeList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -130,24 +158,20 @@ public class RecipeViewController implements Initializable {
         }
     }
 
-
     @FXML
     void messageClicked(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
         Parent root = fxmlLoader.load();
 
         MessageSceneController controller = fxmlLoader.getController();
-        controller.setUser(this.user);  // Ensure user is set before the scene is displayed
+        controller.setUser(this.user); // Ensure user is set before the scene is displayed
         controller.setRecipeRepos(this.recipeRepos);
-        controller.initializeManually();  // If needed, a method to manually start any processes that depend on user
+        controller.initializeManually(); // If needed, a method to manually start any processes that depend on user
 
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.show();
     }
-
-
-
 
     @FXML
     void helpClicked(ActionEvent event) throws IOException {
@@ -217,7 +241,7 @@ public class RecipeViewController implements Initializable {
             String searchHits = "";
             int numberOfHits = 0;
             System.out.println(recipe.getCustomTags());
-            for (String searchWord : searchWords){
+            for (String searchWord : searchWords) {
                 boolean hit = false;
                 // check if the search word is in the recipe name
                 if (recipe.getName().toLowerCase().contains(searchWord.toLowerCase())) {
