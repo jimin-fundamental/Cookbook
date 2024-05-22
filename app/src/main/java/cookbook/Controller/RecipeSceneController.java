@@ -14,6 +14,7 @@ import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
@@ -116,6 +117,12 @@ public class RecipeSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        recipeNameText.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(recipeNameText.getScene());
+            }
+        });
     }
 
     public void setRecipeData(Recipe recipe, int numberOfServings) {

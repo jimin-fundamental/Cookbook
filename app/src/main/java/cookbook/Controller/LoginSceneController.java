@@ -8,6 +8,7 @@ import cookbook.DatabaseManager;
 
 import cookbook.SceneModifier;
 import cookbook.model.User;
+import cookbook.repository.ThemesRepository;
 import cookbook.repository.UserDao;
 import java.util.List;
 import java.util.ArrayList;
@@ -59,6 +60,13 @@ public class LoginSceneController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
        startRecipeView();
+               // You can also add a listener to get the scene once it's set
+               createProfileButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    System.out.println("Scene is now set.");
+                    ThemesRepository.applyTheme(createProfileButton.getScene());
+                }
+            });
     }
     public void setStage(Stage stage){
         this.stage = stage;

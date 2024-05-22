@@ -1,6 +1,7 @@
 package cookbook.Controller;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -9,12 +10,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.controlsfx.glyphfont.INamedCharacter;
 
 import com.mysql.cj.protocol.x.SyncFlushDeflaterOutputStream;
 
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import cookbook.DatabaseManager;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
@@ -22,6 +25,7 @@ import cookbook.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -30,7 +34,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
-public class WeeklyListSceneController {
+public class WeeklyListSceneController implements Initializable {
     @FXML
     private Text weeklyListTitle;
 
@@ -230,5 +234,15 @@ public class WeeklyListSceneController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        mondayItemContainer.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(mondayItemContainer.getScene());
+            }
+        });
     }
 }

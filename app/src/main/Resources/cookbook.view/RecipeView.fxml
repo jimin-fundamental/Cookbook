@@ -24,6 +24,7 @@
                <items>
                   <MenuItem fx:id="manageUsers" mnemonicParsing="false" onAction="#manageUsersClicked" text="Manage Users" />
                   <MenuItem fx:id="changeProfile" mnemonicParsing="false" onAction="#changeProfileClicked" text="Log Off" />
+                  <MenuItem fx:id="changeUITheme" mnemonicParsing="false" onAction="#changeThemeClicked" text="change Theme" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">

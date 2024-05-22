@@ -35,8 +35,10 @@ import cookbook.Controller.HelpViewSceneController;
 import cookbook.SceneModifier;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
+import cookbook.model.ThemePreference;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import cookbook.Controller.AddRecipeController;
 
@@ -103,6 +105,12 @@ public class RecipeViewController implements Initializable {
 
         recipeList = new ArrayList<>();
         recipeRepos.getAllRecipes(recipeList);
+        searchButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(searchButton.getScene());
+            }
+        });
 
     }
 
@@ -110,6 +118,15 @@ public class RecipeViewController implements Initializable {
     void changeProfileClicked(ActionEvent event) throws IOException {
         SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")),
                 (Stage) vBox.getScene().getWindow());
+    }
+
+    @FXML
+    void changeThemeClicked(ActionEvent event) {
+        if (ThemePreference.loadTheme().endsWith("light_theme.css")) {
+            ThemePreference.saveTheme("css/dark_theme.css");
+        } else {
+            ThemePreference.saveTheme("css/light_theme.css");
+        }
     }
 
     @FXML
