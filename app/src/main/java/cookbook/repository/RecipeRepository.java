@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface RecipeRepository {
-    void addRecipeRepo(int userId, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags);
+    void addRecipeRepo(Long userId, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags);
     void getAllRecipes(List<Recipe> recipes);
     void updateRecipe(Long id, String name, String shortDescription, String description, String imageUrl, int servings, Long author, String ingredients, String tags);
     void deleteRecipe(Long id);
