@@ -79,22 +79,42 @@
         private User user;
         private Recipe recipe;
         private boolean favoritesShowing = false;
+        private static boolean animationDisplayed = false;
+
 
         public void setUserName(User user) {
-            Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-            ImageView imageview = new ImageView(image);
-            Group root = new Group(imageview);
-            Scene oldScene = vBox.getScene();
-            Stage ol = (Stage) vBox.getScene().getWindow();
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, e -> {
-                        SceneModifier.change_scene(root,
-                                ol);
-                    }),
-                    new KeyFrame(Duration.seconds(5), e -> {
-                        ol.setScene(oldScene);
-                    }));
-            timeline.play();
+            System.out.println("Animation displayed flag: " + animationDisplayed);
+            if (!animationDisplayed) {
+                Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+                ImageView imageview = new ImageView(image);
+                Group root = new Group(imageview);
+                Scene oldScene = vBox.getScene();
+                Stage ol = (Stage) vBox.getScene().getWindow();
+
+                Timeline timeline = new Timeline(
+                        new KeyFrame(Duration.ZERO, e -> SceneModifier.change_scene(root, ol)),
+                        new KeyFrame(Duration.seconds(5), e -> ol.setScene(oldScene))
+                );
+                timeline.play();
+                animationDisplayed = true; // Set this to true so it doesn't run again
+            }
+
+//            Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+//            ImageView imageview = new ImageView(image);
+//            Group root = new Group(imageview);
+//            Scene oldScene = vBox.getScene();
+//            Stage ol = (Stage) vBox.getScene().getWindow();
+//            Timeline timeline = new Timeline(
+//                    new KeyFrame(Duration.ZERO, e -> {
+//                        SceneModifier.change_scene(root,
+//                                ol);
+//                    }),
+//                    new KeyFrame(Duration.seconds(5), e -> {
+//                        ol.setScene(oldScene);
+//                    }));
+//            timeline.play();
+
+
             this.user = user;
             greetingText.setText("Hi, " + user.getUserName() + "!");
 
@@ -118,7 +138,7 @@
 
         }
 
-        private void setUser(User user) {
+        public void setUser(User user) {
             this.user = user;
             this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
         }
