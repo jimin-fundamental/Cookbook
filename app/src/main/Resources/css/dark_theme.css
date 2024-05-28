@@ -1,0 +1,89 @@
+.root {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.menu-bar {
+    -fx-background-color: black;
+}
+
+.menu-bar .menu {
+    -fx-text-fill: white;
+}
+.menu-bar .menu:hover {
+    -fx-background-color: black; /* Background color when hovering */
+}
+
+.menu-bar .menu .menu-item {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu .menu-item:hover {
+    -fx-background-color: black; /* Background color when hovering */
+}
+
+.menu-bar .menu .menu-item .text {
+    -fx-fill: white; /* Standard text color for menu items */
+}
+
+.button {
+    -fx-background-color: rgb(67, 67, 67);
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: lightgray; /* Background color when hovering */
+}
+
+/* Styling for TextField */
+.text-field {
+    -fx-background-color: rgb(67, 67, 67); /* Background color of text fields */
+    -fx-text-fill: white; /* Text color of text fields */
+}
+
+/* Additional styling for TextField */
+.text-field .text {
+    -fx-fill: white; /* Ensures text fill color */
+}
+
+
+/* Styling for TextArea */
+.text-area {
+    -fx-background-color: rgb(67, 67, 67); /* Background color of text areas */
+    -fx-text-fill: white; /* Text color of text areas */
+}
+
+/* Additional styling for TextArea */
+.text-area .text {
+    -fx-fill: white; /* Ensures text fill color */
+}
+
+/* Styling for VBox */
+.vbox {
+    -fx-background-color: black; /* Background color of VBox */
+    -fx-fill: white; /* Standard property 'fill' */
+}
+
+/* Styling for HBox */
+.hbox {
+    -fx-background-color: black; /* Background color of HBox */
+    -fx-fill: white; /* Standard property 'fill' */
+}
+
+/* Styling for Label */
+.label {
+    -fx-background-color: black; /* Background color of Label */
+    -fx-text-fill: white; /* Text color of Label */
+}
+
+/* Styling for ScrollPane */
+.scroll-pane {
+    -fx-background-color: black; /* Background color of ScrollPane */
+    -fx-fill: white; /* Standard property 'fill' */
+}
+
+/* Additional styling for Text */
+.text {
+    -fx-fill: white; /* Ensures text fill color */
+}

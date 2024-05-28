@@ -82,41 +82,61 @@
         private static boolean animationDisplayed = false;
 
 
-        public void setUserName(User user) {
-            System.out.println("Animation displayed flag: " + animationDisplayed);
-            if (!animationDisplayed) {
-                Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-                ImageView imageview = new ImageView(image);
-                Group root = new Group(imageview);
-                Scene oldScene = vBox.getScene();
-                Stage ol = (Stage) vBox.getScene().getWindow();
+    public void setUserName(User user) {
+        // Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+        // ImageView imageview = new ImageView(image);
+        // Group root = new Group(imageview);
+        // Scene oldScene = vBox.getScene();
+        // Stage ol = (Stage) vBox.getScene().getWindow();
+        // Timeline timeline = new Timeline(
+        //         new KeyFrame(Duration.ZERO, e -> {
+        //             SceneModifier.change_scene(root,
+        //                     ol);
+        //         }),
+        //         new KeyFrame(Duration.seconds(5), e -> {
+        //             ol.setScene(oldScene);
+        //         }));
+        // timeline.play();
 
-                Timeline timeline = new Timeline(
-                        new KeyFrame(Duration.ZERO, e -> SceneModifier.change_scene(root, ol)),
-                        new KeyFrame(Duration.seconds(5), e -> ol.setScene(oldScene))
-                );
-                timeline.play();
-                animationDisplayed = true; // Set this to true so it doesn't run again
+        //make the window visible
+        ((Stage)recipeContainer.getScene().getWindow()).show();
+        System.out.println("starting thread now!");
+        
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                if(!animationDisplayed) {
+                    // Get the recipes from the database
+                    Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+                    System.out.println("got gif now!");
+
+                    ImageView imageview = new ImageView(image);
+                    Group root = new Group(imageview);
+                    Scene oldScene = vBox.getScene();
+                    Stage ol = (Stage) vBox.getScene().getWindow();
+
+                    // Initialize and play the timeline
+                    Timeline timeline = new Timeline(
+                            new KeyFrame(Duration.ZERO, e -> {
+                                SceneModifier.change_scene(root, ol);
+                            }),
+                            new KeyFrame(Duration.seconds(4.3), e -> {
+                                System.out.println("setting new scene!");
+
+                                ol.hide();
+                                ol.setScene(oldScene);
+                                ol.show();
+                            })
+                    );
+                    timeline.play();
+                    animationDisplayed = true;
+                }
+
             }
-
-//            Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-//            ImageView imageview = new ImageView(image);
-//            Group root = new Group(imageview);
-//            Scene oldScene = vBox.getScene();
-//            Stage ol = (Stage) vBox.getScene().getWindow();
-//            Timeline timeline = new Timeline(
-//                    new KeyFrame(Duration.ZERO, e -> {
-//                        SceneModifier.change_scene(root,
-//                                ol);
-//                    }),
-//                    new KeyFrame(Duration.seconds(5), e -> {
-//                        ol.setScene(oldScene);
-//                    }));
-//            timeline.play();
-
-
-            this.user = user;
-            greetingText.setText("Hi, " + user.getUserName() + "!");
+        }).start();
+        this.user = user;
+        greetingText.setText("Hi, " + user.getUserName() + "!");
 
             int number = 0;
             for (Recipe recipe : recipeList) {
@@ -143,17 +163,19 @@
             this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
         }
 
-        @Override
-        public void initialize(URL location, ResourceBundle resources) {
-            // has to be the first to initialize the repository
-            try {
-                // get the recipes from the database
-                recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
-                recipeList = new ArrayList<>();
-                recipeRepos.getAllRecipes(recipeList);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // has to be the first to initialize the repository
+        try {
+            // get the recipes from the database
+
+            recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
+
+            recipeList = new ArrayList<>();
+            recipeRepos.getAllRecipes(recipeList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         }
 
