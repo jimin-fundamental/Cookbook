@@ -52,14 +52,14 @@ public class MySqlRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl,
+    public void addRecipeRepo(Long userID, String name, String shortDescription, String description, String imageUrl,
             int servings, Long author, String ingredients, String tags) {
         try (Connection connection = DriverManager.getConnection(dbManager.url)) {
             // Prepare the SQL statement
-            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?, ?)";
             try (CallableStatement statement = connection.prepareCall(sql)) {
                 // Set the parameters for the stored procedure
-                statement.setInt(1, userID); // Pass the userID to the stored procedure
+                statement.setLong(1, userID); // Pass the userID to the stored procedure
                 statement.setString(2, name);
                 statement.setString(3, shortDescription);
                 statement.setString(4, description);
@@ -870,6 +870,25 @@ public class MySqlRecipeRepository implements RecipeRepository {
         return comments;
     }
 
+    public List<String> getAllPredeterminedTags() {
+        String sql = "SELECT TagName FROM Tags WHERE ispredefined = 1;";
+        List<String> tags = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                tags.add(rs.getString("TagName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tags;
+    }
+
+
     //method for getting whole customTags for that recipe and for that user
     public void getAllCustomTags(List<Recipe> recipes, User user) {
         // SQL to get all Tags_ID for a given Recipe_ID
@@ -1129,6 +1148,8 @@ public class MySqlRecipeRepository implements RecipeRepository {
             return null;  // Return null if recipes are still not loaded or not found
         }
     }
+
+
 
 
 //    public Recipe fetchRecipeById(Long recipeId) {

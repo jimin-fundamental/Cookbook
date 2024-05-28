@@ -2,6 +2,7 @@ package cookbook.Controller;
 
 import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
+import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.collections.FXCollections;
@@ -56,14 +57,17 @@ public class AddRecipeController implements Initializable {
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
     private User user;
+    private Long userID;
 
-    private void setUser(User user){
+    public void setUser(User user){
         this.user = user;
+        userID =user.getId();
+        System.out.println("User ID: " + userID);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        loadPredeterminedTags();
+        loadPredeterminedTags();
 //        loadCustomTags();
     }
 
@@ -73,42 +77,57 @@ public class AddRecipeController implements Initializable {
 //        tagsComboBox.getItems().setAll(tagList);
 //    }
 //
-//    private void loadPredeterminedTags() {
-//        List<String> tags = sqlRepos.getAllPredeterminedTags();
-//        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
-//        tagsComboBox.getItems().setAll(tagList);
-//    }
+    private void loadPredeterminedTags() {
+        List<String> tags = sqlRepos.getAllPredeterminedTags();
+        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
+        tagsComboBox.getItems().setAll(tagList);
+    }
 
-    /*
+    public void initializeManually() {
+        // If you need to load custom tags or other data that depends on the user
+        loadPredeterminedTags();
+    }
+
+//, int userID
     @FXML
-    void addRecipe(ActionEvent event, int userID) {
+    void addRecipe(ActionEvent event) {
         try{
             // Collect selected tags from CheckComboBox
             List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
-            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
-                    .map(String::trim)
-                    .filter(tag -> !tag.isEmpty())
-                    .collect(Collectors.toList());
+//            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
+//                    .map(String::trim)
+//                    .filter(tag -> !tag.isEmpty())
+//                    .collect(Collectors.toList());
 
             System.out.println("start to make allTags String");
             // Combine all tags into a single string
-            String allTagsString = Stream.concat(selectedTags.stream(), customTags.stream())
+            String allTagsString = selectedTags.stream()
                     .collect(Collectors.joining(";"));
-            System.out.println("allTagsString: " + allTagsString);
+            System.out.println("selectedTags: " + selectedTags);
 
             // Add new Recipe with userID
             sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), user.getId(), ingredientsArea.getText(), allTagsString);
 
-            // Change scene or close window
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+
+            // Close the current stage
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+
+            // Load and show the refreshed RecipeView page
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+            SceneModifier.change_scene(loader.load(), new Stage());
+
+//            // Change scene or close window
+//            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
 
         }
         catch(Exception e){
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
+            showAlert("Failed to add recipe. Please try again.");
         }
     }
-     */
+
 
 
 
