@@ -81,20 +81,54 @@ public class RecipeViewController implements Initializable {
     private boolean favoritesShowing = false;
 
     public void setUserName(User user) {
-        Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-        ImageView imageview = new ImageView(image);
-        Group root = new Group(imageview);
-        Scene oldScene = vBox.getScene();
-        Stage ol = (Stage) vBox.getScene().getWindow();
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, e -> {
-                    SceneModifier.change_scene(root,
-                            ol);
-                }),
-                new KeyFrame(Duration.seconds(5), e -> {
-                    ol.setScene(oldScene);
-                }));
-        timeline.play();
+        // Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+        // ImageView imageview = new ImageView(image);
+        // Group root = new Group(imageview);
+        // Scene oldScene = vBox.getScene();
+        // Stage ol = (Stage) vBox.getScene().getWindow();
+        // Timeline timeline = new Timeline(
+        //         new KeyFrame(Duration.ZERO, e -> {
+        //             SceneModifier.change_scene(root,
+        //                     ol);
+        //         }),
+        //         new KeyFrame(Duration.seconds(5), e -> {
+        //             ol.setScene(oldScene);
+        //         }));
+        // timeline.play();
+
+        //make the window visible
+        ((Stage)recipeContainer.getScene().getWindow()).show();
+        System.out.println("starting thread now!");
+        
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                // Get the recipes from the database
+                Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+                System.out.println("got gif now!");
+
+                ImageView imageview = new ImageView(image);
+                Group root = new Group(imageview);
+                Scene oldScene = vBox.getScene();
+                Stage ol = (Stage) vBox.getScene().getWindow();
+
+                // Initialize and play the timeline
+                Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, e -> {
+                        SceneModifier.change_scene(root, ol);
+                    }),
+                    new KeyFrame(Duration.seconds(4.3), e -> {
+                        System.out.println("setting new scene!");
+
+                        ol.hide();
+                        ol.setScene(oldScene);
+                        ol.show();
+                    })
+                );
+                timeline.play();
+            }
+        }).start();
         this.user = user;
         greetingText.setText("Hi, " + user.getUserName() + "!");
 
@@ -122,7 +156,6 @@ public class RecipeViewController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         // has to be the first to initialize the repository
         try {
-            // get the recipes from the database
 
             recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
 
