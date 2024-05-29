@@ -5,16 +5,32 @@
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }
-
+#listsVBox{
+    -fx-background-color: #2D2D30;
+    background-color: #2D2D30;
+}
+#vBox{
+    -fx-background-color: #2D2D30;
+    background-color: #2D2D30;
+}
+#helpListVBox{
+    -fx-background-color: #2D2D30;
+    background-color: #2D2D30;
+}
+#wrapperVBox{
+    -fx-background-color: #2D2D30;
+    background-color: #2D2D30;
+}
 
 VBox{
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }
+
 HBox{
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
-}
+} 
 
 /* changed by type*/
 .root{

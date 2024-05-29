@@ -123,7 +123,7 @@ import cookbook.Controller.AddRecipeController;
                                 new KeyFrame(Duration.ZERO, e -> {
                                     SceneModifier.change_scene(root, ol);
                                 }),
-                                new KeyFrame(Duration.seconds(4.3), e -> {
+                                new KeyFrame(Duration.seconds(4.6), e -> {
                                     System.out.println("setting new scene!");
     
                                     ol.hide();
