@@ -83,54 +83,6 @@ public class RecipeViewController implements Initializable {
     private boolean favoritesShowing = false;
 
     public void setUserName(User user) {
-        // Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-        // ImageView imageview = new ImageView(image);
-        // Group root = new Group(imageview);
-        // Scene oldScene = vBox.getScene();
-        // Stage ol = (Stage) vBox.getScene().getWindow();
-        // Timeline timeline = new Timeline(
-        //         new KeyFrame(Duration.ZERO, e -> {
-        //             SceneModifier.change_scene(root,
-        //                     ol);
-        //         }),
-        //         new KeyFrame(Duration.seconds(5), e -> {
-        //             ol.setScene(oldScene);
-        //         }));
-        // timeline.play();
-
-        //make the window visible
-        ((Stage)recipeContainer.getScene().getWindow()).show();
-        System.out.println("starting thread now!");
-        
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                // Get the recipes from the database
-                Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-                System.out.println("got gif now!");
-
-                ImageView imageview = new ImageView(image);
-                Group root = new Group(imageview);
-                Scene oldScene = vBox.getScene();
-                Stage ol = (Stage) vBox.getScene().getWindow();
-
-                // Initialize and play the timeline
-                Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, e -> {
-                        SceneModifier.change_scene(root, ol);
-                    }),
-                    new KeyFrame(Duration.seconds(4.3), e -> {
-                        System.out.println("setting new scene!");
-
-                        ol.hide();
-                        ol.setScene(oldScene);
-                        ol.show();
-                    })
-                );
-                timeline.play();
-            }
-        }).start();
         this.user = user;
         greetingText.setText("Hi, " + user.getUserName() + "!");
 
@@ -139,6 +91,8 @@ public class RecipeViewController implements Initializable {
             displayRecipeItem(recipe, number++, "");
 
         }
+
+
         // get information about favourite recipes
         recipeRepos.getFavorites(recipeList, user);
         // get information about weekly recipes
@@ -159,24 +113,19 @@ public class RecipeViewController implements Initializable {
         // has to be the first to initialize the repository
         try {
 
-<<<<<<< HEAD
-        recipeList = new ArrayList<>();
-        recipeRepos.getAllRecipes(recipeList);
-        searchButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
-            if (newScene != null) {
-                System.out.println("Scene is now set.");
-                ThemesRepository.applyTheme(searchButton.getScene());
-            }
-        });
-=======
             recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
 
             recipeList = new ArrayList<>();
             recipeRepos.getAllRecipes(recipeList);
+            searchButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    System.out.println("Scene is now set.");
+                    ThemesRepository.applyTheme(searchButton.getScene());
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
->>>>>>> ec2aeb0bbeda0ab899d234eaa0db264da420f795
 
     }
 
@@ -189,10 +138,12 @@ public class RecipeViewController implements Initializable {
     @FXML
     void changeThemeClicked(ActionEvent event) {
         if (ThemePreference.loadTheme().endsWith("light_theme.css")) {
-            ThemePreference.saveTheme("css/dark_theme.css");
+            ThemePreference.saveTheme("/css/dark_theme.css");
         } else {
-            ThemePreference.saveTheme("css/light_theme.css");
+            ThemePreference.saveTheme("/css/light_theme.css");
         }
+        ThemesRepository.applyTheme(searchButton.getScene());
+
     }
 
     @FXML
@@ -213,6 +164,7 @@ public class RecipeViewController implements Initializable {
         }
     }
 
+
     @FXML
     void messageClicked(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/MessageScene.fxml"));
@@ -227,6 +179,9 @@ public class RecipeViewController implements Initializable {
         stage.setScene(new Scene(root));
         stage.show();
     }
+
+
+
 
     @FXML
     void helpClicked(ActionEvent event) throws IOException {

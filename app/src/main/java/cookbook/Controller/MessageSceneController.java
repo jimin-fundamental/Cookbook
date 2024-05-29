@@ -1,5 +1,6 @@
 package cookbook.Controller;
 
+import cookbook.repository.ThemesRepository;
 import cookbook.DatabaseManager;
 import cookbook.model.Message;
 import cookbook.model.Recipe;
@@ -56,7 +57,12 @@ public class MessageSceneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
        
-        
+        messageListView.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(messageListView.getScene());
+            }
+        });
     }
 
     // Manually called initialization
