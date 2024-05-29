@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalField;
 import java.util.ResourceBundle;
 
+import cookbook.repository.ThemesRepository;
 import cookbook.DatabaseManager;
 import cookbook.model.Recipe;
 import cookbook.model.User;
@@ -56,6 +57,12 @@ public class AddToWeeklyListController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         recipeAddedText.setVisible(false);
+        weekDatePicker.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(weekDatePicker.getScene());
+            }
+        });
     }
 
     @FXML

@@ -79,7 +79,7 @@ public class RecipeItemController implements Initializable{
             tagsPane.setStyle("-fx-background-color: green; -fx-background-radius: 4;");
         }
 
-        Tooltip t = new Tooltip(recipe.getShortDescription());
+        Tooltip t = new Tooltip(recipe.getShortDescription() + " (" + recipe.getAverageRating() + ")");
         Tooltip.install(recipeItemPane, t);
 
     }

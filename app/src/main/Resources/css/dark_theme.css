@@ -1,12 +1,29 @@
 
 
+/* changed by id*/
+#recipeContainer{
+    -fx-background-color: #2D2D30;
+    background-color: #2D2D30;
+}
+
+
+VBox{
+    -fx-background-color: #2D2D30;
+    background-color: #2D2D30;
+}
+HBox{
+    -fx-background-color: #2D2D30;
+    background-color: #2D2D30;
+}
+
+/* changed by type*/
 .root{
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }
 
-.text {
-    -fx-text-fill: #AFB1B3;
+Text{
+    -fx-fill: #AFB1B3;
 }
 
 /* Label */
@@ -14,23 +31,18 @@
     -fx-text-fill: #AFB1B3;
 }
 
-
 /* Pane */
 .pane-grid{
 	-fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }
-#recipeContainer {
+
+#hBox{
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }
 
-#vBox {
-    -fx-background-color: #2D2D30;
-    background-color: #2D2D30;
-}
-
-.HBox{
+.hbox-group{
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }

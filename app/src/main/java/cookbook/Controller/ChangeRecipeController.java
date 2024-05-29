@@ -8,6 +8,7 @@ import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -94,5 +95,12 @@ public class ChangeRecipeController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
+
+        descriptionArea.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(descriptionArea.getScene());
+            }
+        });
     }
 }
