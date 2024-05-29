@@ -147,34 +147,41 @@ public class AddRecipeController implements Initializable {
     @FXML
     void addRecipe(ActionEvent event) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
-            Scene newScene = new Scene(fxmlLoader.load());
-            this.scene = newScene;
-            RecipeViewController controller = fxmlLoader.getController();
-            this.setController(controller);
-
+            
             // Collect input values
             List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
             String allTagsString = selectedTags.stream().collect(Collectors.joining(";"));
-
+            
             // Add new Recipe with collected data
             sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(),
-                    descriptionArea.getText(), imageUrlField.getText(),
-                    Integer.parseInt(servingsField.getText()), user.getId(),
-                    ingredientsArea.getText(), allTagsString);
+            descriptionArea.getText(), imageUrlField.getText(),
+            Integer.parseInt(servingsField.getText()), user.getId(),
+            ingredientsArea.getText(), allTagsString);
+            
+            // FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+            // Scene newScene = new Scene(fxmlLoader.load());
+            // this.scene = newScene;
+            // RecipeViewController controller = fxmlLoader.getController();
+            // this.setController(controller);
 
             Node node = (Node) addscenePane;
             Scene scene = node.getScene();
+            
+            
 
             if (scene != null) {
                 Window window = scene.getWindow();
                 if (window instanceof Stage) {
                     Stage stage = (Stage) window;
-
-                    stage.setScene(this.scene);
-
-                    this.controller.setUserName(user);
+                    stage.close();
+                    stage = new Stage();
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+                    Scene recipeViewScene = new Scene(fxmlLoader.load());
+                    RecipeViewController controller = fxmlLoader.getController();
+                    stage.setScene(recipeViewScene);
                     stage.show();
+                    controller.setUserName(user, false);
+                    controller.update();
 
                 } else {
                     System.out.println("The window associated with the scene is not a Stage.");

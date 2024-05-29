@@ -274,7 +274,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public void getAllRecipes(List<Recipe> recipes) {
+    public void getAllRecipes(List<Recipe> recipes, boolean useThread) {
         // Define an anonymous Callable to perform database query and return the list of
         // recipes
         Runnable dbOperationTask = new Runnable() {
@@ -321,7 +321,6 @@ public class MySqlRecipeRepository implements RecipeRepository {
                         recipes.add(recipe);
                         System.out.println("recipes"+recipes);
                         allrecipes.add(recipe);
-                        System.out.println("allrecipes"+allrecipes);
                     }
                     long endTime = System.currentTimeMillis(); // End timing
                     long duration = endTime - startTime;
@@ -336,6 +335,14 @@ public class MySqlRecipeRepository implements RecipeRepository {
         Thread dbThread = new Thread(dbOperationTask);
         dbThread.start();
         System.out.println("Thread is executing for data loading.");
+        if(!useThread){
+            try {
+                dbThread.join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

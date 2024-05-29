@@ -82,7 +82,7 @@
         private static boolean animationDisplayed = false;
 
 
-    public void setUserName(User user) {
+    public void setUserName(User user, boolean showGIF) {
         // Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
         // ImageView imageview = new ImageView(image);
         // Group root = new Group(imageview);
@@ -99,69 +99,75 @@
         // timeline.play();
 
         //make the window visible
-        ((Stage)recipeContainer.getScene().getWindow()).show();
+        // ((Stage)recipeContainer.getScene().getWindow()).show();
         System.out.println("starting thread now!");
-        
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                if(!animationDisplayed) {
-                    // Get the recipes from the database
-                    Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-                    System.out.println("got gif now!");
-
-                    ImageView imageview = new ImageView(image);
-                    Group root = new Group(imageview);
-                    Scene oldScene = vBox.getScene();
-                    Stage ol = (Stage) vBox.getScene().getWindow();
-
-                    // Initialize and play the timeline
-                    Timeline timeline = new Timeline(
-                            new KeyFrame(Duration.ZERO, e -> {
-                                SceneModifier.change_scene(root, ol);
-                            }),
-                            new KeyFrame(Duration.seconds(4.3), e -> {
-                                System.out.println("setting new scene!");
-
-                                ol.hide();
-                                ol.setScene(oldScene);
-                                ol.show();
-                            })
-                    );
-                    timeline.play();
-                    animationDisplayed = true;
+        if(showGIF){
+            new Thread(new Runnable() {
+    
+                @Override
+                public void run() {
+                    if(!animationDisplayed) {
+                        // Get the recipes from the database
+                        Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
+                        System.out.println("got gif now!");
+    
+                        ImageView imageview = new ImageView(image);
+                        Group root = new Group(imageview);
+                        Scene oldScene = vBox.getScene();
+                        Stage ol = (Stage) vBox.getScene().getWindow();
+    
+                        // Initialize and play the timeline
+                        Timeline timeline = new Timeline(
+                                new KeyFrame(Duration.ZERO, e -> {
+                                    SceneModifier.change_scene(root, ol);
+                                }),
+                                new KeyFrame(Duration.seconds(4.3), e -> {
+                                    System.out.println("setting new scene!");
+    
+                                    ol.hide();
+                                    ol.setScene(oldScene);
+                                    ol.show();
+                                })
+                        );
+                        timeline.play();
+                        animationDisplayed = true;
+                    }
+    
                 }
+            }).start();
+        }
 
-            }
-        }).start();
         this.user = user;
         greetingText.setText("Hi, " + user.getUserName() + "!");
 
-            int number = 0;
-            for (Recipe recipe : recipeList) {
-                displayRecipeItem(recipe, number++, "");
-
-            }
-            // get information about favourite recipes
-            recipeRepos.getFavorites(recipeList, user);
-            // get information about weekly recipes
-            recipeRepos.getRecipeWeeklyDates(recipeList, user);
-
-            recipeRepos.getAllCustomTags(recipeList, user);
-
-            if (user.getIsAdmin() == 0) {
-                manageUsers.setVisible(false);
-            }
-
-            recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user, recipeList);
+        int number = 0;
+        for (Recipe recipe : recipeList) {
+            displayRecipeItem(recipe, number++, "");
 
         }
+        // get information about favourite recipes
+        recipeRepos.getFavorites(recipeList, user);
+        // get information about weekly recipes
+        recipeRepos.getRecipeWeeklyDates(recipeList, user);
 
-        public void setUser(User user) {
-            this.user = user;
-            this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
+        recipeRepos.getAllCustomTags(recipeList, user);
+
+        if (user.getIsAdmin() == 0) {
+            manageUsers.setVisible(false);
         }
+
+        recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user, recipeList);
+
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        this.recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user);
+    }
+
+    public void update(){
+        filterRecipes();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -172,7 +178,7 @@
             recipeRepos = new MySqlRecipeRepository(new DatabaseManager());
 
             recipeList = new ArrayList<>();
-            recipeRepos.getAllRecipes(recipeList);
+            recipeRepos.getAllRecipes(recipeList, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -259,11 +265,11 @@
                         Parent root2 = fxmlLoader2.load();
 
                         RecipeViewController controller = fxmlLoader2.getController();
-                        controller.setUser(this.user);
-                        controller.setUserName(this.user);
+                        controller.setUserName(this.user, false);
 
                         Stage stage2 = new Stage();
                         stage2.setScene(new Scene(root2));
+                        stage2.setTitle("");
                         stage2.show();
                     } catch (Exception e) {
                         e.printStackTrace();
