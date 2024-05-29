@@ -163,6 +163,12 @@ public class AddRecipeController implements Initializable {
                     Integer.parseInt(servingsField.getText()), user.getId(),
                     ingredientsArea.getText(), allTagsString);
 
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+//            Scene newScene = new Scene(fxmlLoader.load());
+//            this.scene = newScene;
+//            RecipeViewController controller = fxmlLoader.getController();
+//            this.setController(controller);
+
             Node node = (Node) addscenePane;
             Scene scene = node.getScene();
 
@@ -174,6 +180,7 @@ public class AddRecipeController implements Initializable {
                     stage.setScene(this.scene);
 
                     this.controller.setUserName(user);
+                    stage.setTitle("");
                     stage.show();
 
                 } else {
