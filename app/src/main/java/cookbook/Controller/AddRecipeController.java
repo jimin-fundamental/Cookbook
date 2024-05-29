@@ -2,6 +2,7 @@ package cookbook.Controller;
 
 import cookbook.DatabaseManager;
 import cookbook.SceneModifier;
+import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
 import javafx.collections.FXCollections;
@@ -11,10 +12,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -24,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.stage.Window;
 import org.controlsfx.control.CheckComboBox;
 
 public class AddRecipeController implements Initializable {
@@ -52,18 +58,27 @@ public class AddRecipeController implements Initializable {
     @FXML
     private TextField titleField;
 
+    @FXML
+    private ScrollPane addscenePane;
+
+
 
     private MySqlRecipeRepository sqlRepos = new MySqlRecipeRepository(new DatabaseManager());
 
     private User user;
+    private Long userID;
+    private volatile RecipeViewController controller;
+    private Scene scene;
 
-    private void setUser(User user){
+    public void setUser(User user){
         this.user = user;
+        userID =user.getId();
+        System.out.println("User ID: " + userID);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        loadPredeterminedTags();
+        loadPredeterminedTags();
 //        loadCustomTags();
     }
 
@@ -73,43 +88,20 @@ public class AddRecipeController implements Initializable {
 //        tagsComboBox.getItems().setAll(tagList);
 //    }
 //
-//    private void loadPredeterminedTags() {
-//        List<String> tags = sqlRepos.getAllPredeterminedTags();
-//        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
-//        tagsComboBox.getItems().setAll(tagList);
-//    }
-
-    /*
-    @FXML
-    void addRecipe(ActionEvent event, int userID) {
-        try{
-            // Collect selected tags from CheckComboBox
-            List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
-            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
-                    .map(String::trim)
-                    .filter(tag -> !tag.isEmpty())
-                    .collect(Collectors.toList());
-
-            System.out.println("start to make allTags String");
-            // Combine all tags into a single string
-            String allTagsString = Stream.concat(selectedTags.stream(), customTags.stream())
-                    .collect(Collectors.joining(";"));
-            System.out.println("allTagsString: " + allTagsString);
-
-            // Add new Recipe with userID
-            sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), user.getId(), ingredientsArea.getText(), allTagsString);
-
-            // Change scene or close window
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
-
-        }
-        catch(Exception e){
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
+    private void loadPredeterminedTags() {
+        List<String> tags = sqlRepos.getAllPredeterminedTags();
+        ObservableList<String> tagList = FXCollections.observableArrayList(tags);
+        tagsComboBox.getItems().setAll(tagList);
     }
-     */
 
+    public void initializeManually() {
+        // If you need to load custom tags or other data that depends on the user
+        loadPredeterminedTags();
+    }
+
+    private void setController(RecipeViewController controller){
+        this.controller = controller;
+    }
 
 
 //    @FXML
@@ -117,35 +109,102 @@ public class AddRecipeController implements Initializable {
 //        try{
 //            // Collect selected tags from CheckComboBox
 //            List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
-//            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
-//                    .map(String::trim)
-//                    .filter(tag -> !tag.isEmpty())
-//                    .collect(Collectors.toList());
+////            List<String> customTags = Arrays.stream(tagsArea.getText().split(";"))
+////                    .map(String::trim)
+////                    .filter(tag -> !tag.isEmpty())
+////                    .collect(Collectors.toList());
 //
 //            System.out.println("start to make allTags String");
 //            // Combine all tags into a single string
-//            String allTagsString = Stream.concat(selectedTags.stream(), customTags.stream())
-//                    .collect(Collectors.joining(";"));//changed!!!
-//            System.out.println("allTagsString: " + allTagsString);
+//            String allTagsString = selectedTags.stream()
+//                    .collect(Collectors.joining(";"));
+//            System.out.println("selectedTags: " + selectedTags);
 //
-////            String tagString = String.join(";", selectedTags); // Join tags into a single string separated by semicolons
+//            // Add new Recipe with userID
+//            sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), user.getId(), ingredientsArea.getText(), allTagsString);
 //
-//            // add new Recipe
-//            sqlRepos.addRecipeRepo(titleField.getText(), shortDescriptionField.getText(), descriptionArea.getText(), imageUrlField.getText(), Integer.parseInt(servingsField.getText()), ingredientsArea.getText(), allTagsString);
 //
-//            // Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//            // stage.close();
+//            // Close the current stage
+//            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//            stage.close();
 //
-//            // Change scene or close window
-//            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
+//            // Load and show the refreshed RecipeView page
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+//            SceneModifier.change_scene(loader.load(), new Stage());
+//
+////            // Change scene or close window
+////            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/RecipeView.fxml")), (Stage)((Node)event.getSource()).getScene().getWindow());
 //
 //        }
 //        catch(Exception e){
 //            System.out.println("Error: " + e.getMessage());
 //            e.printStackTrace();
+//            showAlert("Failed to add recipe. Please try again.");
 //        }
-//
 //    }
+
+
+    @FXML
+    void addRecipe(ActionEvent event) {
+        try {
+            
+            // Collect input values
+            List<String> selectedTags = tagsComboBox.getCheckModel().getCheckedItems();
+            String allTagsString = selectedTags.stream().collect(Collectors.joining(";"));
+            
+            // Add new Recipe with collected data
+            sqlRepos.addRecipeRepo(userID, titleField.getText(), shortDescriptionField.getText(),
+            descriptionArea.getText(), imageUrlField.getText(),
+            Integer.parseInt(servingsField.getText()), user.getId(),
+            ingredientsArea.getText(), allTagsString);
+            
+            // FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+            // Scene newScene = new Scene(fxmlLoader.load());
+            // this.scene = newScene;
+            // RecipeViewController controller = fxmlLoader.getController();
+            // this.setController(controller);
+
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+//            Scene newScene = new Scene(fxmlLoader.load());
+//            this.scene = newScene;
+//            RecipeViewController controller = fxmlLoader.getController();
+//            this.setController(controller);
+
+            Node node = (Node) addscenePane;
+            Scene scene = node.getScene();
+            
+            
+
+            if (scene != null) {
+                Window window = scene.getWindow();
+                if (window instanceof Stage) {
+                    Stage stage = (Stage) window;
+                    stage.close();
+                    stage = new Stage();
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+                    Scene recipeViewScene = new Scene(fxmlLoader.load());
+                    RecipeViewController controller = fxmlLoader.getController();
+                    stage.setScene(recipeViewScene);
+                    stage.show();
+                    controller.setUserName(user, false);
+                    controller.update();
+
+                } else {
+                    System.out.println("The window associated with the scene is not a Stage.");
+                }
+            } else {
+                System.out.println("The node is not within a scene.");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Failed to add recipe. Please try again.");
+        }
+    }
+
+
+
 
     private void showAlert(String errorMessage) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

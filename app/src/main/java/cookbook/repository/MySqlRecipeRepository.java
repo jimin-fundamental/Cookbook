@@ -51,32 +51,177 @@ public class MySqlRecipeRepository implements RecipeRepository {
 
     }
 
-    @Override
-    public void addRecipeRepo(int userID, String name, String shortDescription, String description, String imageUrl,
-            int servings, Long author, String ingredients, String tags) {
-        try (Connection connection = DriverManager.getConnection(dbManager.url)) {
-            // Prepare the SQL statement
-            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?)";
-            try (CallableStatement statement = connection.prepareCall(sql)) {
-                // Set the parameters for the stored procedure
-                statement.setInt(1, userID); // Pass the userID to the stored procedure
-                statement.setString(2, name);
-                statement.setString(3, shortDescription);
-                statement.setString(4, description);
-                statement.setString(5, imageUrl);
-                statement.setInt(6, servings);
-                statement.setInt(7, author.intValue());
-                statement.setString(8, ingredients); // Directly pass the ingredients string
-                statement.setString(9, tags); // Directly pass the tags string
+//    @Override
+//    public void addRecipeRepo(Long userID, String name, String shortDescription, String description, String imageUrl,
+//            int servings, Long author, String ingredients, String tags) {
+//        try (Connection connection = DriverManager.getConnection(dbManager.url)) {
+//            // Prepare the SQL statement
+//            String sql = "CALL AddNewRecipe(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//            try (CallableStatement statement = connection.prepareCall(sql)) {
+//                // Set the parameters for the stored procedure
+//                statement.setLong(1, userID); // Pass the userID to the stored procedure
+//                statement.setString(2, name);
+//                statement.setString(3, shortDescription);
+//                statement.setString(4, description);
+//                statement.setString(5, imageUrl);
+//                statement.setInt(6, servings);
+//                statement.setInt(7, author.intValue());
+//                statement.setString(8, ingredients); // Directly pass the ingredients string
+//                statement.setString(9, tags); // Directly pass the tags string
+//
+//                System.out.println("statement: " + statement);
+//                // Execute the stored procedure
+//                statement.execute();
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-                System.out.println("statement: " + statement);
-                // Execute the stored procedure
-                statement.execute();
+    private String convertStepsToJson(String stepsText) {
+        // Split steps text into an array of steps
+        String[] steps = stepsText.split(";");
+        // Convert array to JSON format
+        String jsonSteps = Arrays.stream(steps)
+                .map(step -> "\"" + step.trim().replaceAll("\"", "\\\"") + "\"") // Ensure to escape any double quotes in the step text itself.
+                .collect(Collectors.joining(", ", "[", "]"));
+        return "{\"steps\": " + jsonSteps + "}";
+    }
+
+
+    @Override
+    public void addRecipeRepo(Long userID, String name, String shortDescription, String description, String imageUrl,
+                              int servings, Long author, String ingredients, String tags) {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(dbManager.url);
+            connection.setAutoCommit(false); // Start transaction
+
+            // Convert description to JSON
+            String jsonDescription = convertStepsToJson(description);
+
+            // Insert into Recipe table
+            String sqlRecipe = "INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings, author) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement stmtRecipe = connection.prepareStatement(sqlRecipe, Statement.RETURN_GENERATED_KEYS)) {
+                stmtRecipe.setString(1, name);
+                stmtRecipe.setString(2, shortDescription);
+                stmtRecipe.setString(3, jsonDescription); // Set JSON description
+                stmtRecipe.setString(4, imageUrl);
+                stmtRecipe.setInt(5, servings);
+                stmtRecipe.setLong(6, author);
+                stmtRecipe.executeUpdate();
+
+                try (ResultSet generatedKeys = stmtRecipe.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        long recipeID = generatedKeys.getLong(1);
+                        // Insert ingredients
+                        insertIngredients(connection, ingredients, recipeID);
+                        // Insert tags
+                        insertTags(connection, tags, recipeID, userID);
+                    } else {
+                        throw new SQLException("Creating recipe failed, no ID obtained.");
+                    }
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            connection.commit(); // Commit transaction
+        } catch (SQLException ex) {
+            try {
+                if (connection != null) connection.rollback(); // Rollback transaction on error
+            } catch (SQLException e) {
+                System.out.println("Rollback failed: " + e.getMessage());
+            }
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
+    private void insertIngredients(Connection connection, String ingredients, long recipeID) throws SQLException {
+        String sqlRecipeIngredient = "INSERT INTO RecipeIngredient (Recipe_ID, Ingredient_ID, amount_int, amount_unit) VALUES (?, ?, ?, ?)";
+
+        for (String ingredientDetails : ingredients.split(";")) {
+            String[] details = ingredientDetails.split(",");
+            String name = details[0].trim();
+            int amount = Integer.parseInt(details[1].trim());
+            String unit = details[2].trim();
+
+            // Insert or find ingredient ID
+            long ingredientID = getOrInsertIngredient(connection, name);
+
+            try (PreparedStatement stmtRecipeIngredient = connection.prepareStatement(sqlRecipeIngredient)) {
+                stmtRecipeIngredient.setLong(1, recipeID);
+                stmtRecipeIngredient.setLong(2, ingredientID);
+                stmtRecipeIngredient.setInt(3, amount);
+                stmtRecipeIngredient.setString(4, unit);
+                stmtRecipeIngredient.executeUpdate();
+            }
+        }
+    }
+
+
+    private long getOrInsertIngredient(Connection connection, String name) throws SQLException {
+        String sqlCheck = "SELECT ID FROM Ingredient WHERE name = ?";
+        PreparedStatement stmtCheck = connection.prepareStatement(sqlCheck);
+        stmtCheck.setString(1, name);
+        ResultSet rs = stmtCheck.executeQuery();
+        if (rs.next()) {
+            return rs.getLong("ID");
+        } else {
+            String sqlInsert = "INSERT INTO Ingredient (name) VALUES (?)";
+            PreparedStatement stmtInsert = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            stmtInsert.setString(1, name);
+            stmtInsert.executeUpdate();
+            rs = stmtInsert.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getLong(1);
+            } else {
+                throw new SQLException("Inserting ingredient failed, no ID obtained.");
+            }
+        }
+    }
+
+    private void insertTags(Connection connection, String tags, long recipeID, Long userID) throws SQLException {
+        String sqlTag = "INSERT INTO RecipeTag (Recipe_ID, Tags_ID) VALUES (?, ?)";
+        PreparedStatement stmtTag = connection.prepareStatement(sqlTag);
+
+        for (String tag : tags.split(";")) {
+            long tagID = getOrInsertTag(connection, tag.trim());
+
+            stmtTag.setLong(1, recipeID);
+            stmtTag.setLong(2, tagID);
+            stmtTag.executeUpdate();
+        }
+    }
+
+    private long getOrInsertTag(Connection connection, String tagName) throws SQLException {
+        String sqlCheck = "SELECT ID FROM Tags WHERE tagname = ?";
+        PreparedStatement stmtCheck = connection.prepareStatement(sqlCheck);
+        stmtCheck.setString(1, tagName);
+        ResultSet rs = stmtCheck.executeQuery();
+        if (rs.next()) {
+            return rs.getLong("ID");
+        } else {
+            String sqlInsert = "INSERT INTO Tags (tagname, ispredefined) VALUES (?, 0)";
+            PreparedStatement stmtInsert = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            stmtInsert.setString(1, tagName);
+            stmtInsert.executeUpdate();
+            rs = stmtInsert.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getLong(1);
+            } else {
+                throw new SQLException("Inserting tag failed, no ID obtained.");
+            }
+        }
+    }
+
 
 
     public void addCustomTagsRepo(String tags, Long userId, Recipe recipe) {
@@ -144,7 +289,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
     }
 
     @Override
-    public void getAllRecipes(List<Recipe> recipes) {
+    public void getAllRecipes(List<Recipe> recipes, boolean useThread) {
         // Define an anonymous Callable to perform database query and return the list of
         // recipes
         Runnable dbOperationTask = new Runnable() {
@@ -191,7 +336,6 @@ public class MySqlRecipeRepository implements RecipeRepository {
                         recipes.add(recipe);
                         System.out.println("recipes"+recipes);
                         allrecipes.add(recipe);
-                        System.out.println("allrecipes"+allrecipes);
                     }
                     long endTime = System.currentTimeMillis(); // End timing
                     long duration = endTime - startTime;
@@ -206,6 +350,14 @@ public class MySqlRecipeRepository implements RecipeRepository {
         Thread dbThread = new Thread(dbOperationTask);
         dbThread.start();
         System.out.println("Thread is executing for data loading.");
+        if(!useThread){
+            try {
+                dbThread.join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -870,6 +1022,25 @@ public class MySqlRecipeRepository implements RecipeRepository {
         return comments;
     }
 
+    public List<String> getAllPredeterminedTags() {
+        String sql = "SELECT TagName FROM Tags WHERE ispredefined = 1;";
+        List<String> tags = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(dbManager.url);
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                tags.add(rs.getString("TagName"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tags;
+    }
+
+
     //method for getting whole customTags for that recipe and for that user
     public void getAllCustomTags(List<Recipe> recipes, User user) {
         // SQL to get all Tags_ID for a given Recipe_ID
@@ -1129,6 +1300,8 @@ public class MySqlRecipeRepository implements RecipeRepository {
             return null;  // Return null if recipes are still not loaded or not found
         }
     }
+
+
 
 
 //    public Recipe fetchRecipeById(Long recipeId) {

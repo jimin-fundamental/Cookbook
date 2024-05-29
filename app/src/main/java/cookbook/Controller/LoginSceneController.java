@@ -141,7 +141,7 @@ public class LoginSceneController implements Initializable{
                         // setController(controller);
                         //returnValues.add(controller);
                         stage.show();
-                        this.controller.setUserName(user);
+                        this.controller.setUserName(user, true);
 
                         //stage.show();
         
