@@ -164,6 +164,12 @@ public class AddRecipeController implements Initializable {
             // RecipeViewController controller = fxmlLoader.getController();
             // this.setController(controller);
 
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cookbook.view/RecipeView.fxml"));
+//            Scene newScene = new Scene(fxmlLoader.load());
+//            this.scene = newScene;
+//            RecipeViewController controller = fxmlLoader.getController();
+//            this.setController(controller);
+
             Node node = (Node) addscenePane;
             Scene scene = node.getScene();
             

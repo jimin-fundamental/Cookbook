@@ -78,6 +78,17 @@ public class MySqlRecipeRepository implements RecipeRepository {
 //        }
 //    }
 
+    private String convertStepsToJson(String stepsText) {
+        // Split steps text into an array of steps
+        String[] steps = stepsText.split(";");
+        // Convert array to JSON format
+        String jsonSteps = Arrays.stream(steps)
+                .map(step -> "\"" + step.trim().replaceAll("\"", "\\\"") + "\"") // Ensure to escape any double quotes in the step text itself.
+                .collect(Collectors.joining(", ", "[", "]"));
+        return "{\"steps\": " + jsonSteps + "}";
+    }
+
+
     @Override
     public void addRecipeRepo(Long userID, String name, String shortDescription, String description, String imageUrl,
                               int servings, Long author, String ingredients, String tags) {
@@ -86,12 +97,15 @@ public class MySqlRecipeRepository implements RecipeRepository {
             connection = DriverManager.getConnection(dbManager.url);
             connection.setAutoCommit(false); // Start transaction
 
+            // Convert description to JSON
+            String jsonDescription = convertStepsToJson(description);
+
             // Insert into Recipe table
             String sqlRecipe = "INSERT INTO Recipe (name, sdecr, descr, imgUrl, servings, author) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement stmtRecipe = connection.prepareStatement(sqlRecipe, Statement.RETURN_GENERATED_KEYS)) {
                 stmtRecipe.setString(1, name);
                 stmtRecipe.setString(2, shortDescription);
-                stmtRecipe.setString(3, description);
+                stmtRecipe.setString(3, jsonDescription); // Set JSON description
                 stmtRecipe.setString(4, imageUrl);
                 stmtRecipe.setInt(5, servings);
                 stmtRecipe.setLong(6, author);
@@ -128,6 +142,7 @@ public class MySqlRecipeRepository implements RecipeRepository {
             }
         }
     }
+
 
     private void insertIngredients(Connection connection, String ingredients, long recipeID) throws SQLException {
         String sqlRecipeIngredient = "INSERT INTO RecipeIngredient (Recipe_ID, Ingredient_ID, amount_int, amount_unit) VALUES (?, ?, ?, ?)";
