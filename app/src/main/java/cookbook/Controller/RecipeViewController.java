@@ -50,6 +50,8 @@ import cookbook.repository.MySqlRecipeRepository;
 import cookbook.repository.ThemesRepository;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import cookbook.Controller.AddRecipeController;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 
     public class RecipeViewController implements Initializable {
 
@@ -77,6 +79,9 @@ import cookbook.Controller.AddRecipeController;
         @FXML
         private Button searchButton;
 
+        @FXML
+        private ImageView GifIntroImageView;
+
         private List<Recipe> recipeList;
         private MySqlRecipeRepository recipeRepos;
         private User user;
@@ -86,82 +91,68 @@ import cookbook.Controller.AddRecipeController;
 
 
     public void setUserName(User user, boolean showGIF) {
-        // Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-        // ImageView imageview = new ImageView(image);
-        // Group root = new Group(imageview);
-        // Scene oldScene = vBox.getScene();
-        // Stage ol = (Stage) vBox.getScene().getWindow();
-        // Timeline timeline = new Timeline(
-        //         new KeyFrame(Duration.ZERO, e -> {
-        //             SceneModifier.change_scene(root,
-        //                     ol);
-        //         }),
-        //         new KeyFrame(Duration.seconds(5), e -> {
-        //             ol.setScene(oldScene);
-        //         }));
-        // timeline.play();
-
-        //make the window visible
-        // ((Stage)recipeContainer.getScene().getWindow()).show();
-        System.out.println("starting thread now!");
-        if(showGIF){
-            new Thread(new Runnable() {
-    
-                @Override
-                public void run() {
-                    if(!animationDisplayed) {
-                        // Get the recipes from the database
-                        Image image = new Image(getClass().getResource("/gif/intro.gif").toString());
-                        System.out.println("got gif now!");
-    
-                        ImageView imageview = new ImageView(image);
-                        Group root = new Group(imageview);
-                        Scene oldScene = vBox.getScene();
-                        Stage ol = (Stage) vBox.getScene().getWindow();
-    
-                        // Initialize and play the timeline
-                        Timeline timeline = new Timeline(
-                                new KeyFrame(Duration.ZERO, e -> {
-                                    SceneModifier.change_scene(root, ol);
-                                }),
-                                new KeyFrame(Duration.seconds(4.6), e -> {
-                                    System.out.println("setting new scene!");
-    
-                                    ol.hide();
-                                    ol.setScene(oldScene);
-                                    ol.show();
-                                })
-                        );
-                        timeline.play();
-                        animationDisplayed = true;
-                    }
-    
-                }
-            }).start();
-        }
-
         this.user = user;
         greetingText.setText("Hi, " + user.getUserName() + "!");
-
-        int number = 0;
-        for (Recipe recipe : recipeList) {
-            displayRecipeItem(recipe, number++, "");
-
-        }
-
-
-        // get information about favourite recipes
-        recipeRepos.getFavorites(recipeList, user);
-        // get information about weekly recipes
-        recipeRepos.getRecipeWeeklyDates(recipeList, user);
-
-        recipeRepos.getAllCustomTags(recipeList, user);
-
         if (user.getIsAdmin() == 0) {
             manageUsers.setVisible(false);
         }
+        List<StackPane> recipesBox = new ArrayList<StackPane>();
+        
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                System.out.println("Started thread");
+                        System.out.println(java.time.LocalDateTime.now());
+                // Perform long-running task here
+                // This is where you load your things
 
-        recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user, recipeList);
+                // get information about favourite recipes
+                recipeRepos.getFavorites(recipeList, user);
+                // get information about weekly recipes
+                recipeRepos.getRecipeWeeklyDates(recipeList, user);
+
+                recipeRepos.getAllCustomTags(recipeList, user);
+
+                for (Recipe recipe : recipeList) {
+                    recipesBox.add(loadRecipeItem(recipe, ""));
+                }
+
+                recipeRepos = new MySqlRecipeRepository(new DatabaseManager(), user, recipeList);
+                System.out.println("Ended thread");
+                System.out.println(java.time.LocalDateTime.now());
+                return null;
+            }
+        };
+        new Thread(task).start();
+        
+        if(showGIF && !animationDisplayed){
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, e -> {
+                        GifIntroImageView.setImage(new Image(getClass().getResource("/gif/intro.gif").toString()));
+                        GifIntroImageView.setVisible(true);
+                    }),
+                    new KeyFrame(Duration.seconds(3), e -> {
+                        System.out.println("UI is loading");
+                        System.out.println(java.time.LocalDateTime.now());
+                        int number = 0;
+                        for (StackPane recipeBox : recipesBox) {
+                            displayRecipeItem(recipeBox, number++);
+                        }
+                        GifIntroImageView.setVisible(false);
+                        System.out.println("GIF is hidden");
+                        System.out.println(java.time.LocalDateTime.now());
+                    }));
+            timeline.play();
+            animationDisplayed = true;
+        } else {
+            int number = 0;
+            for (StackPane recipeBox : recipesBox) {
+                displayRecipeItem(recipeBox, number++);
+            }
+        }
+
+        System.out.println("FINISHED initialization");
+        System.out.println(java.time.LocalDateTime.now());
 
     }
 
@@ -416,7 +407,7 @@ import cookbook.Controller.AddRecipeController;
                     if (searchHits.length() >= 3)
                         searchHits = searchHits.substring(0, searchHits.length() - 2);
                     // show selected Item
-                    displayRecipeItem(recipe, number++, searchHits);
+                    displayRecipeItem(loadRecipeItem(recipe, searchHits), number++);
                 }
             }
         }
@@ -438,7 +429,7 @@ import cookbook.Controller.AddRecipeController;
                 // iterate through all recipes
                 for (Recipe recipe : recipeList) {
                     if (recipe.getIsFavourite()) {
-                        displayRecipeItem(recipe, number++, "");
+                        displayRecipeItem(loadRecipeItem(recipe, ""), number++);
                     }
                 }
             }
@@ -459,7 +450,13 @@ import cookbook.Controller.AddRecipeController;
             }
         }
 
-        private void displayRecipeItem(Recipe recipe, int number, String searchHits) {
+        private void displayRecipeItem(StackPane recipeBox, int number) {
+            int column = number % 5;
+            int row = number / 5 + 1;
+            recipeContainer.add(recipeBox, column, row);
+        }
+
+        private StackPane loadRecipeItem(Recipe recipe, String searchHits) {
             try {
 
                 FXMLLoader fxmlLoader = new FXMLLoader();
@@ -468,12 +465,11 @@ import cookbook.Controller.AddRecipeController;
                 RecipeItemController controller = fxmlLoader.getController();
                 controller.setRecipeData(recipe, searchHits);
                 controller.setUser(user);
-                int column = number % 5;
-                int row = number / 5 + 1;
-                recipeContainer.add(recipeBox, column, row);
+                return recipeBox;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return new StackPane();
         }
 
     }
