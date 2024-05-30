@@ -17,7 +17,7 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         try {
             // Connection conn = DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net/sql11698285?&user=sql11698285&password=BlmMYE2vhj&useSSL=false ");
-            ThemePreference.saveTheme("/css/dark_theme.css");
+            ThemePreference.saveTheme("/css/light_theme.css");
             // Initialize the database manager and user repository
             dbManager = new DatabaseManager();
             userRepo = new UserDao(dbManager);
