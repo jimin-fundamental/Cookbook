@@ -1,28 +1,19 @@
 
 
-/* changed by id*/
-#recipeContainer{
-    -fx-background-color: #2D2D30;
-    background-color: #2D2D30;
-}
-#listsVBox{
-    -fx-background-color: #2D2D30;
-    background-color: #2D2D30;
-}
-#vBox{
-    -fx-background-color: #2D2D30;
-    background-color: #2D2D30;
-}
-#helpListVBox{
-    -fx-background-color: #2D2D30;
-    background-color: #2D2D30;
-}
-#wrapperVBox{
+GridPane{
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }
 
-VBox{
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+ }
+
+.grid-pane > .viewport {
+    -fx-background-color: transparent;
+ }
+
+VBox:not(#recipeItemContainer){
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
 }

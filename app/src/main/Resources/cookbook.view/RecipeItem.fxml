@@ -12,7 +12,7 @@
 <StackPane fx:id="recipeItemPane" alignment="BOTTOM_LEFT" maxHeight="300.0" maxWidth="300.0" minHeight="160.0" minWidth="160.0" onMouseClicked="#recipeClicked" style="-fx-background-color: ffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeItemController">
    <children>
       <Pane fx:id="recipeImagePane" style="-fx-background-image: url(&quot;https://www.google.com/images/srpr/logo3w.png&quot;); -fx-background-size: cover;" />
-      <VBox alignment="BOTTOM_LEFT" fillWidth="false" spacing="5.0" StackPane.alignment="BOTTOM_LEFT">
+      <VBox fx:id="recipeItemContainer" alignment="BOTTOM_LEFT" fillWidth="false" spacing="5.0" StackPane.alignment="BOTTOM_LEFT">
          <children>
       
             <!-- Label for displaying tags specifically -->
