@@ -24,7 +24,7 @@
                <items>
                   <MenuItem fx:id="manageUsers" mnemonicParsing="false" onAction="#manageUsersClicked" text="Manage Users" />
                   <MenuItem fx:id="changeProfile" mnemonicParsing="false" onAction="#changeProfileClicked" text="Log Off" />
-                  <MenuItem fx:id="changeUITheme" mnemonicParsing="false" onAction="#changeThemeClicked" text="change Theme" />
+                  <MenuItem fx:id="changeUITheme" mnemonicParsing="false" onAction="#changeThemeClicked" text="Change Theme" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
@@ -58,8 +58,8 @@
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <FontAwesomeIconView fx:id="star" fill="#ffbb0000" glyphName="STAR" onMouseClicked="#favouritesButtonClicked" selectionFill="#ffcc0000" size="20" stroke="BLACK" />
-                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="100.0" onAction="#searchBarKeyTyped" prefHeight="26.0" prefWidth="268.0" promptText="search..." />
-                              <Button fx:id="searchButton" alignment="TOP_LEFT" minWidth="60.0" mnemonicParsing="false" onAction="#searchButtonClicked" text="search" />
+                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="100.0" onAction="#searchBarKeyTyped" prefHeight="26.0" prefWidth="268.0" promptText="Search recipes..." />
+                              <Button fx:id="searchButton" alignment="TOP_LEFT" minWidth="60.0" mnemonicParsing="false" onAction="#searchButtonClicked" text="Search" />
                            </children>
                         </HBox>
                         <Region HBox.hgrow="ALWAYS" />
