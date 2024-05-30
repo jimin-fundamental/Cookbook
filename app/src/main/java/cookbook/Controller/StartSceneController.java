@@ -3,6 +3,7 @@ package cookbook.Controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import cookbook.repository.ThemesRepository;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -43,6 +44,13 @@ public class StartSceneController implements Initializable{
             }
             
         });
+        recipeListView.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(recipeListView.getScene());
+            }
+        });
+        
     }
 
 }

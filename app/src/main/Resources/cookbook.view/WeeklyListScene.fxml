@@ -15,13 +15,13 @@
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="0.0">
          <children>
-            <Text fx:id="weeklyListTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="My Week">
+            <Text fx:id="weeklyListTitle" text="My Week">
                <font>
                   <Font name="System Bold" size="23.0" />
                </font>
             </Text>
             <Region prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <Text fx:id="weeklyListTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="06/05/2024 - 13/05/2024">
+            <Text fx:id="weeklyListTitle" text="06/05/2024 - 13/05/2024">
                <font>
                   <Font size="18.0" />
                </font>

@@ -4,9 +4,11 @@ import cookbook.DatabaseManager;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
@@ -15,9 +17,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.util.ResourceBundle;
+import java.net.URL;
 import java.sql.Date;
 
-public class WeeklyViewItemController {
+public class WeeklyViewItemController implements Initializable{
 
     
     @FXML
@@ -69,8 +73,8 @@ public class WeeklyViewItemController {
 
         // get the controller to call the method to set the data
         RecipeSceneController controller = fxmlLoader.getController();
-        controller.setRecipeData(this.recipe, servings);
         controller.setUser(user);
+        controller.setRecipeData(this.recipe, servings);
         stage.show();
 
     }
@@ -85,5 +89,15 @@ public class WeeklyViewItemController {
         
         WeeklyListSceneController parentController = (WeeklyListSceneController)parent.getProperties().get("Controller");
         parentController.updateView();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        recipeName.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(recipeName.getScene());
+            }
+        });
     }
 }

@@ -1,22 +1,24 @@
 package cookbook.Controller;
 //handles the detailed view of a recipe
 
-import java.net.URL;
-import java.util.*;
 import java.io.IOException;
-import java.util.function.Consumer;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import cookbook.DatabaseManager;
-import cookbook.SceneModifier;
 import cookbook.model.Comment;
 import cookbook.model.Ingredient;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import cookbook.repository.ThemesRepository;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -24,28 +26,26 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.beans.binding.Bindings;
-import javafx.application.Platform;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 public class RecipeSceneController implements Initializable {
 
@@ -116,6 +116,12 @@ public class RecipeSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        recipeNameText.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(recipeNameText.getScene());
+            }
+        });
     }
 
     public void setRecipeData(Recipe recipe, int numberOfServings) {
@@ -354,9 +360,9 @@ public class RecipeSceneController implements Initializable {
 
     private void setFavouriteStar() {
         if (recipe.getIsFavourite()) {
-            star.setFill(Color.YELLOW);
+            star.setFill(Paint.valueOf("#ffbd00"));
         } else {
-            star.setFill(Color.WHITE);
+            star.setFill(Color.TRANSPARENT);
 
         }
     }
@@ -364,7 +370,7 @@ public class RecipeSceneController implements Initializable {
     private void setRatingStars(int rating){
         ObservableList<Node> stars = ratingHbox.getChildren();
         for(int i = 0; i < rating; i++){
-            ((FontAwesomeIconView)stars.get(i)).setFill(Color.YELLOW);
+            ((FontAwesomeIconView)stars.get(i)).setFill(Paint.valueOf("#ffbd00"));
         }
         
     }

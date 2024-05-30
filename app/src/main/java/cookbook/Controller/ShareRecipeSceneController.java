@@ -1,9 +1,17 @@
 package cookbook.Controller;
 
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+import org.controlsfx.control.SearchableComboBox;
+
 import cookbook.DatabaseManager;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import cookbook.repository.UserDao;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,11 +22,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.controlsfx.control.SearchableComboBox;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class ShareRecipeSceneController implements Initializable {
 
@@ -51,6 +54,12 @@ public class ShareRecipeSceneController implements Initializable {
         userDao = new UserDao(dbManager);
 
         fetchingUsersComboBox();
+        sendBtn.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(sendBtn.getScene());
+            }
+        });
     }
 
     private void fetchingUsersComboBox() {

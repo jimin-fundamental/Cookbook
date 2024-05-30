@@ -4,12 +4,14 @@ package cookbook.Controller;
 
 import com.google.common.cache.CacheLoader.InvalidCacheLoadException;
 
+import cookbook.repository.ThemesRepository;
 import cookbook.SceneModifier;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -27,10 +29,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
 // Display basic recipe information (like name and associated tags).
-public class RecipeItemController {
+public class RecipeItemController implements Initializable{
 
     @FXML
     private Text recipeNameText;
@@ -62,7 +66,7 @@ public class RecipeItemController {
         String imagePath = recipe.getImagePath() != null ? recipe.getImagePath()
                 : "https://images.pexels.com/photos/1109197/pexels-photo-1109197.jpeg";
 
-        recipeImagePane.setStyle("-fx-background-image: url(\"" + imagePath + "\"); -fx-background-size: cover;");
+        recipeImagePane.setStyle("-fx-background-image: url(\"" + imagePath + "\")!important; -fx-background-size: cover;");
         // Setting tags
         String tags = "";
         for (String tag : recipe.getTags()) {
@@ -75,7 +79,7 @@ public class RecipeItemController {
             tagsPane.setStyle("-fx-background-color: green; -fx-background-radius: 4;");
         }
 
-        Tooltip t = new Tooltip(recipe.getShortDescription());
+        Tooltip t = new Tooltip(recipe.getShortDescription() + " (" + recipe.getAverageRating() + ")");
         Tooltip.install(recipeItemPane, t);
 
     }
@@ -97,6 +101,17 @@ public class RecipeItemController {
 
         stage.show();
 
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // You can also add a listener to get the scene once it's set
+        searchHitsLabel.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(searchHitsLabel.getScene());
+            }
+        });
     }
 
 }

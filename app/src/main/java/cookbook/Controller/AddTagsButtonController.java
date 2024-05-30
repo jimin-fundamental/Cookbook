@@ -1,19 +1,37 @@
 package cookbook.Controller;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import cookbook.model.Recipe;
 import cookbook.model.User;
+import cookbook.repository.ThemesRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class AddTagsButtonController {
+public class AddTagsButtonController implements Initializable {
 
     private User user;
     private Recipe recipe;
+
+    @FXML
+    private StackPane addTagsButtonPane;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        addTagsButtonPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(addTagsButtonPane.getScene());
+            }
+        });
+    }
 
     // MouseEvent
     @FXML

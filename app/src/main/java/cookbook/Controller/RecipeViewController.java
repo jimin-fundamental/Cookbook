@@ -12,41 +12,44 @@
     import java.util.ResourceBundle;
     import java.util.ArrayList;
 
-    import javafx.animation.KeyFrame;
-    import javafx.animation.Timeline;
-    import javafx.event.ActionEvent;
-    import javafx.fxml.FXML;
-    import javafx.fxml.FXMLLoader;
-    import javafx.fxml.Initializable;
-    import javafx.geometry.Insets;
-    import javafx.scene.control.Button;
-    import javafx.scene.control.Label;
-    import javafx.scene.control.Menu;
-    import javafx.scene.control.MenuItem;
-    import javafx.scene.control.ScrollPane;
-    import javafx.scene.control.TextField;
-    import javafx.scene.image.Image;
-    import javafx.scene.image.ImageView;
-    import javafx.scene.input.KeyEvent;
-    import javafx.scene.layout.GridPane;
-    import javafx.scene.layout.StackPane;
-    import javafx.scene.layout.VBox;
-    import javafx.scene.paint.Paint;
-    import javafx.scene.Group;
-    import javafx.scene.Node;
-    import javafx.scene.Parent;
-    import javafx.scene.Scene;
-    import javafx.stage.Stage;
-    import javafx.util.Duration;
-    import cookbook.DatabaseManager;
-    import cookbook.Controller.HelpViewSceneController;
-    import cookbook.SceneModifier;
-    import cookbook.model.Ingredient;
-    import cookbook.model.Recipe;
-    import cookbook.model.User;
-    import cookbook.repository.MySqlRecipeRepository;
-    import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-    import cookbook.Controller.AddRecipeController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import cookbook.DatabaseManager;
+import cookbook.Controller.HelpViewSceneController;
+import cookbook.SceneModifier;
+import cookbook.model.Ingredient;
+import cookbook.model.Recipe;
+import cookbook.model.ThemePreference;
+import cookbook.model.User;
+import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import cookbook.Controller.AddRecipeController;
 
     public class RecipeViewController implements Initializable {
 
@@ -121,7 +124,7 @@
                                 new KeyFrame(Duration.ZERO, e -> {
                                     SceneModifier.change_scene(root, ol);
                                 }),
-                                new KeyFrame(Duration.seconds(4.3), e -> {
+                                new KeyFrame(Duration.seconds(4.6), e -> {
                                     System.out.println("setting new scene!");
     
                                     ol.hide();
@@ -145,6 +148,8 @@
             displayRecipeItem(recipe, number++, "");
 
         }
+
+
         // get information about favourite recipes
         recipeRepos.getFavorites(recipeList, user);
         // get information about weekly recipes
@@ -179,17 +184,34 @@
 
             recipeList = new ArrayList<>();
             recipeRepos.getAllRecipes(recipeList, false);
+            searchButton.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    System.out.println("Scene is now set.");
+                    ThemesRepository.applyTheme(searchButton.getScene());
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         }
 
-        @FXML
-        void changeProfileClicked(ActionEvent event) throws IOException {
-            SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")),
-                    (Stage) vBox.getScene().getWindow());
+    @FXML
+    void changeProfileClicked(ActionEvent event) throws IOException {
+        SceneModifier.change_scene(FXMLLoader.load(getClass().getResource("/cookbook.view/LoginScene.fxml")),
+                (Stage) vBox.getScene().getWindow());
+    }
+
+    @FXML
+    void changeThemeClicked(ActionEvent event) {
+        if (ThemePreference.loadTheme().endsWith("light_theme.css")) {
+            ThemePreference.saveTheme("/css/dark_theme.css");
+        } else {
+            ThemePreference.saveTheme("/css/light_theme.css");
         }
+        ThemesRepository.applyTheme(searchButton.getScene());
+
+    }
 
         @FXML
         void manageUsersClicked(ActionEvent event) throws IOException {
@@ -204,10 +226,10 @@
                 stage.setResizable(false);
                 stage.show();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
         @FXML
         void messageClicked(ActionEvent event) throws IOException {
@@ -219,10 +241,10 @@
             controller.setRecipeRepos(this.recipeRepos);
             controller.initializeManually(); // If needed, a method to manually start any processes that depend on user
 
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-        }
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
 
         @FXML
         void helpClicked(ActionEvent event) throws IOException {
@@ -403,7 +425,7 @@
         void favouritesButtonClicked() {
             if (this.favoritesShowing == true) {
                 this.favoritesShowing = false;
-                star.setFill(Paint.valueOf("#ffbb0000"));
+                star.setFill(Color.TRANSPARENT);
                 searchBar.setText("");
                 filterRecipes();
 

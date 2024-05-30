@@ -10,6 +10,7 @@ import cookbook.DatabaseManager;
 import cookbook.model.User;
 import cookbook.model.UserTable;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import cookbook.repository.UserDao;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,7 +28,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public class UsersSceneController {
+public class UsersSceneController implements Initializable {
 
     @FXML
     TableView<UserTable> usersTableView;
@@ -48,6 +49,17 @@ public class UsersSceneController {
 
     private ObservableList<UserTable> userTable = FXCollections.observableArrayList();
     private List<User> users;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // You can also add a listener to get the scene once it's set
+        usersTableView.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(usersTableView.getScene());
+            }
+        });
+    }
 
     public void retrieveUsers() {
         DatabaseManager dbManager = new DatabaseManager();

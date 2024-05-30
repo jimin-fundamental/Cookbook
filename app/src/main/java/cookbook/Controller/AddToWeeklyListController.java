@@ -1,16 +1,15 @@
 package cookbook.Controller;
 
-import java.awt.Color;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.temporal.TemporalField;
 import java.util.ResourceBundle;
 
 import cookbook.DatabaseManager;
 import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,7 +17,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 public class AddToWeeklyListController implements Initializable{
@@ -56,6 +54,12 @@ public class AddToWeeklyListController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         recipeAddedText.setVisible(false);
+        weekDatePicker.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(weekDatePicker.getScene());
+            }
+        });
     }
 
     @FXML

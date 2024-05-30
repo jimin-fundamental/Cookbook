@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="vBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeViewController">
+<VBox fx:id="vBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cookbook.Controller.RecipeViewController" style="-fx-background-color: #2b2b2b;">
    <children>
       <MenuBar>
          <menus>
@@ -24,21 +24,21 @@
                <items>
                   <MenuItem fx:id="manageUsers" mnemonicParsing="false" onAction="#manageUsersClicked" text="Manage Users" />
                   <MenuItem fx:id="changeProfile" mnemonicParsing="false" onAction="#changeProfileClicked" text="Log Off" />
+                  <MenuItem fx:id="changeUITheme" mnemonicParsing="false" onAction="#changeThemeClicked" text="Change Theme" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem fx:id="help" mnemonicParsing="false" onAction="#helpClicked" text="Help" />
-                  
                </items>
             </Menu>
          </menus>
       </MenuBar>
       <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
          <content>
-            <VBox spacing="20.0">
+            <VBox spacing="0">
                <children>
-                  <HBox alignment="CENTER_LEFT" spacing="20.0">
+                  <HBox fx:id="hBox" alignment="CENTER_LEFT" spacing="20.0">
                      <children>
                         <VBox alignment="CENTER_LEFT" minWidth="80.0">
                            <children>
@@ -58,8 +58,8 @@
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                            <children>
                               <FontAwesomeIconView fx:id="star" fill="#ffbb0000" glyphName="STAR" onMouseClicked="#favouritesButtonClicked" selectionFill="#ffcc0000" size="20" stroke="BLACK" />
-                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="100.0" onAction="#searchBarKeyTyped" prefHeight="26.0" prefWidth="268.0" promptText="search..." />
-                              <Button fx:id="searchButton" alignment="TOP_LEFT" minWidth="60.0" mnemonicParsing="false" onAction="#searchButtonClicked" text="search" />
+                              <TextField fx:id="searchBar" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="100.0" onAction="#searchBarKeyTyped" prefHeight="26.0" prefWidth="268.0" promptText="Search recipes..." />
+                              <Button fx:id="searchButton" alignment="TOP_LEFT" minWidth="60.0" mnemonicParsing="false" onAction="#searchButtonClicked" text="Search" />
                            </children>
                         </HBox>
                         <Region HBox.hgrow="ALWAYS" />
@@ -67,9 +67,6 @@
                         <Button fx:id="weeklyDinnerButton" alignment="TOP_LEFT" maxWidth="-Infinity" minWidth="106.0" mnemonicParsing="false" onAction="#openWeeklyLists" text="Weekly Dinners" />
                         <Button fx:id="messagesButton" alignment="TOP_LEFT" minWidth="90.0" mnemonicParsing="false" onAction="#messageClicked" text="Messages" />
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
                   </HBox>
                   <GridPane fx:id="recipeContainer" hgap="5.0" vgap="5.0" VBox.vgrow="ALWAYS">
                      <rowConstraints>

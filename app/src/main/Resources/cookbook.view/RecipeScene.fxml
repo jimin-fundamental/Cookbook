@@ -118,11 +118,11 @@
                      </Text>
                      <HBox fx:id="ratingHbox" spacing="10.0">
                            <children>
-                              <FontAwesomeIconView fx:id="star1" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingOneStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
-                              <FontAwesomeIconView fx:id="star2" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingTwoStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
-                              <FontAwesomeIconView fx:id="star3" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingThreeStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
-                              <FontAwesomeIconView fx:id="star4" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingFourStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
-                              <FontAwesomeIconView fx:id="star5" fill="#ffffff" glyphName="STAR" onMouseClicked="#ratingFiveStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star1" fill="#ffffff00" glyphName="STAR" onMouseClicked="#ratingOneStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star2" fill="#ffffff00" glyphName="STAR" onMouseClicked="#ratingTwoStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star3" fill="#ffffff00" glyphName="STAR" onMouseClicked="#ratingThreeStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star4" fill="#ffffff00" glyphName="STAR" onMouseClicked="#ratingFourStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
+                              <FontAwesomeIconView fx:id="star5" fill="#ffffff00" glyphName="STAR" onMouseClicked="#ratingFiveStar" selectionFill="#ffce00" size="20" stroke="BLACK" />
                               <Text fx:id="averageRatingText" strokeType="OUTSIDE" strokeWidth="0.0" text="">
                                  <font>
                                     <Font name="System Bold" size="16.0" />

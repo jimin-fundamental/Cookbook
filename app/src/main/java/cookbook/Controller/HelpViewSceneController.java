@@ -1,23 +1,22 @@
 package cookbook.Controller;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import cookbook.DatabaseManager;
 import cookbook.model.Help;
-import cookbook.model.Recipe;
 import cookbook.repository.HelpDao;
+import cookbook.repository.ThemesRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
 
 
-public class HelpViewSceneController {
+public class HelpViewSceneController implements Initializable{
 
     private List<Help> helpEntries;
 
@@ -102,6 +101,17 @@ public class HelpViewSceneController {
         for (Help help : helpEntries) {
             displayHelpItem(help);
         }
+    }
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        helpListVBox.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(helpListVBox.getScene());
+            }
+        });
     }
 }
 
