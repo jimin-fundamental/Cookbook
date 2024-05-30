@@ -1,8 +1,23 @@
-
+* {
+    -mdfx-font-color: #AFB1B3;
+    -mdfx-link-color: blue;
+    -mdfx-border-color-1: #888;
+  
+    -mdfx-bg-color-1: #5a5a5a;
+    -mdfx-bg-color-2: #2d2d2d;
+    -mdfx-bg-color-3: #111111;
+  
+    -mdfx-bq-color-border: #4488cc; /* the blockquote's border color */
+    -mdfx-bq-color-background: #0000ff0c; /* the blockquote's background color */
+  }
 
 GridPane{
     -fx-background-color: #2D2D30;
     background-color: #2D2D30;
+}
+
+#backButton{
+    -fx-fill: #AFB1B3;
 }
 
 .scroll-pane > .viewport {
