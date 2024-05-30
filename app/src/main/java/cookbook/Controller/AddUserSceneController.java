@@ -1,16 +1,20 @@
 package cookbook.Controller;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import cookbook.DatabaseManager;
-import cookbook.model.User;
+import cookbook.repository.ThemesRepository;
 import cookbook.repository.UserDao;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class AddUserSceneController {
+public class AddUserSceneController implements Initializable{
 
     @FXML
     Button closeButton;
@@ -26,6 +30,16 @@ public class AddUserSceneController {
 
     @FXML
     CheckBox isAdminCheckBox;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        nameField.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(nameField.getScene());
+            }
+        });
+    }
 
     @FXML
     public void saveClicked(ActionEvent event) {

@@ -5,20 +5,15 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import cookbook.repository.ThemesRepository;
 import cookbook.DatabaseManager;
 import cookbook.model.Help;
-import cookbook.model.Recipe;
 import cookbook.repository.HelpDao;
+import cookbook.repository.ThemesRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
 
 
 public class HelpViewSceneController implements Initializable{

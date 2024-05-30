@@ -1,36 +1,30 @@
 package cookbook.Controller;
 
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+import org.controlsfx.control.CheckComboBox;
+
 import cookbook.DatabaseManager;
-import cookbook.SceneModifier;
-import cookbook.model.Recipe;
 import cookbook.model.User;
 import cookbook.repository.MySqlRecipeRepository;
+import cookbook.repository.ThemesRepository;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import javafx.stage.Window;
-import org.controlsfx.control.CheckComboBox;
 
 public class AddRecipeController implements Initializable {
 
@@ -79,8 +73,15 @@ public class AddRecipeController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadPredeterminedTags();
+        addscenePane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                System.out.println("Scene is now set.");
+                ThemesRepository.applyTheme(addscenePane.getScene());
+            }
+        });
 //        loadCustomTags();
     }
+
 
 //    private void loadCustomTags() {
 //        List<String> customtags = sqlRepos.getAllPredeterminedTags();

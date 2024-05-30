@@ -31,6 +31,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -424,7 +425,7 @@ import cookbook.Controller.AddRecipeController;
         void favouritesButtonClicked() {
             if (this.favoritesShowing == true) {
                 this.favoritesShowing = false;
-                star.setFill(Paint.valueOf("#ffbb0000"));
+                star.setFill(Color.TRANSPARENT);
                 searchBar.setText("");
                 filterRecipes();
 
