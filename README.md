@@ -106,12 +106,15 @@ Through this experience, we significantly enhanced our development skills, espec
 Jimin:
 - Focus Areas: Backend development, tag management, and database integration.
 - Key Contributions: Led the implementation of custom tag features, handled MySQL integration, and contributed significantly to backend logic.
+
 Lucas:
 - Focus Areas: Frontend development, including FXML layouts and animations.
 - Key Contributions: Also contributed to backend development, especially in implementing admin functions.
+
 Bastian:
 - Focus Areas: Scrum master duties and backend development.
 - Key Contributions: Managed multi-threading, search functionalities, user authentication, and shopping list features.
+
 Nina:
 - Focus Areas: Database development, including MySQL table, procedure, and view management.
 - Key Contributions: Ensured data consistency and efficient database operations.
