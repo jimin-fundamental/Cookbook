@@ -63,7 +63,7 @@ settings.gradle
 ---
 
 ## Development Approach
-This project was developed under specific constraints dictated by the course, which required the use of JavaFX for frontend development, Java for backend, and MySQL for database management, without the use of additional libraries or frameworks. These constraints pushed us to deepen our understanding of core technologies and apply creative solutions to meet project requirements.
+This project was developed under specific constraints dictated by the course, which required the use of **JavaFX** for frontend development, **Java** for backend, and MySQL for database management, **without the use of additional libraries or frameworks**. These constraints pushed us to deepen our understanding of core technologies and apply creative solutions to meet project requirements.
 
 Through this experience, we significantly enhanced our development skills, especially in areas like manual dependency management, optimizing performance without external libraries, and implementing complex features within the limitations of the tools provided. This project allowed us to see the development process from a new perspective, focusing on the fundamentals of software design and architecture.
 
